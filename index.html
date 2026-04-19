@@ -86,6 +86,17 @@ fbq('track', 'PageView');
   .nav-links a{color:var(--ink);font-size:.95rem}
   .nav-links a:hover{color:var(--burgundy)}
   @media(min-width:768px){.nav-links{display:flex}}
+  .logo-group{display:flex;align-items:center;gap:10px}
+  .nav-icon{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--burgundy);
+    opacity:.75;
+    flex-shrink:0;
+    transition:opacity .2s, transform .3s;
+  }
+  .nav-icon:hover{opacity:1;transform:rotate(8deg)}
 
   /* Hero */
   .hero{
@@ -183,7 +194,7 @@ fbq('track', 'PageView');
     grid-template-columns:1fr;
     gap:28px;
   }
-  @media(min-width:768px){.cards{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:768px){.cards{grid-template-columns:repeat(2,1fr);max-width:820px;margin:0 auto}}
   .card{
     background:var(--cream-2);
     border:1px solid var(--beige);
@@ -295,6 +306,48 @@ fbq('track', 'PageView');
     font-family:'Caveat',cursive;
     font-style:normal;
     font-size:1.3rem;
+    color:var(--gold);
+  }
+
+  /* Quotes grid */
+  .quotes-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    max-width:900px;
+    margin:0 auto;
+  }
+  @media(max-width:680px){.quotes-grid{grid-template-columns:1fr}}
+  .quote-card{
+    background:rgba(246,239,227,.06);
+    border:1px solid rgba(246,239,227,.1);
+    border-radius:18px;
+    padding:46px 28px 26px;
+    position:relative;
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size:1.05rem;
+    line-height:1.7;
+    color:rgba(246,239,227,.88);
+    transition:background .25s;
+  }
+  .quote-card:hover{background:rgba(246,239,227,.1)}
+  .quote-card::before{
+    content:"\201C";
+    font-size:4rem;
+    position:absolute;
+    top:10px;left:22px;
+    color:var(--gold);
+    font-family:'Playfair Display',serif;
+    line-height:1;
+    opacity:.4;
+  }
+  .quote-card-author{
+    display:block;
+    margin-top:18px;
+    font-family:'Caveat',cursive;
+    font-style:normal;
+    font-size:1.15rem;
     color:var(--gold);
   }
 
@@ -559,7 +612,24 @@ fbq('track', 'PageView');
 <!-- NAVBAR -->
 <nav class="nav">
   <div class="container nav-inner">
-    <div class="logo">Tidsbrev<span>.no</span></div>
+    <div class="logo-group">
+      <!-- Tidsbrev logo icon: circular seal with envelope motif -->
+      <div class="nav-icon" aria-hidden="true">
+        <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Outer seal ring -->
+          <circle cx="19" cy="19" r="17" stroke="currentColor" stroke-width="1.4"/>
+          <!-- Inner decorative ring -->
+          <circle cx="19" cy="19" r="13.5" stroke="currentColor" stroke-width="0.7" stroke-dasharray="2 2.5" opacity="0.45"/>
+          <!-- Envelope body -->
+          <rect x="10.5" y="14" width="17" height="11.5" rx="1.6" stroke="currentColor" stroke-width="1.35" fill="none"/>
+          <!-- Envelope flap (V-fold) -->
+          <polyline points="10.5,14 19,21.5 27.5,14" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round" fill="none"/>
+          <!-- Small time mark below flap centre -->
+          <line x1="19" y1="22" x2="19" y2="25.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="logo">Tidsbrev</div>
+    </div>
     <div class="nav-links">
       <a href="#hvordan">Hvordan det fungerer</a>
       <a href="#brev">Våre brev</a>
@@ -604,7 +674,7 @@ fbq('track', 'PageView');
           </svg>
         </div>
         <h3>2. Vi tar vare på det</h3>
-        <p>Brevet krypteres og forsegles trygt i vårt sikre arkiv — frem til dagen det skal åpnes.</p>
+        <p>Brevet krypteres eller lagres trygt i vårt sikre arkiv — frem til dagen det skal åpnes.</p>
       </div>
       <div class="step fade-in">
         <div class="step-icon">
@@ -628,44 +698,33 @@ fbq('track', 'PageView');
       <p>Fra et enkelt minnesbrev til en hel livshistorie — vi har en form for hvert øyeblikk.</p>
     </div>
     <div class="cards">
-      <div class="card fade-in" data-product="standard">
-        <h3>Standard Brev</h3>
-        <p class="years">1–5 år</p>
-        <p class="price">349 <small>NOK</small></p>
+      <div class="card fade-in" data-product="digitalt">
+        <h3>Digitalt Brev</h3>
+        <p class="years">Skrives og mottas digitalt</p>
+        <p class="price">79 <small>NOK</small></p>
+        <p style="font-size:.85rem;color:var(--muted);margin-bottom:20px;margin-top:-10px">Fast pris — uansett antall år</p>
         <ul>
-          <li>Digitalt tidsbrev</li>
-          <li>Valgfri leveringsdato</li>
-          <li>Sikker kryptering</li>
-          <li>E-postlevering</li>
+          <li>Skrives direkte på nett</li>
+          <li>Leveres på e-post på valgt dato</li>
+          <li>Sikker kryptering og lagring</li>
+          <li>Til deg selv eller noen du er glad i</li>
         </ul>
-        <button class="card-btn" data-cta="card-standard">Velg Standard</button>
+        <button class="card-btn" data-cta="card-digitalt">Velg Digitalt</button>
       </div>
 
-      <div class="card featured fade-in" data-product="premium">
-        <span class="badge">Mest populær</span>
-        <h3>Premium Brev</h3>
-        <p class="years">5–15 år</p>
-        <p class="price">599 <small>NOK</small></p>
+      <div class="card featured fade-in" data-product="fysisk">
+        <span class="badge">Mest personlig</span>
+        <h3>Fysisk Brev</h3>
+        <p class="years">leveres i vakker konvolutt</p>
+        <p class="price">fra 149 <small>NOK</small></p>
+        <p style="font-size:.85rem;color:rgba(246,239,227,.6);margin-bottom:20px;margin-top:-10px">149 kr + 15 kr per ekstra år</p>
         <ul>
-          <li>Fysisk brev på håndlaget papir</li>
-          <li>Voksstempel og signet</li>
-          <li>Digital sikkerhetskopi</li>
-          <li>Påminnelse til mottaker</li>
+          <li>Du sender brevet til oss</li>
+          <li>Vi lagrer og sender det ut på valgt dato</li>
+          <li>Til deg selv eller noen du er glad i</li>
+          <li>Innpakkes i vakker konvolutt (+79 kr)</li>
         </ul>
-        <button class="card-btn" data-cta="card-premium">Velg Premium</button>
-      </div>
-
-      <div class="card fade-in" data-product="legacy">
-        <h3>Legacy Pakke</h3>
-        <p class="years">opptil 5 brev</p>
-        <p class="price">1.299 <small>NOK</small></p>
-        <ul>
-          <li>Inntil 5 brev over 30 år</li>
-          <li>Fysisk eller digital levering</li>
-          <li>Personlig arkivboks</li>
-          <li>Arv og familietilgang</li>
-        </ul>
-        <button class="card-btn" data-cta="card-legacy">Velg Legacy</button>
+        <button class="card-btn" data-cta="card-fysisk">Velg Fysisk</button>
       </div>
     </div>
 
@@ -690,10 +749,29 @@ fbq('track', 'PageView');
       <h2>Et brev kan forandre et øyeblikk</h2>
       <p>Noen ganger er det mest verdifulle vi kan gi hverandre, tiden det tar å skrive ned det vi føler.</p>
     </div>
-    <blockquote class="quote fade-in">
-      Da jeg åpnet brevet fra mamma ti år etter at hun skrev det, var det som om hun satt ved siden av meg igjen. Ordene hennes fant meg akkurat når jeg trengte dem mest.
-      <span class="quote-author">— Ingrid, 34</span>
-    </blockquote>
+    <div class="quotes-grid">
+
+      <div class="quote-card fade-in">
+        Da datteren min ble født, satte jeg meg ned og skrev. Femten år senere kom brevet i posten til konfirmasjonsdagen hennes. Det var det mest ektefølte gaven jeg kunne gitt.
+        <span class="quote-card-author">— Ingrid, 39</span>
+      </div>
+
+      <div class="quote-card fade-in">
+          Da jeg ble 18 skrev jeg et brev til meg selv, om mine mål og ambisjoner. Jeg gleder meg til å få vite om jeg har klart det jeg drømte om, eller om livet tok meg i en helt annen retning.
+          <span class="quote-card-author">— Marte, 28</span>
+      </div>
+
+      <div class="quote-card fade-in">
+        På bryllupsdagen skrev jeg et brev til Camilla. Ti år senere fikk hun det som en overraskelse i posten på jubileet vårt. Hun sa det var den fineste gaven hun kunne fått.
+        <span class="quote-card-author">— Andreas, 41</span>
+      </div>
+
+      <div class="quote-card fade-in">
+          Jeg var på reisefot i 3 måneder, og sendte jeg et brev til den framtidige meg. Jeg ser fram til å la minnene og opplevelsene strømme tilbake. Det blir som en tidskapsel i postkassen.
+          <span class="quote-card-author">— Sofie, 26</span>
+      </div>
+
+    </div>
   </div>
 </section>
 
@@ -739,7 +817,7 @@ fbq('track', 'PageView');
 <!-- FOOTER -->
 <footer>
   <div class="container">
-    <div class="logo">Tidsbrev<span>.no</span></div>
+    <div class="logo">Tidsbrev</div>
     <div class="foot-links">
       <a href="#">Personvern</a>
       <a href="#">Vilkår</a>
