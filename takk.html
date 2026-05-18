@@ -258,7 +258,7 @@
     </div>
 
     <!-- Bekreftelse -->
-    <div class="confirmation-text">
+    <div class="confirmation-text" id="confirmationText">
       <strong>Vi har sendt en bekreftelse til e-posten din.</strong><br/>
       Brevet ditt er kryptert og trygt lagret i arkivet vårt.
       Du trenger ikke gjøre noe mer — vi tar oss av resten og leverer det på nøyaktig riktig dato.
@@ -349,25 +349,35 @@ function vent(ms) { return new Promise(r => setTimeout(r, ms)); }
 async function hentOrdre(db) {
   const orderNumber = Utils.urlParam('order');
   const sessionId   = Utils.urlParam('session_id');
+  let lastOrder = null;
 
   for (let i = 0; i < MAX_FORSOK; i++) {
     let order = null;
+    let error = null;
 
     if (orderNumber) {
-      const { data } = await db
+      const res = await db
         .from('orders')
         .select(SELECT_FIELDS)
         .eq('order_number', orderNumber)
         .single();
-      order = data;
+      order = res.data;
+      error = res.error;
     } else if (sessionId) {
-      const { data } = await db
+      const res = await db
         .from('orders')
         .select(SELECT_FIELDS)
         .eq('stripe_session_id', sessionId)
         .single();
-      order = data;
+      order = res.data;
+      error = res.error;
     }
+
+    if (error) {
+      console.warn('[takk] Supabase query error:', error.message, error.code);
+    }
+
+    if (order) lastOrder = order;
 
     if (order && order.payment_status === 'paid') return order;
 
@@ -380,11 +390,12 @@ async function hentOrdre(db) {
       continue;
     }
 
-    // Order not found yet — wait once in case DB write is slow
     if (i < 2) { await vent(VENTETID_MS); continue; }
     break;
   }
-  return null;
+
+  // If we found an order but it never became 'paid', return it anyway
+  return lastOrder || null;
 }
 
 (async function() {
@@ -410,7 +421,7 @@ async function hentOrdre(db) {
     const order = await hentOrdre(db);
 
     if (!order) {
-      throw new Error('Ordre ikke funnet eller ikke betalt');
+      throw new Error('Ordre ikke funnet');
     }
 
     // --- Fyll inn ordredetaljer ---
@@ -419,6 +430,13 @@ async function hentOrdre(db) {
     document.getElementById('orderDelivery').textContent = LEVERING_TEKST[order.delivery_type] || order.delivery_type;
     document.getElementById('orderDate').textContent     = Utils.formaterDato(order.delivery_date);
     document.getElementById('orderAmount').textContent   = Utils.formaterPris(order.amount);
+
+    // Show pending notice if webhook hasn't fired yet
+    if (order.payment_status !== 'paid') {
+      const confirm = document.getElementById('confirmationText');
+      confirm.style.borderLeftColor = 'var(--gold)';
+      confirm.innerHTML = '<strong style="color:var(--gold)">Betalingen din behandles.</strong><br/>Ordren er registrert og brevet er lagret. Du vil motta en bekreftelse på e-post så snart betalingen er fullført.';
+    }
 
     document.getElementById('orderRecipient').textContent =
       order.recipient_type === 'meg_selv' ? 'Til deg selv' : (order.recipient_name || 'Til en annen');
