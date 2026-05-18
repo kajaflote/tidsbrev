@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Noe gikk galt — Tidsbrev.no</title>
+<meta name="description" content="Betalingen ble ikke fullført. Prøv igjen eller ta kontakt med oss." />
+<meta name="robots" content="noindex" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --cream:#F5F0E8;--cream-2:#FBF6EC;--beige:#E8DCC4;
+    --burgundy:#6B2737;--burgundy-dark:#4E141C;
+    --forest:#2D4A3E;--forest-dark:#1F3A2E;
+    --ink:#2A231C;--muted:#6B5D4C;--gold:#B08A3E;
+    --shadow:0 20px 60px rgba(42,35,28,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--ink);background:var(--cream);
+    line-height:1.65;-webkit-font-smoothing:antialiased;
+    min-height:100vh;display:flex;flex-direction:column;
+  }
+
+  h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:600;line-height:1.2}
+  a{color:var(--burgundy);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* --- Nav --- */
+  .nav{
+    padding:22px 24px;
+    background:rgba(245,240,232,.9);backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(107,93,76,.12);
+  }
+  .nav .wrap{max-width:840px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+  .logo{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--burgundy);letter-spacing:.3px}
+  .logo span{color:var(--forest)}
+  .nav-link{font-size:.92rem;color:var(--muted)}
+
+  /* --- Hovedinnhold --- */
+  main{flex:1;display:flex;align-items:center;justify-content:center}
+  .container{max-width:600px;margin:0 auto;padding:60px 24px 80px;text-align:center}
+
+  /* --- Ikon --- */
+  .icon-circle{
+    width:90px;height:90px;border-radius:50%;
+    background:var(--burgundy);
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 28px;
+    animation:gentlePulse 2s ease-in-out infinite;
+  }
+  @keyframes gentlePulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(107,39,55,.15)}
+    50%{box-shadow:0 0 0 16px rgba(107,39,55,0)}
+  }
+  .icon-circle svg{color:var(--cream)}
+
+  /* --- Tekst --- */
+  .title{font-size:clamp(1.7rem,3.5vw,2.3rem);color:var(--ink);margin-bottom:10px}
+  .subtitle{
+    font-family:'Caveat',cursive;font-size:1.15rem;
+    color:var(--burgundy);font-style:italic;margin-bottom:30px;
+  }
+  .message{
+    color:var(--muted);font-size:1.05rem;line-height:1.75;
+    margin-bottom:36px;max-width:480px;margin-left:auto;margin-right:auto;
+  }
+
+  /* --- Hjelpekort --- */
+  .help-card{
+    background:var(--cream-2);border:1px solid var(--beige);
+    border-radius:16px;padding:28px 32px;text-align:left;
+    box-shadow:var(--shadow);margin-bottom:36px;
+  }
+  .help-card h3{font-size:1rem;color:var(--forest);margin-bottom:14px}
+  .help-item{
+    display:flex;align-items:flex-start;gap:14px;
+    padding:12px 0;border-bottom:1px solid var(--beige);
+  }
+  .help-item:last-child{border-bottom:none}
+  .help-icon{
+    width:40px;height:40px;border-radius:10px;
+    background:var(--cream);border:1px solid var(--beige);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .help-icon svg{width:18px;height:18px;color:var(--burgundy)}
+  .help-text{font-size:.92rem;color:var(--ink);line-height:1.5}
+  .help-text span{display:block;color:var(--muted);font-size:.84rem;margin-top:2px}
+
+  /* --- Knapper --- */
+  .btn{
+    display:inline-block;background:var(--burgundy);color:var(--cream);
+    padding:16px 36px;border:none;border-radius:50px;
+    font-family:inherit;font-size:1rem;font-weight:500;
+    cursor:pointer;transition:background .2s,transform .2s;
+  }
+  .btn:hover{background:var(--burgundy-dark);transform:translateY(-2px);text-decoration:none}
+  .btn-ghost{
+    background:transparent;color:var(--burgundy);
+    border:1.5px solid var(--burgundy);margin-left:12px;
+  }
+  .btn-ghost:hover{background:var(--burgundy);color:var(--cream)}
+
+  .reassurance{
+    margin-top:28px;font-size:.85rem;color:var(--muted);
+    font-style:italic;
+  }
+
+  /* --- Footer --- */
+  footer{
+    background:var(--burgundy-dark);color:rgba(246,239,227,.85);
+    text-align:center;padding:36px 24px;font-size:.85rem;
+  }
+  footer a{color:var(--gold);margin:0 8px}
+
+  /* --- Responsive --- */
+  @media(max-width:520px){
+    .container{padding:40px 18px 60px}
+    .help-card{padding:22px 20px}
+    .btn-ghost{margin-left:0;margin-top:10px;display:inline-block}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="wrap">
+    <a href="/" class="logo">Tidsbrev<span>.no</span></a>
+    <a href="/" class="nav-link">Tilbake til forsiden</a>
+  </div>
+</nav>
+
+<!-- INNHOLD -->
+<main>
+  <div class="container">
+
+    <!-- Ikon -->
+    <div class="icon-circle">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 8v4"/>
+        <path d="M12 16h.01"/>
+        <circle cx="12" cy="12" r="10"/>
+      </svg>
+    </div>
+
+    <!-- Overskrift (oppdateres av JS basert på feiltype) -->
+    <h1 class="title" id="errTitle">Det gikk ikke helt som planlagt</h1>
+    <p class="subtitle" id="errSubtitle">~ men brevet ditt er ikke tapt ~</p>
+
+    <!-- Forklaring (oppdateres av JS) -->
+    <p class="message" id="errMessage">
+      Betalingen ble dessverre ikke fullført denne gangen. Ikke bekymre deg —
+      ingenting har blitt trukket fra kontoen din, og du kan enkelt
+      prøve igjen når du er klar.
+    </p>
+
+    <!-- Hjelp-kort -->
+    <div class="help-card">
+      <h3>Hva kan du gjøre?</h3>
+
+      <div class="help-item">
+        <div class="help-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        </div>
+        <div class="help-text">
+          <strong>Prøv igjen</strong>
+          <span>Gå tilbake til bestillingen og forsøk betalingen på nytt. Det tar bare et minutt.</span>
+        </div>
+      </div>
+
+      <div class="help-item">
+        <div class="help-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <div class="help-text">
+          <strong>Sjekk betalingskortet</strong>
+          <span>Kontroller at kortet har dekning og at utløpsdatoen er riktig.</span>
+        </div>
+      </div>
+
+      <div class="help-item">
+        <div class="help-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div class="help-text">
+          <strong>Ta kontakt med oss</strong>
+          <span>Send oss en e-post på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a> — vi hjelper deg gjerne.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Knapper -->
+    <div>
+      <a href="/bestill.html" class="btn">Prøv igjen</a>
+      <a href="/" class="btn btn-ghost">Til forsiden</a>
+    </div>
+
+    <p class="reassurance">
+      Ordene dine fortjener å bli levert. Vi er her for å hjelpe deg dit.
+    </p>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:8px">Tidsbrev</div>
+  <p style="margin-bottom:6px">Brev til fremtiden, skrevet i dag.</p>
+  <div>
+    <a href="/personvern.html">Personvern</a>
+    <a href="/vilkaar.html">Vilkår</a>
+    <a href="/faq.html">FAQ</a>
+    <a href="mailto:hei@tidsbrev.no">Kontakt</a>
+  </div>
+</footer>
+
+<script>
+// ================================================================
+// FEIL-SIDE — Tilpass melding etter årsak i URL
+// ================================================================
+// Mulige URL-parametere:
+//   ?reason=cancelled    — brukeren kansellerte selv (Vipps "Avbryt")
+//   ?reason=expired      — betalingsøkten gikk ut på tid
+//   ?reason=card_error   — kortfeil
+//   ?reason=vipps        — generell Vipps-feil
+//   (ingen param)        — generell betalingsfeil (Stripe cancel_url)
+//
+// Sett cancel_url i backend til:
+//   ${sideUrl}/feil.html?reason=cancelled
+// og reason-spesifikke URL-er der det er hensiktsmessig.
+// ================================================================
+
+(function () {
+  const reason = new URLSearchParams(window.location.search).get('reason') || '';
+
+  const meldinger = {
+    cancelled: {
+      title:    'Du avbrøt betalingen',
+      subtitle: '~ ingen ting er trukket fra kontoen din ~',
+      message:  'Det er helt greit — noen ganger trenger man litt mer tid. ' +
+                'Ordene dine venter på deg. Kom tilbake når du er klar, ' +
+                'og brevet ditt vil være der akkurat der du slapp.'
+    },
+    expired: {
+      title:    'Betalingssiden gikk ut på tid',
+      subtitle: '~ ingen ting er trukket fra kontoen din ~',
+      message:  'Betalingslenken din ble dessverre for gammel. ' +
+                'Det skjer av og til — det tar bare et minutt å starte på nytt. ' +
+                'Brevet du har skrevet er lagret i nettleseren din så lenge du ikke lukker fanen.'
+    },
+    card_error: {
+      title:    'Kortet ble ikke godkjent',
+      subtitle: '~ prøv et annet kort eller betalingsmåte ~',
+      message:  'Det ser ut til at det ble et lite hinder med kortet denne gangen. ' +
+                'Ingen ting er trukket, og du kan prøve med et annet kort, ' +
+                'eller betale med Vipps hvis det er enklere.'
+    },
+    vipps: {
+      title:    'Vipps-betalingen ble ikke fullført',
+      subtitle: '~ ingen ting er trukket fra Vipps-kontoen din ~',
+      message:  'Det oppstod et lite hinder med Vipps-betalingen. ' +
+                'Ingen ting har blitt belastet. Du kan prøve igjen med Vipps, ' +
+                'eller betale med kort hvis det er enklere.'
+    }
+  };
+
+  const valgt = meldinger[reason];
+  if (valgt) {
+    const titleEl    = document.getElementById('errTitle');
+    const subtitleEl = document.getElementById('errSubtitle');
+    const msgEl      = document.getElementById('errMessage');
+    if (titleEl)    titleEl.textContent    = valgt.title;
+    if (subtitleEl) subtitleEl.textContent = valgt.subtitle;
+    if (msgEl)      msgEl.textContent      = valgt.message;
+  }
+})();
+</script>
+
+</body>
+</html>

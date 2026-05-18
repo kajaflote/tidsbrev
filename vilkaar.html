@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vilkår og betingelser — Tidsbrev.no</title>
+<meta name="description" content="Vilkår og betingelser for Tidsbrev.no. Les om refusjonspolicy, leveringsgaranti og hva som skjer i ulike situasjoner." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --cream:#F5F0E8;--cream-2:#FBF6EC;--beige:#E8DCC4;
+    --burgundy:#6B2737;--burgundy-dark:#4E141C;
+    --forest:#2D4A3E;--forest-dark:#1F3A2E;
+    --ink:#2A231C;--muted:#6B5D4C;--gold:#B08A3E;
+    --shadow:0 20px 60px rgba(42,35,28,.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--ink);background:var(--cream);
+    line-height:1.7;-webkit-font-smoothing:antialiased;
+    min-height:100vh;display:flex;flex-direction:column;
+  }
+  h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:600;line-height:1.25}
+  a{color:var(--burgundy);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  main{flex:1;padding:60px 0 100px}
+  .container{max-width:760px;margin:0 auto;padding:0 24px}
+
+  .page-hero{text-align:center;margin-bottom:60px;padding-bottom:40px;border-bottom:1px solid var(--beige)}
+  .eyebrow{font-family:'Caveat',cursive;font-size:1.2rem;color:var(--burgundy);display:block;margin-bottom:10px}
+  .page-hero h1{font-size:clamp(2rem,4vw,2.8rem);margin-bottom:14px;color:var(--ink)}
+  .page-hero .lead{color:var(--muted);font-size:1.05rem;max-width:520px;margin:0 auto;line-height:1.65}
+
+  .section{margin-bottom:52px}
+  .section h2{font-size:1.5rem;color:var(--ink);margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid var(--beige)}
+  .section h3{font-size:1.05rem;color:var(--forest);margin:22px 0 8px;font-weight:600}
+  .section p{color:var(--muted);margin-bottom:14px;font-size:.97rem}
+  .section p:last-child{margin-bottom:0}
+  .section ul,.section ol{margin:10px 0 14px 22px}
+  .section ul li,.section ol li{color:var(--muted);font-size:.97rem;margin-bottom:8px}
+
+  /* Scenario-kort */
+  .scenario-grid{display:grid;gap:16px;margin-top:16px}
+  .scenario{
+    background:var(--cream-2);border:1px solid var(--beige);
+    border-radius:14px;padding:22px 26px;
+    border-left:4px solid var(--forest);
+  }
+  .scenario.warning{border-left-color:var(--gold)}
+  .scenario .sc-title{
+    font-family:'Playfair Display',serif;font-size:1.05rem;
+    color:var(--ink);margin-bottom:8px;font-weight:600;
+  }
+  .scenario p{color:var(--muted);font-size:.92rem;margin-bottom:6px}
+  .scenario p:last-child{margin-bottom:0}
+
+  /* Refusjon-tabell */
+  .refund-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:.93rem}
+  .refund-table th{
+    background:var(--forest);color:var(--cream);
+    padding:12px 16px;text-align:left;font-weight:500;font-size:.85rem;
+  }
+  .refund-table th:first-child{border-radius:10px 0 0 0}
+  .refund-table th:last-child{border-radius:0 10px 0 0}
+  .refund-table td{padding:12px 16px;border-bottom:1px solid var(--beige);color:var(--muted)}
+  .refund-table tr:last-child td{border-bottom:none}
+  .refund-table tr:nth-child(even) td{background:rgba(232,220,196,.25)}
+  .refund-ok{color:var(--forest);font-weight:600}
+  .refund-no{color:var(--burgundy);font-weight:600}
+
+  .highlight-box{
+    background:var(--cream-2);border:1px solid var(--beige);
+    border-radius:14px;padding:24px 28px;margin:20px 0;
+    box-shadow:var(--shadow);
+  }
+  .highlight-box .box-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--forest);margin-bottom:10px;font-weight:600}
+  .highlight-box p{color:var(--muted);font-size:.93rem;margin-bottom:8px}
+  .highlight-box p:last-child{margin-bottom:0}
+
+  .contact-card{
+    background:var(--burgundy);color:var(--cream);
+    border-radius:16px;padding:32px 36px;text-align:center;margin-top:48px;
+  }
+  .contact-card h3{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:10px;color:var(--cream)}
+  .contact-card p{font-size:.95rem;color:rgba(246,239,227,.8);margin-bottom:18px}
+  .contact-card a{
+    display:inline-block;background:rgba(246,239,227,.15);
+    border:1px solid rgba(246,239,227,.3);color:var(--cream);
+    padding:11px 28px;border-radius:50px;font-size:.93rem;font-weight:500;transition:background .2s;
+  }
+  .contact-card a:hover{background:rgba(246,239,227,.25);text-decoration:none}
+
+  .updated-note{text-align:center;font-size:.82rem;color:var(--muted);margin-top:40px;font-style:italic}
+</style>
+</head>
+<body data-page="vilkaar">
+
+<main>
+  <div class="container">
+
+    <div class="page-hero">
+      <span class="eyebrow">~ klart og tydelig ~</span>
+      <h1>Vilkår og betingelser</h1>
+      <p class="lead">Vi har prøvd å skrive dette slik at det faktisk er mulig å lese. Ingen juridisk sjargong — bare klare regler for hva du kan forvente av oss, og hva vi forventer av deg.</p>
+    </div>
+
+    <!-- 1. Tjenesten -->
+    <div class="section">
+      <h2>1. Hva er Tidsbrev?</h2>
+      <p>Tidsbrev.no er en norsk tjeneste som lar deg skrive og sende brev med fremtidig leveringsdato — til deg selv eller til noen du er glad i. Brevet lagres trygt hos oss og leveres automatisk på datoen du velger, enten digitalt via e-post eller fysisk i posten.</p>
+      <p>Tjenesten drives som en enkeltpersonsforretning registrert i Norge.</p>
+    </div>
+
+    <!-- 2. Bestilling og betaling -->
+    <div class="section">
+      <h2>2. Bestilling og betaling</h2>
+      <p>En bestilling er bindende når betalingen er gjennomført og du har mottatt ordrebekreftelse på e-post. Priser er oppgitt i norske kroner (NOK) inkl. mva.</p>
+
+      <h3>Priser</h3>
+      <ul>
+        <li><strong>Digitalt brev:</strong> 79 kr flat pris, uavhengig av leveringsdato.</li>
+        <li><strong>Fysisk brev i konvolutt:</strong> 149 kr første år + 15 kr per ekstra år til levering. Et brev som leveres om 5 år koster altså 149 + 4 × 15 = 209 kr.</li>
+      </ul>
+
+      <p>Vi aksepterer kortbetaling via Stripe og mobilbetaling via Vipps. Ingen kortinformasjon lagres hos oss.</p>
+    </div>
+
+    <!-- 3. Refusjon -->
+    <div class="section">
+      <h2>3. Refusjon og angrerett</h2>
+
+      <div class="highlight-box">
+        <div class="box-title">Kort oppsummert: full refusjon innen 24 timer</div>
+        <p>Angrer du deg rett etter bestillingen? Send oss en e-post innen 24 timer fra kjøpstidspunktet, så refunderer vi hele beløpet — ingen spørsmål stilt.</p>
+        <p>Etter at brevet er lagret og bearbeidet i systemet vårt (vanligvis innen noen timer etter betaling), kan vi ikke lenger tilby refusjon.</p>
+      </div>
+
+      <table class="refund-table">
+        <thead>
+          <tr><th>Tidspunkt</th><th>Refusjon</th><th>Hva gjøres?</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Innen 24 timer etter kjøp</td>
+            <td class="refund-ok">Full refusjon</td>
+            <td>Send e-post til hei@tidsbrev.no</td>
+          </tr>
+          <tr>
+            <td>Etter 24 timer, brev ikke levert</td>
+            <td class="refund-no">Ingen refusjon</td>
+            <td>Brevet er lagret og vil leveres som avtalt</td>
+          </tr>
+          <tr>
+            <td>Teknisk feil på vår side</td>
+            <td class="refund-ok">Full refusjon</td>
+            <td>Vi tar ansvar for egne feil</td>
+          </tr>
+          <tr>
+            <td>Feil adresse oppgitt av deg</td>
+            <td class="refund-no">Ingen refusjon</td>
+            <td>Vi forsøker å hjelpe uansett — ta kontakt</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Angrerettloven</h3>
+      <p>Etter norsk angrerettlov §22 (b) bortfaller angreretten for digitale ytelser der du eksplisitt har bekreftet at leveringen starter umiddelbart. Ved å fullføre en ordre på Tidsbrev.no bekrefter du at brevet lagres og behandles straks, og at du er klar over at angreretten dermed kan bortfalle før fristen på 14 dager.</p>
+      <p>Vi er likevel sjenerøse: vår interne 24-timers refusjonspolicy gjelder uavhengig av angrerettlovens begrensninger.</p>
+    </div>
+
+    <!-- 4. Levering -->
+    <div class="section">
+      <h2>4. Levering</h2>
+
+      <h3>Digitale brev</h3>
+      <p>Digitale brev sendes per e-post på valgt leveringsdato (kl. 07–09 norsk tid). Vi garanterer leveringsforsøk, men kan ikke garantere mottak dersom mottakerens e-postadresse er ugyldig, endret, eller e-posten lander i søppelpost.</p>
+      <p>Leveringsdato kan ikke endres etter at bestillingen er bekreftet. Kontakt oss på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a> om du har spesielle omstendigheter.</p>
+
+      <h3>Fysiske brev</h3>
+      <p>Fysiske brev postlegges i god tid før leveringsdatoen via Posten Norge. Forventet leveringstid er 2–5 virkedager fra postleggingsdato. Vi er ikke ansvarlig for forsinkelser i Postens distribusjon.</p>
+      <p>For fysiske brev får du som avsender en e-postvarsling ca. 30 dager før vi postlegger brevet, slik at du kan oppdatere adressen dersom mottakeren har flyttet.</p>
+    </div>
+
+    <!-- 5. Spesielle situasjoner -->
+    <div class="section">
+      <h2>5. Spesielle situasjoner</h2>
+      <p>Livet er uforutsigbart. Her er hva vi gjør i situasjoner som kan oppstå:</p>
+
+      <div class="scenario-grid">
+        <div class="scenario">
+          <div class="sc-title">Mottakeren er ikke lenger i live ved leveringsdato</div>
+          <p>Vi forsøker å levere brevet, men får ikke bekreftet mottak (digitalt) eller får brevet returnert (fysisk). Vi kontakter deg som avsender, slik at dere kan bestemme hva som skal gjøres med brevet.</p>
+          <p>Vi sletter aldri et brev uten å kontakte avsenderen først.</p>
+        </div>
+
+        <div class="scenario">
+          <div class="sc-title">Avsenderens e-post er ugyldig eller utilgjengelig</div>
+          <p>Hvis vi ikke klarer å levere brevet og heller ikke kan nå avsenderen, oppbevarer vi brevet i inntil 90 dager ekstra og forsøker kontakt via alternative kanaler om mulig, før brevet slettes.</p>
+        </div>
+
+        <div class="scenario warning">
+          <div class="sc-title">Tidsbrev legger ned virksomheten</div>
+          <p>Dersom vi beslutter å legge ned tjenesten, sender vi <strong>alle uleverte brev umiddelbart</strong> — digitalt eller via fysisk post. Du mottar et varsel minst 90 dager i forveien. Ingen brev vil forsvinne stille. Full refusjon av ubrukt abonnement gis ved nedleggelse.</p>
+        </div>
+
+        <div class="scenario">
+          <div class="sc-title">Teknisk feil hindrer levering</div>
+          <p>Dersom en teknisk feil på vår side forhindrer levering, forsøker vi alternativ levering og varsler deg umiddelbart. Lykkes vi ikke, refunderer vi fullt beløp.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Innhold -->
+    <div class="section">
+      <h2>6. Brevinnhold og bruk av tjenesten</h2>
+      <p>Du er ansvarlig for innholdet i brevet ditt. Det er ikke tillatt å bruke tjenesten til å sende:</p>
+      <ul>
+        <li>Trakassering, trusler eller sjikane rettet mot andre</li>
+        <li>Ulovlig innhold av noe slag</li>
+        <li>Innhold som krenker andres rettigheter</li>
+      </ul>
+      <p>Vi forbeholder oss retten til å avvise eller slette bestillinger som åpenbart bryter med disse punktene. I praksis leser vi ikke brevene — men dersom misbruk avdekkes på annen måte, kan vi agere.</p>
+    </div>
+
+    <!-- 7. Ansvarsbegrensning -->
+    <div class="section">
+      <h2>7. Ansvarsbegrensning</h2>
+      <p>Vi gjør vårt aller beste for å levere brevet ditt på riktig dag. Men vi er et lite norsk selskap — vi kan ikke ta ansvar for:</p>
+      <ul>
+        <li>Forsinkelser i Postens distribusjon</li>
+        <li>At mottakerens e-postadresse ikke lenger er i bruk</li>
+        <li>Tekniske feil utenfor vår kontroll (strømbrudd, naturkatastrofer, force majeure)</li>
+        <li>Eventuelle konsekvenser av at brevet ikke nådde frem</li>
+      </ul>
+      <p>Vår totale erstatningsplikt er begrenset til det du faktisk har betalt for den aktuelle bestillingen. Vi tilbyr uansett å forsøke levering på nytt eller refundere dersom feilen er på vår side.</p>
+    </div>
+
+    <!-- 8. Jurisdiksjon -->
+    <div class="section">
+      <h2>8. Lovvalg og tvisteløsning</h2>
+      <p>Disse vilkårene reguleres av norsk lov. Eventuelle tvister søkes løst i minnelighet. Dersom det ikke lykkes, er verneting Oslo tingrett.</p>
+      <p>Som norsk forbruker kan du også bringe tvister inn for <a href="https://www.forbrukertilsynet.no" target="_blank" rel="noopener">Forbrukertilsynet</a> eller Forbrukerrådet.</p>
+    </div>
+
+    <!-- 9. Endringer -->
+    <div class="section">
+      <h2>9. Endringer i vilkårene</h2>
+      <p>Vi kan oppdatere disse vilkårene. Vesentlige endringer varsles på e-post til berørte kunder med minst 30 dagers varsel. Du kan alltid finne gjeldende versjon på denne siden.</p>
+    </div>
+
+    <div class="contact-card">
+      <h3>Spørsmål om vilkårene?</h3>
+      <p>Vi svarer alltid innen et par virkedager. Litt usikker på noe? Spør oss — vi er hyggelige.</p>
+      <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a>
+    </div>
+
+    <p class="updated-note">Sist oppdatert: april 2025</p>
+
+  </div>
+</main>
+
+<script src="js/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+/* ================================================================
+   Tidsbrev.no — Delt stilark
+   ================================================================
+   Dette stilarket brukes av alle undersider (bestill, takk, admin,
+   personvern, vilkaar, faq). Landingssiden (index.html) har sin
+   egen embeddede CSS for å laste raskere.
+   ================================================================ */
+
+:root {
+  --cream: #f6efe3;
+  --cream-2: #fbf6ec;
+  --beige: #e8dcc4;
+  --burgundy: #6b1f2a;
+  --burgundy-dark: #4e141c;
+  --forest: #1f3a2e;
+  --ink: #2a231c;
+  --muted: #6b5d4c;
+  --gold: #b08a3e;
+  --shadow: 0 20px 60px rgba(42, 35, 28, .12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  background: var(--cream);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+h1 { font-size: clamp(2rem, 4vw, 3rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); }
+h3 { font-size: 1.3rem; }
+
+p { margin-bottom: 14px; color: var(--muted); }
+
+a { color: var(--burgundy); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  width: 100%;
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 60px 24px;
+}
+
+/* ---------- Knapper ---------- */
+.btn {
+  display: inline-block;
+  background: var(--burgundy);
+  color: var(--cream);
+  padding: 14px 32px;
+  border: none;
+  border-radius: 50px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+.btn:hover { background: var(--burgundy-dark); transform: translateY(-2px); text-decoration: none; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--burgundy);
+  border: 1.5px solid var(--burgundy);
+}
+
+/* ---------- Skjemaelementer ---------- */
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: .92rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid var(--beige);
+  border-radius: 10px;
+  background: var(--cream-2);
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 18px;
+  transition: border-color .2s;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--burgundy);
+}
+
+textarea { min-height: 220px; resize: vertical; font-family: 'Playfair Display', Georgia, serif; font-size: 1.05rem; line-height: 1.7; }
+
+/* ---------- Kort ---------- */
+.card {
+  background: var(--cream-2);
+  border: 1px solid var(--beige);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+}
+
+/* ---------- Varsel/feil ---------- */
+.alert {
+  padding: 14px 18px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  font-size: .95rem;
+}
+.alert-success { background: #e4efe2; color: var(--forest); border: 1px solid #bcd4b5; }
+.alert-error { background: #f5dcdf; color: var(--burgundy-dark); border: 1px solid #e6b8bd; }
+
+/* ---------- Navigasjon ---------- */
+.nav {
+  background: rgba(246, 239, 227, .9);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(107, 93, 76, .12);
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.nav a { margin-right: 20px; color: var(--ink); font-size: .95rem; }
+.nav a:hover { color: var(--burgundy); text-decoration: none; }
+
+/* ---------- Footer ---------- */
+footer {
+  background: var(--burgundy-dark);
+  color: rgba(246, 239, 227, .85);
+  text-align: center;
+  padding: 40px 24px;
+  font-size: .88rem;
+}
+footer a { color: var(--cream); margin: 0 10px; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+  .container { padding: 40px 20px; }
+  .card { padding: 24px; }
+}

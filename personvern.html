@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Personvernerklæring — Tidsbrev.no</title>
+<meta name="description" content="Hvordan Tidsbrev.no behandler dine personopplysninger. Vi lagrer bare det vi trenger, og sletter det etterpå." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --cream:#F5F0E8;--cream-2:#FBF6EC;--beige:#E8DCC4;
+    --burgundy:#6B2737;--burgundy-dark:#4E141C;
+    --forest:#2D4A3E;--forest-dark:#1F3A2E;
+    --ink:#2A231C;--muted:#6B5D4C;--gold:#B08A3E;
+    --shadow:0 20px 60px rgba(42,35,28,.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--ink);background:var(--cream);
+    line-height:1.7;-webkit-font-smoothing:antialiased;
+    min-height:100vh;display:flex;flex-direction:column;
+  }
+  h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:600;line-height:1.25}
+  a{color:var(--burgundy);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* --- Innhold --- */
+  main{flex:1;padding:60px 0 100px}
+  .container{max-width:760px;margin:0 auto;padding:0 24px}
+
+  /* --- Hero --- */
+  .page-hero{text-align:center;margin-bottom:60px;padding-bottom:40px;border-bottom:1px solid var(--beige)}
+  .eyebrow{
+    font-family:'Caveat',cursive;font-size:1.2rem;
+    color:var(--burgundy);display:block;margin-bottom:10px;
+  }
+  .page-hero h1{font-size:clamp(2rem,4vw,2.8rem);margin-bottom:14px;color:var(--ink)}
+  .page-hero .lead{color:var(--muted);font-size:1.05rem;max-width:520px;margin:0 auto;line-height:1.65}
+
+  /* --- Seksjon --- */
+  .section{margin-bottom:52px}
+  .section h2{
+    font-size:1.5rem;color:var(--ink);
+    margin-bottom:18px;padding-bottom:10px;
+    border-bottom:2px solid var(--beige);
+  }
+  .section h3{font-size:1.1rem;color:var(--forest);margin:22px 0 8px}
+  .section p{color:var(--muted);margin-bottom:14px;font-size:.97rem}
+  .section p:last-child{margin-bottom:0}
+  .section ul{margin:10px 0 14px 20px}
+  .section ul li{color:var(--muted);font-size:.97rem;margin-bottom:8px}
+
+  /* --- Fremhevede kort --- */
+  .highlight-box{
+    background:var(--cream-2);border:1px solid var(--beige);
+    border-radius:14px;padding:24px 28px;margin:20px 0;
+    box-shadow:var(--shadow);
+  }
+  .highlight-box .box-title{
+    font-family:'Playfair Display',serif;font-size:1.05rem;
+    color:var(--forest);margin-bottom:10px;font-weight:600;
+  }
+  .highlight-box p{color:var(--muted);font-size:.93rem;margin-bottom:8px}
+  .highlight-box p:last-child{margin-bottom:0}
+
+  /* --- Rettigheter-grid --- */
+  .rights-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+  @media(max-width:560px){.rights-grid{grid-template-columns:1fr}}
+  .right-item{
+    background:var(--cream-2);border:1px solid var(--beige);
+    border-radius:12px;padding:18px 20px;
+  }
+  .right-item .ri-title{font-weight:600;color:var(--ink);font-size:.92rem;margin-bottom:5px}
+  .right-item .ri-desc{color:var(--muted);font-size:.86rem;line-height:1.5}
+
+  /* --- Kontaktkort --- */
+  .contact-card{
+    background:var(--burgundy);color:var(--cream);
+    border-radius:16px;padding:32px 36px;text-align:center;
+    margin-top:48px;
+  }
+  .contact-card h3{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:10px;color:var(--cream)}
+  .contact-card p{font-size:.95rem;color:rgba(246,239,227,.8);margin-bottom:18px}
+  .contact-card a{
+    display:inline-block;background:rgba(246,239,227,.15);
+    border:1px solid rgba(246,239,227,.3);
+    color:var(--cream);padding:11px 28px;border-radius:50px;
+    font-size:.93rem;font-weight:500;transition:background .2s;
+  }
+  .contact-card a:hover{background:rgba(246,239,227,.25);text-decoration:none}
+
+  .updated-note{
+    text-align:center;font-size:.82rem;color:var(--muted);
+    margin-top:40px;font-style:italic;
+  }
+</style>
+</head>
+<body data-page="personvern">
+
+<main>
+  <div class="container">
+
+    <div class="page-hero">
+      <span class="eyebrow">~ trygghet og åpenhet ~</span>
+      <h1>Personvernerklæring</h1>
+      <p class="lead">Vi lagrer bare det vi trenger, vi forteller deg hva og hvorfor, og vi sletter det når brevet er levert. Ingen mer, ingen mindre.</p>
+    </div>
+
+    <!-- 1. Hvem er vi -->
+    <div class="section">
+      <h2>Hvem er vi?</h2>
+      <p>Tidsbrev.no er en norsk tjeneste som lar deg skrive brev til fremtiden — til deg selv eller til noen du er glad i. Brevet oppbevares trygt hos oss og leveres på den datoen du velger, enten digitalt via e-post eller fysisk i posten.</p>
+      <p>Vi er behandlingsansvarlig for personopplysningene du gir oss. Har du spørsmål, er vi alltid tilgjengelig på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a>.</p>
+    </div>
+
+    <!-- 2. Hva vi lagrer -->
+    <div class="section">
+      <h2>Hva lagrer vi om deg?</h2>
+      <p>Vi lagrer bare det vi trenger for å levere brevet ditt:</p>
+
+      <h3>Informasjon om deg (avsenderen)</h3>
+      <ul>
+        <li><strong>Navn</strong> — slik vi kan adressere ordrebekreftelsen riktig.</li>
+        <li><strong>E-postadresse</strong> — for ordrebekreftelse og eventuell kontakt.</li>
+      </ul>
+
+      <h3>Informasjon om mottakeren</h3>
+      <ul>
+        <li><strong>Navn</strong> — for å adressere brevet.</li>
+        <li><strong>E-postadresse</strong> — hvis brevet skal leveres digitalt.</li>
+        <li><strong>Postadresse</strong> (gate, postnummer, sted) — hvis brevet skal leveres fysisk.</li>
+      </ul>
+
+      <h3>Selve brevet</h3>
+      <ul>
+        <li><strong>Brevinnholdet</strong> — det du skriver. Vi leser det ikke, vi selger det ikke, og vi bruker det ikke til noe annet enn å levere det.</li>
+        <li><strong>Leveringsdato og anledning</strong> — når og til hva brevet skal leveres.</li>
+      </ul>
+
+      <h3>Betalingsinformasjon</h3>
+      <ul>
+        <li>Vi lagrer <em>ikke</em> kortinformasjon. Betaling håndteres av Stripe (kort) eller Vipps, og vi mottar kun en bekreftelse på at betalingen er gjennomført. Stripe og Vipps er ansvarlig for sin del av behandlingen.</li>
+      </ul>
+    </div>
+
+    <!-- 3. Kryptering -->
+    <div class="section">
+      <h2>Er brevet mitt kryptert?</h2>
+      <div class="highlight-box">
+        <div class="box-title">Ja — alltid.</div>
+        <p>All kommunikasjon mellom nettleseren din og våre servere skjer via HTTPS (TLS). Brevinnhold og personopplysninger lagres kryptert i databasen (kryptering i hvile). Vi benytter Supabase som databaseleverandør, som drifter serverne sine i EU (Frankfurt, Germany) i tråd med GDPR.</p>
+        <p>Bare automatiserte systemer "leser" brevet ved levering — ingen menneskelige øyne ser innholdet ditt under normal drift.</p>
+      </div>
+    </div>
+
+    <!-- 4. Servere i EU -->
+    <div class="section">
+      <h2>Hvor lagres dataene?</h2>
+      <p>Alle data lagres på servere i EU, hos følgende underleverandører:</p>
+      <ul>
+        <li><strong>Supabase</strong> (database) — servere i Frankfurt, EU. <a href="https://supabase.com/privacy" target="_blank" rel="noopener">Personvernerklæring ↗</a></li>
+        <li><strong>Netlify</strong> (webserver og funksjoner) — EU-regionen. <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener">Personvernerklæring ↗</a></li>
+        <li><strong>Resend</strong> (e-postutsending) — EU-regionen. <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener">Personvernerklæring ↗</a></li>
+        <li><strong>Stripe</strong> (kortbetaling) — behandles i henhold til Stripes DPA. <a href="https://stripe.com/en-no/privacy" target="_blank" rel="noopener">Personvernerklæring ↗</a></li>
+        <li><strong>Vipps</strong> (mobilbetaling) — norsk selskap, regulert av norsk lov.</li>
+      </ul>
+    </div>
+
+    <!-- 5. Hvor lenge -->
+    <div class="section">
+      <h2>Hvor lenge beholder vi dataene?</h2>
+
+      <div class="highlight-box">
+        <div class="box-title">Frem til brevet er levert — og ikke lenger.</div>
+        <p>Brevinnholdet ditt slettes automatisk innen 30 dager etter at det er levert. Kontaktinformasjon og ordredata beholder vi i inntil 3 år av bokføringshensyn (jf. norsk bokføringslov), men brevinnholdet i seg selv er borte.</p>
+        <p>Hvis du ber om sletting før leveringsdato — og brevet ikke er sendt — sletter vi alt umiddelbart.</p>
+      </div>
+
+      <h3>Hva skjer hvis Tidsbrev legges ned?</h3>
+      <p>Skulle vi en dag bestemme oss for å legge ned tjenesten, sender vi alle uleverte brev umiddelbart til mottakerne (eller til deg som avsender, dersom mottaker er ukjent). Du vil i tillegg motta et varsel på e-post med god tid i forveien. Ingen brev vil bli slettet uten at de er forsøkt levert.</p>
+    </div>
+
+    <!-- 6. Rettslig grunnlag -->
+    <div class="section">
+      <h2>Hva er det rettslige grunnlaget?</h2>
+      <p>Vi behandler personopplysninger på følgende grunnlag (GDPR art. 6):</p>
+      <ul>
+        <li><strong>Avtaloppfyllelse (art. 6 nr. 1 b)</strong> — behandling som er nødvendig for å levere tjenesten du har bestilt. Dette gjelder brevinnhold, navn, e-post og leveringsinformasjon.</li>
+        <li><strong>Rettslig forpliktelse (art. 6 nr. 1 c)</strong> — oppbevaring av regnskapsdata i henhold til norsk bokføringslov.</li>
+      </ul>
+      <p>Vi bruker <em>ikke</em> personopplysningene dine til markedsføring uten ditt eksplisitte samtykke.</p>
+    </div>
+
+    <!-- 7. Dine rettigheter -->
+    <div class="section">
+      <h2>Dine rettigheter</h2>
+      <p>Du har følgende rettigheter etter GDPR. Send oss en e-post på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a>, så svarer vi innen 30 dager:</p>
+
+      <div class="rights-grid">
+        <div class="right-item">
+          <div class="ri-title">Innsyn</div>
+          <div class="ri-desc">Du kan be om å se all informasjon vi har lagret om deg.</div>
+        </div>
+        <div class="right-item">
+          <div class="ri-title">Sletting</div>
+          <div class="ri-desc">Du kan be oss slette alt om deg, så lenge brevet ikke er levert.</div>
+        </div>
+        <div class="right-item">
+          <div class="ri-title">Retting</div>
+          <div class="ri-desc">Feil informasjon kan du be oss om å korrigere.</div>
+        </div>
+        <div class="right-item">
+          <div class="ri-title">Dataportabilitet</div>
+          <div class="ri-desc">Du kan be om å få utlevert dataene dine i et maskinlesbart format.</div>
+        </div>
+        <div class="right-item">
+          <div class="ri-title">Begrensning</div>
+          <div class="ri-desc">Du kan be oss stoppe bruken av dataene dine midlertidig.</div>
+        </div>
+        <div class="right-item">
+          <div class="ri-title">Klage</div>
+          <div class="ri-desc">Du kan klage til Datatilsynet: <a href="https://www.datatilsynet.no" target="_blank" rel="noopener">datatilsynet.no</a></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. Informasjonskapsler -->
+    <div class="section">
+      <h2>Informasjonskapsler (cookies)</h2>
+      <p>Vi bruker et minimum av informasjonskapsler. Nettstedet bruker sessionStorage (ikke cookies) for å ta vare på bestillingsutkastet ditt mens du fyller ut skjemaet — dette forsvinner automatisk når du lukker nettleserfanen.</p>
+      <p>Vi bruker anonym statistikk (PostHog og Google Analytics) for å forstå hvordan nettsiden brukes. Disse samler ikke inn personopplysninger knyttet til identiteten din.</p>
+    </div>
+
+    <!-- Kontaktkort -->
+    <div class="contact-card">
+      <h3>Spørsmål om personvern?</h3>
+      <p>Vi svarer alltid innen 30 dager — som regel mye raskere. Skriv til oss på e-post, og vi hjelper deg.</p>
+      <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a>
+    </div>
+
+    <p class="updated-note">Sist oppdatert: april 2025</p>
+
+  </div>
+</main>
+
+<script src="js/nav.js"></script>
+</body>
+</html>

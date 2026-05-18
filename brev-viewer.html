@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ditt tidsbrev er ankommet — Tidsbrev.no</title>
+  <meta name="robots" content="noindex, nofollow"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream: #F5F0E8;
+      --cream-2: #FBF6EC;
+      --beige: #E8DCC4;
+      --burgundy: #6B2737;
+      --burgundy-dark: #4E141C;
+      --forest: #2D4A3E;
+      --ink: #2A231C;
+      --muted: #6B5D4C;
+      --gold: #B08A3E;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Loading state ────────────────────────────── */
+    #loading-state {
+      text-align: center;
+      opacity: 1;
+      transition: opacity .4s ease;
+    }
+    #loading-state.hidden { opacity: 0; pointer-events: none; }
+    .loading-seal {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: var(--burgundy);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%       { transform: scale(1.08); opacity: .8; }
+    }
+    #loading-state p { color: var(--muted); font-size: 1rem; }
+
+    /* ── Error states ─────────────────────────────── */
+    #error-state, #opened-state {
+      display: none;
+      text-align: center;
+      max-width: 420px;
+    }
+    #error-state.show, #opened-state.show { display: block; }
+    .state-icon {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .state-icon.error-icon { background: #fff0f1; }
+    .state-icon.opened-icon { background: rgba(176,138,62,.12); }
+    #error-state h2, #opened-state h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      margin-bottom: 12px;
+    }
+    #error-state p, #opened-state p { color: var(--muted); line-height: 1.7; }
+    .back-link {
+      display: inline-block;
+      margin-top: 28px;
+      color: var(--burgundy);
+      text-decoration: underline;
+      font-size: .9rem;
+    }
+
+    /* ── Envelope stage ───────────────────────────── */
+    #envelope-stage {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 520px;
+    }
+    #envelope-stage.show { display: flex; }
+
+    .envelope-wrap {
+      position: relative;
+      width: 320px;
+      height: 220px;
+      cursor: pointer;
+      user-select: none;
+    }
+    @media (max-width: 400px) {
+      .envelope-wrap { width: 280px; height: 192px; }
+    }
+
+    /* Envelope body (back) */
+    .env-body {
+      position: absolute;
+      inset: 0;
+      background: var(--cream-2);
+      border: 2px solid var(--beige);
+      border-radius: 4px 4px 8px 8px;
+      box-shadow: 0 8px 32px rgba(42,35,28,.12);
+      overflow: hidden;
+    }
+    /* Bottom triangle fold */
+    .env-body::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 50%;
+      background: linear-gradient(to bottom, var(--cream-2) 0%, #efe9da 100%);
+      clip-path: polygon(0 100%, 50% 0, 100% 100%);
+    }
+    /* Side fold lines */
+    .env-body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(107,93,76,.06) 0%, transparent 50%),
+        linear-gradient(225deg, rgba(107,93,76,.06) 0%, transparent 50%);
+    }
+
+    /* Flap (top triangle — animates open) */
+    .env-flap {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 55%;
+      transform-origin: top center;
+      transition: transform 1.2s cubic-bezier(.22,.61,.36,1);
+      z-index: 3;
+    }
+    .env-flap svg { width: 100%; height: 100%; display: block; }
+    .env-flap.open { transform: rotateX(180deg); }
+
+    /* Seal on flap */
+    .env-seal {
+      position: absolute;
+      top: 42%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--burgundy);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 4;
+      transition: opacity .4s ease .2s;
+      box-shadow: 0 2px 8px rgba(107,39,55,.3);
+    }
+    .env-seal.hidden { opacity: 0; pointer-events: none; }
+
+    /* Letter inside envelope — slides up */
+    .env-letter {
+      position: absolute;
+      bottom: 10%; left: 10%; right: 10%;
+      height: 75%;
+      background: #fffdf7;
+      border-radius: 2px;
+      border: 1px solid rgba(232,220,196,.8);
+      box-shadow: 0 2px 8px rgba(42,35,28,.08);
+      transform: translateY(0);
+      transition: transform 1s cubic-bezier(.22,.61,.36,1) .8s;
+      z-index: 2;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .env-letter.rising { transform: translateY(-85%); }
+    .env-letter-lines {
+      display: flex; flex-direction: column; gap: 6px; padding: 12px 16px;
+      opacity: .4;
+    }
+    .env-letter-lines span {
+      display: block;
+      height: 3px;
+      background: var(--beige);
+      border-radius: 2px;
+    }
+    .env-letter-lines span:nth-child(1) { width: 60%; }
+    .env-letter-lines span:nth-child(2) { width: 90%; }
+    .env-letter-lines span:nth-child(3) { width: 80%; }
+    .env-letter-lines span:nth-child(4) { width: 70%; }
+
+    /* Tap prompt */
+    .tap-prompt {
+      margin-top: 32px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.35rem;
+      color: var(--burgundy);
+      text-align: center;
+      animation: floatY 2s ease-in-out infinite;
+    }
+    @keyframes floatY {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-5px); }
+    }
+    .tap-prompt.hidden { opacity: 0; }
+
+    /* ── Letter reveal ────────────────────────────── */
+    #letter-reveal {
+      display: none;
+      width: 100%;
+      max-width: 680px;
+      animation: fadeUp .8s ease forwards;
+    }
+    #letter-reveal.show { display: block; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Letter paper — base */
+    .letter-paper {
+      border-radius: 4px;
+      padding: 52px 56px;
+      box-shadow: 0 12px 48px rgba(42,35,28,.12), 0 2px 8px rgba(42,35,28,.06);
+      position: relative;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 560px) {
+      .letter-paper { padding: 36px 28px; }
+    }
+
+    /* Design themes */
+    .theme-klassisk {
+      background: #fffdf7;
+      border-left: 4px solid var(--burgundy);
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+    .theme-klassisk .letter-body { font-size: 1.08rem; line-height: 1.85; color: var(--ink); }
+    .theme-klassisk .letter-header { border-bottom: 1px solid var(--beige); margin-bottom: 28px; padding-bottom: 18px; }
+    .theme-klassisk .letter-footer { border-top: 1px solid var(--beige); margin-top: 28px; padding-top: 16px; }
+
+    .theme-romantisk {
+      background: linear-gradient(160deg, #fffaf5 0%, #fff5f0 100%);
+      border: 1px solid rgba(176,138,62,.25);
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+    .theme-romantisk .letter-body { font-size: 1.1rem; line-height: 1.9; color: #3d2a1e; font-style: italic; }
+    .theme-romantisk .letter-header { text-align: center; margin-bottom: 32px; }
+    .theme-romantisk .letter-header::after {
+      content: '\2726';
+      display: block;
+      color: var(--gold);
+      font-size: 1.2rem;
+      margin-top: 12px;
+    }
+    .theme-romantisk .letter-footer { text-align: center; margin-top: 28px; color: var(--gold); }
+
+    .theme-moderne {
+      background: #f8faf9;
+      border-top: 3px solid var(--forest);
+      font-family: 'Inter', sans-serif;
+    }
+    .theme-moderne .letter-body { font-size: 1rem; line-height: 1.8; color: #1a2e25; }
+    .theme-moderne .letter-header { margin-bottom: 28px; }
+    .theme-moderne .letter-header h2 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; color: var(--forest); text-transform: uppercase; letter-spacing: 1px; }
+    .theme-moderne .letter-footer { margin-top: 24px; font-size: .85rem; color: var(--forest); border-top: 1px solid rgba(45,74,62,.2); padding-top: 14px; }
+
+    .theme-eventyr {
+      background: #fdf8ee;
+      border: 1px solid #d4b87a;
+      font-family: 'Caveat', cursive;
+      position: relative;
+    }
+    .theme-eventyr::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1' height='1' fill='%236b5d4c' opacity='0.04'/%3E%3C/svg%3E");
+      border-radius: 4px;
+      pointer-events: none;
+    }
+    .theme-eventyr .letter-body { font-size: 1.25rem; line-height: 1.75; color: #3a2e1e; }
+    .theme-eventyr .letter-header { margin-bottom: 20px; font-size: 1.1rem; color: var(--muted); }
+    .theme-eventyr .letter-footer { margin-top: 24px; font-size: 1rem; color: var(--muted); }
+
+    /* Shared letter elements */
+    .letter-from {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-family: 'Inter', sans-serif;
+      font-style: normal;
+    }
+    .letter-date-written {
+      font-size: .78rem;
+      color: var(--muted);
+      font-family: 'Inter', sans-serif;
+      font-style: normal;
+    }
+    .letter-body {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .letter-brand {
+      font-size: .8rem;
+      color: var(--muted);
+      font-family: 'Inter', sans-serif;
+      font-style: normal;
+    }
+    .letter-brand a { color: var(--muted); }
+
+    /* Action buttons */
+    .letter-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: .9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      border: none;
+      text-decoration: none;
+    }
+    .btn-print {
+      background: var(--cream-2);
+      color: var(--ink);
+      border: 1.5px solid var(--beige);
+    }
+    .btn-print:hover { border-color: var(--burgundy); color: var(--burgundy); }
+    .btn-share {
+      background: var(--burgundy);
+      color: var(--cream);
+      box-shadow: 0 6px 20px rgba(107,39,55,.2);
+    }
+    .btn-share:hover { background: var(--burgundy-dark); }
+  </style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loading-state">
+  <div class="loading-seal">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F5F0E8"
+         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z"/>
+      <polyline points="22,6 12,13 2,6"/>
+    </svg>
+  </div>
+  <p>Åpner brevet ditt…</p>
+</div>
+
+<!-- Error state -->
+<div id="error-state">
+  <div class="state-icon error-icon">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#b13341"
+         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="15" y1="9" x2="9" y2="15"/>
+      <line x1="9" y1="9" x2="15" y2="15"/>
+    </svg>
+  </div>
+  <h2>Brevet er ikke tilgjengelig</h2>
+  <p>Denne lenken er ugyldig, utløpt, eller brevet er ikke levert ennå. Ta kontakt med <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a> om du tror dette er en feil.</p>
+  <a href="https://tidsbrev.no" class="back-link">← Tilbake til Tidsbrev.no</a>
+</div>
+
+<!-- Already opened state -->
+<div id="opened-state">
+  <div class="state-icon opened-icon">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#B08A3E"
+         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z"/>
+      <polyline points="22,6 12,13 2,6"/>
+    </svg>
+  </div>
+  <h2>Dette brevet er allerede åpnet</h2>
+  <p>Av sikkerhetshensyn kan dette brevet bare åpnes én gang. Ta kontakt med <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a> om du trenger hjelp.</p>
+  <a href="https://tidsbrev.no" class="back-link">← Tilbake til Tidsbrev.no</a>
+</div>
+
+<!-- Envelope animation stage -->
+<div id="envelope-stage">
+  <div class="envelope-wrap" id="envelopeWrap" role="button" aria-label="Åpne brevet" tabindex="0">
+    <!-- Flap (top) -->
+    <div class="env-flap" id="envFlap">
+      <svg viewBox="0 0 320 176" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="0,0 160,110 320,0" fill="#ece5d4" stroke="#e8dcc4" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <!-- Seal on flap -->
+    <div class="env-seal" id="envSeal">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5F0E8"
+           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z"/>
+        <polyline points="22,6 12,13 2,6"/>
+      </svg>
+    </div>
+    <!-- Envelope body -->
+    <div class="env-body"></div>
+    <!-- Letter peeking out -->
+    <div class="env-letter" id="envLetter">
+      <div class="env-letter-lines">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+  <p class="tap-prompt" id="tapPrompt">Trykk for å åpne brevet ✦</p>
+</div>
+
+<!-- Letter reveal -->
+<div id="letter-reveal">
+  <div class="letter-paper" id="letterPaper">
+    <div class="letter-header" id="letterHeader">
+      <div class="letter-from" id="letterFrom"></div>
+      <div class="letter-date-written" id="letterDateWritten"></div>
+    </div>
+    <div class="letter-body" id="letterBody"></div>
+    <div class="letter-footer" id="letterFooter">
+      <div class="letter-brand">Levert av <a href="https://tidsbrev.no">Tidsbrev.no</a> — et brev fra fortiden</div>
+    </div>
+  </div>
+
+  <div class="letter-actions">
+    <button class="action-btn btn-print" onclick="window.print()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"/>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+      </svg>
+      Last ned / skriv ut
+    </button>
+    <button class="action-btn btn-share" id="shareBtn" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>
+      Del brevet
+    </button>
+  </div>
+</div>
+
+<!-- Supabase CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+
+<script>
+// ─── Supabase client ───────────────────────────────────────────
+const sbClient = window.supabase.createClient(
+  CONFIG.SUPABASE_URL,
+  CONFIG.SUPABASE_ANON_KEY
+);
+
+// ─── Token from URL ────────────────────────────────────────────
+const token = new URLSearchParams(window.location.search).get('token');
+
+// ─── State ────────────────────────────────────────────────────
+let letterData = null;
+let tokenRow   = null;
+
+// ─── UI helpers ───────────────────────────────────────────────
+function show(id)  { document.getElementById(id).classList.add('show'); }
+
+function showError() {
+  document.getElementById('loading-state').classList.add('hidden');
+  setTimeout(() => {
+    document.getElementById('loading-state').style.display = 'none';
+    show('error-state');
+  }, 400);
+}
+
+function showOpened() {
+  document.getElementById('loading-state').classList.add('hidden');
+  setTimeout(() => {
+    document.getElementById('loading-state').style.display = 'none';
+    show('opened-state');
+  }, 400);
+}
+
+// ─── Load and validate token ───────────────────────────────────
+async function loadLetter() {
+  if (!token) { showError(); return; }
+
+  try {
+    const { data: tokenRow_, error: tokenErr } = await sbClient
+      .from('letter_tokens')
+      .select(`
+        id, token, opened_at, allow_reopen, expires_at,
+        letters (
+          id, letter_content, design_theme, created_at,
+          orders (
+            customer_name, recipient_name, recipient_type, delivery_date
+          )
+        )
+      `)
+      .eq('token', token)
+      .single();
+
+    if (tokenErr || !tokenRow_) { showError(); return; }
+
+    tokenRow = tokenRow_;
+
+    // Check expiry
+    if (tokenRow.expires_at && new Date(tokenRow.expires_at) < new Date()) {
+      showError(); return;
+    }
+
+    // Check if already opened and not allowed to reopen
+    if (tokenRow.opened_at && !tokenRow.allow_reopen) {
+      showOpened(); return;
+    }
+
+    // Mark as opened (fire-and-forget)
+    if (!tokenRow.opened_at) {
+      sbClient
+        .from('letter_tokens')
+        .update({ opened_at: new Date().toISOString() })
+        .eq('id', tokenRow.id)
+        .then(() => {});
+    }
+
+    letterData = tokenRow.letters;
+    showEnvelope();
+
+  } catch (e) {
+    console.error('[brev-viewer]', e);
+    showError();
+  }
+}
+
+// ─── Show envelope stage ───────────────────────────────────────
+function showEnvelope() {
+  document.getElementById('loading-state').classList.add('hidden');
+  setTimeout(() => {
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('envelope-stage').style.display = 'flex';
+  }, 400);
+}
+
+// ─── Envelope open animation ───────────────────────────────────
+let animating = false;
+function openEnvelope() {
+  if (animating) return;
+  animating = true;
+
+  const flap    = document.getElementById('envFlap');
+  const seal    = document.getElementById('envSeal');
+  const letter  = document.getElementById('envLetter');
+  const prompt  = document.getElementById('tapPrompt');
+
+  prompt.classList.add('hidden');
+  setTimeout(() => seal.classList.add('hidden'), 100);
+  setTimeout(() => flap.classList.add('open'), 300);
+  setTimeout(() => letter.classList.add('rising'), 900);
+
+  setTimeout(() => {
+    document.getElementById('envelope-stage').style.display = 'none';
+    revealLetter();
+  }, 2200);
+}
+
+document.getElementById('envelopeWrap').addEventListener('click', openEnvelope);
+document.getElementById('envelopeWrap').addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') openEnvelope();
+});
+
+// ─── Reveal letter content ─────────────────────────────────────
+function formatDate(isoString) {
+  if (!isoString) return '';
+  return new Date(isoString).toLocaleDateString('nb-NO', {
+    day: 'numeric', month: 'long', year: 'numeric'
+  });
+}
+
+function revealLetter() {
+  if (!letterData) { showError(); return; }
+
+  const order       = letterData.orders || {};
+  const theme       = letterData.design_theme || 'klassisk';
+  const content     = letterData.letter_content || '';
+  const createdAt   = letterData.created_at;
+  const senderName  = order.customer_name || '';
+  const recipientName = order.recipient_type === 'andre' ? order.recipient_name : senderName;
+
+  // Apply theme class
+  const paper = document.getElementById('letterPaper');
+  paper.classList.add(`theme-${theme}`);
+
+  // Header
+  document.getElementById('letterFrom').textContent = `Fra: ${senderName}`;
+  document.getElementById('letterDateWritten').textContent = createdAt ? `Skrevet: ${formatDate(createdAt)}` : '';
+
+  // Theme-specific header adjustments
+  if (theme === 'romantisk') {
+    const h2 = document.createElement('h2');
+    h2.style.fontFamily = "'Playfair Display', serif";
+    h2.style.fontSize = '1.6rem';
+    h2.style.color = 'var(--burgundy)';
+    h2.style.marginBottom = '4px';
+    h2.textContent = recipientName ? `Kjære ${recipientName.split(' ')[0]}` : 'Kjære deg';
+    document.getElementById('letterHeader').prepend(h2);
+  }
+  if (theme === 'moderne') {
+    const tag = document.createElement('h2');
+    tag.textContent = 'TIDSBREV';
+    document.getElementById('letterHeader').prepend(tag);
+  }
+
+  // Body
+  document.getElementById('letterBody').textContent = content;
+
+  // Footer
+  if (theme === 'romantisk') {
+    document.getElementById('letterFooter').innerHTML =
+      '<div style="color:var(--gold);font-size:1.3rem;margin-bottom:8px">✦</div>' +
+      '<div class="letter-brand">Levert av <a href="https://tidsbrev.no">Tidsbrev.no</a></div>';
+  }
+
+  // Show the letter
+  const reveal = document.getElementById('letter-reveal');
+  reveal.style.display = 'block';
+  setTimeout(() => reveal.classList.add('show'), 50);
+
+  // Share button (Web Share API)
+  if (navigator.share) {
+    const shareBtn = document.getElementById('shareBtn');
+    shareBtn.style.display = 'flex';
+    shareBtn.addEventListener('click', () => {
+      navigator.share({
+        title: 'Mitt tidsbrev',
+        text: 'Jeg fikk et brev fra fortiden — levert av Tidsbrev.no',
+        url: window.location.href
+      }).catch(() => {});
+    });
+  }
+}
+
+// ─── Bootstrap ────────────────────────────────────────────────
+loadLetter();
+</script>
+</body>
+</html>

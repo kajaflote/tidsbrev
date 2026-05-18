@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bestill tidsbrev — Tidsbrev.no</title>
+<meta name="description" content="Skriv ditt tidsbrev — et brev til fremtiden, levert på nøyaktig riktig dato." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --cream:#F5F0E8;
+    --cream-2:#FBF6EC;
+    --beige:#E8DCC4;
+    --burgundy:#6B2737;
+    --burgundy-dark:#4E141C;
+    --forest:#2D4A3E;
+    --forest-dark:#1F3A2E;
+    --ink:#2A231C;
+    --muted:#6B5D4C;
+    --gold:#B08A3E;
+    --error:#b13341;
+    --shadow:0 10px 40px rgba(42,35,28,.08);
+    --shadow-lg:0 20px 60px rgba(42,35,28,.15);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--cream);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  h1,h2,h3,h4{font-family:'Playfair Display',Georgia,serif;font-weight:600;line-height:1.2;color:var(--ink)}
+  a{color:var(--burgundy);text-decoration:none}
+  button{font-family:inherit;cursor:pointer}
+
+  /* ---------- Layout ---------- */
+  .container{width:100%;max-width:820px;margin:0 auto;padding:0 24px}
+  header.nav{
+    padding:22px 0;
+    background:rgba(245,240,232,.9);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(107,93,76,.12);
+    position:sticky;top:0;z-index:50;
+  }
+  .logo{
+    font-family:'Playfair Display',serif;
+    font-size:1.35rem;font-weight:700;
+    color:var(--burgundy);letter-spacing:.3px;
+  }
+  .logo span{color:var(--forest)}
+
+  main{padding:50px 0 100px}
+
+  /* ---------- Progress bar ---------- */
+  .progress-wrap{margin-bottom:50px}
+  .progress-bar{
+    display:flex;
+    justify-content:space-between;
+    position:relative;
+    max-width:720px;margin:0 auto;
+    padding:0 20px;
+  }
+  .progress-bar::before{
+    content:"";
+    position:absolute;
+    top:18px;left:40px;right:40px;
+    height:2px;
+    background:var(--beige);
+    z-index:0;
+  }
+  .progress-fill{
+    position:absolute;
+    top:18px;left:40px;
+    height:2px;
+    background:var(--burgundy);
+    z-index:1;
+    transition:width .5s ease;
+    width:0;
+  }
+  .progress-step{
+    position:relative;z-index:2;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    flex:1;
+  }
+  .progress-circle{
+    width:38px;height:38px;border-radius:50%;
+    background:var(--cream);
+    border:2px solid var(--beige);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:600;font-size:.92rem;
+    color:var(--muted);
+    transition:all .3s ease;
+  }
+  .progress-step.active .progress-circle{
+    background:var(--burgundy);
+    border-color:var(--burgundy);
+    color:var(--cream);
+    box-shadow:0 0 0 6px rgba(107,39,55,.12);
+  }
+  .progress-step.completed .progress-circle{
+    background:var(--forest);
+    border-color:var(--forest);
+    color:var(--cream);
+  }
+  .progress-label{
+    font-size:.78rem;
+    color:var(--muted);
+    text-align:center;
+    font-weight:500;
+    max-width:90px;
+    line-height:1.3;
+  }
+  .progress-step.active .progress-label{color:var(--burgundy);font-weight:600}
+  @media(max-width:640px){
+    .progress-label{display:none}
+    .progress-bar{padding:0}
+    .progress-bar::before,.progress-fill{left:20px;right:20px}
+  }
+
+  /* ---------- Steps ---------- */
+  .step-panel{display:none;animation:fadeIn .4s ease}
+  .step-panel.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+  .step-head{text-align:center;margin-bottom:40px}
+  .step-head .eyebrow{
+    font-family:'Caveat',cursive;
+    color:var(--burgundy);
+    font-size:1.3rem;
+    display:block;margin-bottom:8px;
+  }
+  .step-head h2{font-size:clamp(1.8rem,3.5vw,2.4rem);margin-bottom:12px}
+  .step-head p{color:var(--muted);font-size:1.02rem;max-width:520px;margin:0 auto}
+
+  /* ---------- Choice cards ---------- */
+  .choice-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:20px;
+    margin-bottom:40px;
+  }
+  @media(min-width:640px){.choice-grid{grid-template-columns:1fr 1fr}}
+  .choice-card{
+    background:var(--cream-2);
+    border:2px solid var(--beige);
+    border-radius:18px;
+    padding:36px 28px;
+    cursor:pointer;
+    transition:all .25s ease;
+    position:relative;
+    text-align:center;
+  }
+  .choice-card:hover{
+    border-color:var(--burgundy);
+    transform:translateY(-4px);
+    box-shadow:var(--shadow-lg);
+  }
+  .choice-card.selected{
+    border-color:var(--burgundy);
+    background:#fff9ef;
+    box-shadow:0 0 0 4px rgba(107,39,55,.12), var(--shadow);
+  }
+  .choice-card .icon{
+    width:72px;height:72px;
+    border-radius:50%;
+    background:var(--cream);
+    border:2px solid var(--beige);
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 18px;
+    color:var(--burgundy);
+    transition:all .25s ease;
+  }
+  .choice-card.selected .icon{
+    background:var(--burgundy);
+    border-color:var(--burgundy);
+    color:var(--cream);
+  }
+  .choice-card h3{font-size:1.35rem;margin-bottom:8px}
+  .choice-card p{color:var(--muted);font-size:.95rem;margin-bottom:14px}
+  .choice-card .price{
+    font-family:'Playfair Display',serif;
+    color:var(--burgundy);
+    font-weight:600;
+    font-size:.95rem;
+  }
+  .badge-popular{
+    position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+    background:var(--gold);color:var(--ink);
+    padding:5px 14px;border-radius:20px;
+    font-size:.72rem;font-weight:700;
+    letter-spacing:.5px;text-transform:uppercase;
+    white-space:nowrap;
+  }
+
+  /* ---------- Form fields ---------- */
+  .form-card{
+    background:var(--cream-2);
+    border:1px solid var(--beige);
+    border-radius:18px;
+    padding:40px 36px;
+    box-shadow:var(--shadow);
+    margin-bottom:30px;
+  }
+  @media(max-width:560px){.form-card{padding:28px 22px}}
+  .field{margin-bottom:22px}
+  .field label{
+    display:block;
+    font-size:.9rem;
+    font-weight:500;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+  .field input,.field select,.field textarea{
+    width:100%;
+    padding:14px 16px;
+    border:1.5px solid var(--beige);
+    border-radius:10px;
+    background:var(--cream);
+    font-family:inherit;
+    font-size:1rem;
+    color:var(--ink);
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{
+    outline:none;
+    border-color:var(--burgundy);
+    box-shadow:0 0 0 3px rgba(107,39,55,.1);
+  }
+  .field.error input,.field.error select,.field.error textarea{
+    border-color:var(--error);
+    background:#fff5f5;
+  }
+  .field .err-msg{
+    display:none;
+    color:var(--error);
+    font-size:.82rem;
+    margin-top:6px;
+  }
+  .field.error .err-msg{display:block}
+  .field-row{display:grid;grid-template-columns:1fr;gap:18px}
+  @media(min-width:560px){.field-row.two{grid-template-columns:1fr 2fr}}
+
+  /* ---------- Step 4: letter editor ---------- */
+  .letter-editor textarea{
+    min-height:320px;
+    font-family:'Playfair Display',Georgia,serif;
+    font-size:1.1rem;
+    line-height:1.7;
+    resize:vertical;
+    background:#fffdf7;
+  }
+  .char-counter{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-top:10px;
+    font-size:.85rem;color:var(--muted);
+  }
+  .char-counter.warn{color:#c27b1a}
+  .char-counter.max{color:var(--error);font-weight:600}
+
+  .inspiration{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+    margin-top:24px;
+  }
+  @media(min-width:640px){.inspiration{grid-template-columns:repeat(3,1fr)}}
+  .insp-card{
+    background:var(--cream);
+    border:1px dashed var(--beige);
+    border-radius:12px;
+    padding:16px 18px;
+    cursor:pointer;
+    font-family:'Caveat',cursive;
+    font-size:1.15rem;
+    color:var(--forest);
+    line-height:1.3;
+    transition:all .2s;
+    text-align:left;
+  }
+  .insp-card:hover{
+    background:#fff9ef;
+    border-color:var(--burgundy);
+    border-style:solid;
+    color:var(--burgundy);
+  }
+  .insp-card.expanded{
+    background:#fff9ef;
+    border-color:var(--burgundy);
+    border-style:solid;
+    font-family:'Inter',sans-serif;
+    font-size:.88rem;
+    color:var(--muted);
+  }
+
+  /* ---------- Summary ---------- */
+  .summary{
+    background:var(--cream-2);
+    border:1px solid var(--beige);
+    border-radius:18px;
+    padding:36px 32px;
+    box-shadow:var(--shadow);
+    margin-bottom:24px;
+  }
+  .summary-row{
+    display:flex;justify-content:space-between;
+    padding:14px 0;
+    border-bottom:1px dashed rgba(107,93,76,.2);
+    gap:16px;
+  }
+  .summary-row:last-of-type{border-bottom:none}
+  .summary-row .label{color:var(--muted);font-size:.92rem}
+  .summary-row .val{color:var(--ink);font-weight:500;text-align:right;max-width:60%;word-break:break-word}
+  .summary-total{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 0 6px;
+    border-top:2px solid var(--beige);
+    margin-top:14px;
+  }
+  .summary-total .label{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--ink)}
+  .summary-total .val{
+    font-family:'Playfair Display',serif;
+    font-size:2rem;font-weight:700;color:var(--burgundy);
+  }
+
+  /* ---------- Payment buttons ---------- */
+  .pay-btn{
+    width:100%;
+    padding:18px 24px;
+    border:none;
+    border-radius:50px;
+    font-size:1.05rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:all .2s;
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    margin-bottom:14px;
+  }
+  .pay-vipps{
+    background:#FF5B24;
+    color:#fff;
+    box-shadow:0 10px 30px rgba(255,91,36,.25);
+  }
+  .pay-vipps:hover{background:#e64e1a;transform:translateY(-2px);box-shadow:0 14px 36px rgba(255,91,36,.35)}
+  .pay-vipps:disabled,.pay-vipps.disabled{
+    background:#c9b6a9;
+    color:#fff;
+    cursor:not-allowed;
+    box-shadow:none;
+    transform:none;
+  }
+  .pay-vipps:disabled:hover,.pay-vipps.disabled:hover{
+    background:#c9b6a9;
+    transform:none;
+    box-shadow:none;
+  }
+  .pay-btn.loading{opacity:.7;cursor:wait}
+  .pay-vipps .vipps-logo{
+    font-family:Arial,sans-serif;
+    font-weight:900;
+    font-size:1.3rem;
+    letter-spacing:.5px;
+  }
+  .pay-card{
+    background:var(--burgundy);
+    color:var(--cream);
+    box-shadow:0 10px 30px rgba(107,39,55,.25);
+  }
+  .pay-card:hover{background:var(--burgundy-dark);transform:translateY(-2px)}
+
+  .trust{
+    display:flex;justify-content:center;gap:22px;flex-wrap:wrap;
+    margin-top:20px;
+    font-size:.82rem;color:var(--muted);
+  }
+  .trust div{display:flex;align-items:center;gap:6px}
+
+  /* ---------- Navigation buttons ---------- */
+  .nav-btns{
+    display:flex;justify-content:space-between;gap:14px;
+    margin-top:30px;
+  }
+  .btn{
+    padding:15px 34px;
+    border-radius:50px;
+    font-size:1rem;
+    font-weight:500;
+    cursor:pointer;
+    transition:all .2s;
+    border:none;
+    font-family:inherit;
+  }
+  .btn-primary{
+    background:var(--burgundy);
+    color:var(--cream);
+    box-shadow:0 10px 30px rgba(107,39,55,.25);
+  }
+  .btn-primary:hover{background:var(--burgundy-dark);transform:translateY(-2px)}
+  .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+  .btn-secondary{
+    background:transparent;
+    color:var(--burgundy);
+    border:1.5px solid var(--burgundy);
+  }
+  .btn-secondary:hover{background:var(--burgundy);color:var(--cream)}
+
+  .form-error{
+    background:#fff0f1;
+    border:1px solid #f0c0c5;
+    color:var(--burgundy-dark);
+    padding:14px 18px;
+    border-radius:10px;
+    margin-bottom:20px;
+    font-size:.92rem;
+    display:none;
+  }
+  .form-error.show{display:block}
+
+  /* ---------- 3-column choice grid for step 2 ---------- */
+  @media (min-width: 900px) {
+    #step-2 .choice-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ---------- Design theme picker ---------- */
+  .design-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 600px) {
+    .design-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .design-card {
+    border: 2px solid var(--beige);
+    border-radius: 12px;
+    padding: 14px 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: all .2s;
+  }
+  .design-card:hover { border-color: var(--burgundy); }
+  .design-card.selected {
+    border-color: var(--burgundy);
+    background: #fff9ef;
+    box-shadow: 0 0 0 3px rgba(107,39,55,.1);
+  }
+  .design-preview {
+    width: 100%;
+    height: 52px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+  }
+  .klassisk-preview  { background: linear-gradient(135deg, #f5f0e8 60%, #6b2737 100%); border: 1px solid #e8dcc4; }
+  .romantisk-preview { background: linear-gradient(135deg, #fff5f5 60%, #b08a3e 100%); border: 1px solid #f0d0d0; }
+  .moderne-preview   { background: linear-gradient(135deg, #f0f4f0 60%, #2d4a3e 100%); border: 1px solid #d0dcd0; }
+  .eventyr-preview   { background: linear-gradient(135deg, #fdf6e3 60%, #6b5d4c 100%); border: 1px solid #e8d8b0; }
+  .design-name { display: block; font-weight: 600; font-size: .88rem; color: var(--ink); }
+  .design-desc { display: block; font-size: .78rem; color: var(--muted); margin-top: 2px; }
+
+  /* ---------- File upload (Tidskapsell) ---------- */
+  .upload-zone {
+    border: 2px dashed var(--beige);
+    border-radius: 14px;
+    padding: 40px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    margin-bottom: 20px;
+  }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--burgundy);
+    background: #fff9ef;
+  }
+  .upload-zone p { color: var(--muted); margin-top: 12px; }
+  .upload-zone .upload-hint { font-size: .82rem; }
+  .upload-link {
+    color: var(--burgundy);
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 500;
+  }
+  .file-list { display: flex; flex-direction: column; gap: 8px; }
+  .file-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--cream);
+    border: 1px solid var(--beige);
+    border-radius: 8px;
+    font-size: .88rem;
+  }
+  .file-item .file-name { flex: 1; color: var(--ink); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-item .file-size { color: var(--muted); flex-shrink: 0; }
+  .file-item .file-remove { color: var(--muted); cursor: pointer; flex-shrink: 0; font-size: 1.1rem; line-height: 1; }
+  .file-item .file-remove:hover { color: var(--error); }
+  .file-item.uploading { border-color: var(--gold); }
+  .file-item.done { border-color: var(--forest); }
+  .file-item.error { border-color: var(--error); }
+  .upload-overall-bar {
+    height: 6px;
+    background: var(--beige);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .upload-overall-fill {
+    height: 100%;
+    background: var(--burgundy);
+    border-radius: 3px;
+    transition: width .3s ease;
+    width: 0%;
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between">
+    <a href="index.html" class="logo">Tidsbrev<span>.no</span></a>
+    <a href="index.html" style="font-size:.9rem;color:var(--muted)">← Tilbake til forsiden</a>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+        <div class="progress-step active" data-step="1">
+          <div class="progress-circle">1</div>
+          <div class="progress-label">Mottaker</div>
+        </div>
+        <div class="progress-step" data-step="2">
+          <div class="progress-circle">2</div>
+          <div class="progress-label">Levering</div>
+        </div>
+        <div class="progress-step" data-step="3">
+          <div class="progress-circle">3</div>
+          <div class="progress-label">Informasjon</div>
+        </div>
+        <div class="progress-step" data-step="4">
+          <div class="progress-circle">4</div>
+          <div class="progress-label">Skriv brev</div>
+        </div>
+        <div class="progress-step" data-step="5">
+          <div class="progress-circle">5</div>
+          <div class="progress-label">Betaling</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================ STEG 1 — Mottaker ================ -->
+    <section class="step-panel active" id="step-1">
+      <div class="step-head">
+        <span class="eyebrow">~ la oss begynne ~</span>
+        <h2>Hvem er brevet til?</h2>
+        <p>Et tidsbrev kan være en gave til deg selv eller til noen du er glad i.</p>
+      </div>
+
+      <div class="choice-grid">
+        <div class="choice-card" data-value="meg_selv" data-field="recipient_type">
+          <div class="icon">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <h3>Til meg selv</h3>
+          <p>Et brev fra deg i dag til deg i fremtiden.</p>
+        </div>
+
+        <div class="choice-card" data-value="andre" data-field="recipient_type">
+          <div class="icon">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/>
+            </svg>
+          </div>
+          <h3>Til noen andre</h3>
+          <p>Overrask noen du er glad i på en fremtidig dato.</p>
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <span></span>
+        <button class="btn btn-primary" data-next="1">Neste →</button>
+      </div>
+    </section>
+
+    <!-- ================ STEG 2 — Levering ================ -->
+    <section class="step-panel" id="step-2">
+      <div class="step-head">
+        <span class="eyebrow">~ hvordan skal det komme frem ~</span>
+        <h2>Hvordan skal brevet leveres?</h2>
+        <p>Velg hvordan du vil at brevet skal ankomme på leveringsdagen.</p>
+      </div>
+
+      <div class="choice-grid">
+        <div class="choice-card" data-value="digitalt" data-field="delivery_type">
+          <div class="icon">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z"/><polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <h3>Digitalt brev</h3>
+          <p>Vi sender en e-post på nøyaktig riktig dato.</p>
+          <div class="price" id="price-digitalt">fra 99 kr</div>
+        </div>
+
+        <div class="choice-card" data-value="fysisk" data-field="delivery_type">
+          <span class="badge-popular">Mest populær</span>
+          <div class="icon">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/>
+            </svg>
+          </div>
+          <h3>Fysisk brev i konvolutt</h3>
+          <p>Et ekte brev leveres i vakker konvolutt.</p>
+          <div class="price" id="price-fysisk">fra 249 kr</div>
+        </div>
+
+        <div class="choice-card" data-value="tidskapsell" data-field="delivery_type">
+          <span class="badge-popular" style="background:var(--forest);color:var(--cream)">Nytt</span>
+          <div class="icon">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 10l4.553-2.069A1 1 0 0 1 21 8.87v6.26a1 1 0 0 1-1.447.894L15 14"/>
+              <rect x="1" y="6" width="14" height="12" rx="2"/>
+            </svg>
+          </div>
+          <h3>Tidskapsell</h3>
+          <p>Last opp bilder eller videoer som leveres digitalt på valgt dato.</p>
+          <div class="price" id="price-tidskapsell">fra 79 kr</div>
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-secondary" data-prev="2">← Tilbake</button>
+        <button class="btn btn-primary" data-next="2">Neste →</button>
+      </div>
+    </section>
+
+    <!-- ================ STEG 3 — Informasjon ================ -->
+    <section class="step-panel" id="step-3">
+      <div class="step-head">
+        <span class="eyebrow">~ det praktiske ~</span>
+        <h2>Informasjon</h2>
+        <p id="step3-intro">Fortell oss hvem som skal motta brevet og når.</p>
+      </div>
+
+      <div class="form-card">
+        <div class="form-error" id="form-error-3"></div>
+
+        <!-- Avsender — vises alltid, label endres dynamisk -->
+        <div class="field">
+          <label id="lbl-sender-name">Ditt navn</label>
+          <input type="text" id="customer_name" placeholder="Fornavn Etternavn" autocomplete="name"/>
+          <div class="err-msg">Vennligst fyll inn navnet ditt.</div>
+        </div>
+
+        <div class="field">
+          <label id="lbl-sender-email">Din e-post</label>
+          <input type="email" id="customer_email" placeholder="din@epost.no" autocomplete="email"/>
+          <div class="err-msg">Vennligst fyll inn en gyldig e-postadresse.</div>
+        </div>
+
+        <!-- Mottaker — vises kun ved "til andre" -->
+        <div id="recipient-fields" style="display:none">
+          <div class="field">
+            <label id="lbl-recipient-name">Mottakers fulle navn</label>
+            <input type="text" id="recipient_name" placeholder="Fornavn Etternavn"/>
+            <div class="err-msg">Vennligst fyll inn mottakerens navn.</div>
+          </div>
+
+          <div class="field" id="field-recipient-email">
+            <label>Mottakers e-post</label>
+            <input type="email" id="recipient_email" placeholder="mottaker@epost.no"/>
+            <div class="err-msg">Vennligst fyll inn en gyldig e-postadresse.</div>
+          </div>
+
+          <div class="field">
+            <label>Anledning</label>
+            <select id="occasion">
+              <option value="">Velg anledning…</option>
+              <option value="meg_selv">Til meg selv</option>
+              <option value="konfirmasjon">Konfirmasjon</option>
+              <option value="bursdag">Bursdag</option>
+              <option value="bryllup">Bryllup</option>
+              <option value="nyfodt">Nyfødt barn</option>
+              <option value="jubileum">Jubileum</option>
+              <option value="bare_fordi">Bare fordi</option>
+            </select>
+            <div class="err-msg">Vennligst velg en anledning.</div>
+          </div>
+        </div>
+
+        <!-- Fysisk adresse — vises ved fysisk levering -->
+        <div id="address-fields" style="display:none">
+          <div class="field">
+            <label>Gateadresse</label>
+            <input type="text" id="recipient_address" placeholder="Eksempelveien 12" autocomplete="street-address"/>
+            <div class="err-msg">Vennligst fyll inn gateadresse.</div>
+          </div>
+
+          <div class="field-row two">
+            <div class="field">
+              <label>Postnummer</label>
+              <input type="text" id="recipient_zip" placeholder="0123" maxlength="4" inputmode="numeric" autocomplete="postal-code"/>
+              <div class="err-msg">Ugyldig postnummer.</div>
+            </div>
+            <div class="field">
+              <label>Poststed</label>
+              <input type="text" id="recipient_city" placeholder="Oslo" autocomplete="address-level2"/>
+              <div class="err-msg">Vennligst fyll inn poststed.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leveringsdato — vises alltid -->
+        <div class="field">
+          <label>Leveringsdato</label>
+          <input type="date" id="delivery_date"/>
+          <div class="err-msg">Leveringsdatoen må være minst i morgen.</div>
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-secondary" data-prev="3">← Tilbake</button>
+        <button class="btn btn-primary" data-next="3">Neste →</button>
+      </div>
+    </section>
+
+    <!-- ================ STEG 4 — Skriv brevet ================ -->
+    <section class="step-panel" id="step-4">
+      <div class="step-head">
+        <span class="eyebrow">~ ordene dine ~</span>
+        <h2>Skriv brevet</h2>
+        <p>Ta deg tid. Skriv fra hjertet. Dette er øyeblikket som skal fryses i tid.</p>
+      </div>
+
+      <div id="design-picker" style="display:none; margin-bottom: 28px;">
+        <p style="font-size:.9rem;font-weight:500;color:var(--ink);margin-bottom:14px;">
+          Velg utseende på brevet
+        </p>
+        <div class="design-grid">
+          <div class="design-card selected" data-theme="klassisk">
+            <div class="design-preview klassisk-preview"></div>
+            <span class="design-name">Klassisk</span>
+            <span class="design-desc">Rent og tidløst</span>
+          </div>
+          <div class="design-card" data-theme="romantisk">
+            <div class="design-preview romantisk-preview"></div>
+            <span class="design-name">Romantisk</span>
+            <span class="design-desc">Varm og personlig</span>
+          </div>
+          <div class="design-card" data-theme="moderne">
+            <div class="design-preview moderne-preview"></div>
+            <span class="design-name">Moderne</span>
+            <span class="design-desc">Enkel og stilren</span>
+          </div>
+          <div class="design-card" data-theme="eventyr">
+            <div class="design-preview eventyr-preview"></div>
+            <span class="design-name">Eventyr</span>
+            <span class="design-desc">Håndskrevet følelse</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="upload-area" style="display:none;">
+        <div class="form-card">
+          <div class="form-error" id="form-error-upload"></div>
+
+          <div class="upload-zone" id="uploadZone">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+                 stroke="var(--muted)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <p>Dra og slipp filer her, eller <label for="fileInput" class="upload-link">velg filer</label></p>
+            <p class="upload-hint">Bilder og videoer · maks 500 MB totalt · maks 20 filer</p>
+            <input type="file" id="fileInput" multiple accept="image/*,video/*" style="display:none"/>
+          </div>
+
+          <div id="fileList" class="file-list"></div>
+          <div id="uploadProgress" style="display:none;">
+            <div class="upload-overall-bar">
+              <div class="upload-overall-fill" id="uploadFill"></div>
+            </div>
+            <p id="uploadStatusText" style="font-size:.85rem;color:var(--muted);margin-top:8px;text-align:center"></p>
+          </div>
+
+          <div class="field" style="margin-top:24px">
+            <label>Legg til en personlig hilsen <span style="color:var(--muted);font-weight:400">(valgfritt)</span></label>
+            <textarea id="message_content" placeholder="Hei fremtidige meg…"
+                      style="min-height:120px" maxlength="500"></textarea>
+            <div class="char-counter" id="msg-counter">
+              <span><span id="msg-current">0</span> / 500 tegn</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card letter-editor">
+        <div class="form-error" id="form-error-4"></div>
+
+        <div class="field" style="margin-bottom:10px">
+          <textarea id="letter_content" placeholder="Kjære fremtidige [navn]..."></textarea>
+          <div class="char-counter" id="char-counter">
+            <span><span id="char-current">0</span> / <span id="char-max">3000</span> tegn</span>
+            <span id="char-remaining">3000 igjen</span>
+          </div>
+          <div class="err-msg">Brevet må inneholde minst 20 tegn.</div>
+        </div>
+
+        <div class="inspiration">
+          <button type="button" class="insp-card" data-hint="Tenk på noe du har oppnådd i det siste — en liten eller stor seier — og beskriv hvordan det føltes. Hva lærte du om deg selv?">Hva er du stolt av akkurat nå?</button>
+          <button type="button" class="insp-card" data-hint="Om verden, om deg selv, om menneskene rundt deg. Hva drømmer du om skal være annerledes når brevet ankommer?">Hva håper du har forandret seg?</button>
+          <button type="button" class="insp-card" data-hint="Hva er de små og store tingene fra tiden din som du ønsker at fremtiden ikke skal glemme? Tenk lyder, lukter, øyeblikk.">Hva vil du at fremtiden skal huske?</button>
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-secondary" data-prev="4">← Tilbake</button>
+        <button class="btn btn-primary" data-next="4">Neste →</button>
+      </div>
+    </section>
+
+    <!-- ================ STEG 5 — Oppsummering og betaling ================ -->
+    <section class="step-panel" id="step-5">
+      <div class="step-head">
+        <span class="eyebrow">~ siste steg ~</span>
+        <h2>Oppsummering og betaling</h2>
+        <p>Sjekk at alt stemmer, og velg hvordan du vil betale.</p>
+      </div>
+
+      <div class="summary" id="summary">
+        <!-- Fylles inn av JS -->
+      </div>
+
+      <div style="margin-bottom:18px">
+        <button class="pay-btn pay-vipps" id="pay-vipps">
+          <span class="vipps-logo">vipps</span> <span id="vipps-btn-label">Betal med Vipps</span>
+        </button>
+        <button class="pay-btn pay-card" id="pay-card">
+          Betal med kort
+        </button>
+      </div>
+
+      <div class="trust">
+        <div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Sikker betaling
+        </div>
+        <div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          GDPR-trygt
+        </div>
+        <div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+          Norsk drift
+        </div>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-secondary" data-prev="5">← Tilbake</button>
+        <span></span>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script src="js/config.js"></script>
+<script src="js/nav.js"></script>
+<script>
+/* ============================================================
+   Tidsbrev.no — Bestillingsskjema
+   ============================================================ */
+
+const STORAGE_KEY = 'tidsbrev_order_draft';
+
+// Default state
+const state = {
+  step: 1,
+  recipient_type: null,   // 'meg_selv' | 'andre'
+  delivery_type: null,    // 'digitalt' | 'fysisk'
+  product_type: null,     // settes lik delivery_type ved steg 2
+  customer_name: '',
+  customer_email: '',
+  recipient_name: '',
+  recipient_email: '',
+  recipient_address: '',
+  recipient_zip: '',
+  recipient_city: '',
+  occasion: '',
+  delivery_date: '',
+  letter_content: '',
+  product_type:   null,
+  design_theme:   'klassisk',
+  uploaded_files: [],
+  message_content: ''
+};
+
+// Load from sessionStorage
+function loadState() {
+  try {
+    const saved = sessionStorage.getItem(STORAGE_KEY);
+    if (saved) Object.assign(state, JSON.parse(saved));
+  } catch(e) { console.warn('Kunne ikke lese lagret data', e); }
+}
+function saveState() {
+  try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  catch(e) { console.warn('Kunne ikke lagre data', e); }
+}
+
+/* ---------- Pricing ---------- */
+function calcPrice() {
+  const type = state.delivery_type || 'digitalt';
+  if (typeof window.getPris === 'function') {
+    return window.getPris(type, state.delivery_date || '');
+  }
+  // Fallback hvis config ikke er lastet
+  const aar = state.delivery_date
+    ? Math.max(0, Math.floor((new Date(state.delivery_date) - new Date()) / (1000*60*60*24*365.25)))
+    : 0;
+  if (type === 'fysisk') return 249 + aar * 29;
+  if (type === 'tidskapsell') return 79 + aar * 49;
+  return 99 + aar * 19;
+}
+
+/* ---------- File upload state (declared early for use in validate/summary) ---------- */
+const MAX_TOTAL_BYTES = 500 * 1024 * 1024;
+const MAX_FILES = 20;
+let pendingFiles = [];
+
+function formatBytes(bytes) {
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+/* ---------- Step navigation ---------- */
+function showStep(n) {
+  state.step = n;
+  saveState();
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('step-' + n);
+  if (panel) panel.classList.add('active');
+
+  // Progress
+  document.querySelectorAll('.progress-step').forEach(s => {
+    const step = parseInt(s.dataset.step);
+    s.classList.remove('active','completed');
+    if (step < n) s.classList.add('completed');
+    else if (step === n) s.classList.add('active');
+  });
+  const pct = ((n - 1) / 4) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (n === 3) renderStep3();
+  if (n === 4) renderStep4();
+  if (n === 5) renderSummary();
+}
+
+/* ---------- Validation helpers ---------- */
+function showErr(fieldEl, msg) {
+  fieldEl.classList.add('error');
+  if (msg) {
+    const em = fieldEl.querySelector('.err-msg');
+    if (em) em.textContent = msg;
+  }
+}
+function clearErr(fieldEl) { fieldEl.classList.remove('error'); }
+function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((v||'').trim()); }
+function isValidZip(v) { return /^\d{4}$/.test((v||'').trim()); }
+
+/* ---------- Step 1 & 2: choice cards ---------- */
+document.querySelectorAll('.choice-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const field = card.dataset.field;
+    const value = card.dataset.value;
+    state[field] = value;
+    // product_type spiller samme rolle som delivery_type i ny prismodell
+    if (field === 'delivery_type') state.product_type = value;
+    saveState();
+    // Update UI
+    document.querySelectorAll(`.choice-card[data-field="${field}"]`)
+      .forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+  });
+});
+
+/* ---------- Step 3: dynamic fields ---------- */
+function renderStep3() {
+  const intro = document.getElementById('step3-intro');
+  const recipientFields = document.getElementById('recipient-fields');
+  const addressFields = document.getElementById('address-fields');
+  const lblSenderName = document.getElementById('lbl-sender-name');
+  const lblSenderEmail = document.getElementById('lbl-sender-email');
+  const fieldRecEmail = document.getElementById('field-recipient-email');
+
+  const toSelf = state.recipient_type === 'meg_selv';
+  const physical = state.delivery_type === 'fysisk';
+
+  if (toSelf) {
+    lblSenderName.textContent = 'Ditt navn';
+    lblSenderEmail.textContent = 'Din e-post';
+    recipientFields.style.display = 'none';
+    intro.textContent = 'Fortell oss hvor vi skal sende brevet når tiden er inne.';
+  } else {
+    lblSenderName.textContent = 'Ditt navn (avsender)';
+    lblSenderEmail.textContent = 'Din e-post (avsender)';
+    recipientFields.style.display = 'block';
+    intro.textContent = 'Fortell oss hvem som skal motta brevet og hvilken anledning det er for.';
+  }
+
+  if (state.delivery_type === 'tidskapsell') {
+    addressFields.style.display = 'none';
+    if (!toSelf) fieldRecEmail.style.display = 'block';
+    intro.textContent = 'Fortell oss hvem som skal motta tidskapselen og når.';
+  } else {
+    // Recipient email only needed for digital delivery to others
+    if (!toSelf && !physical) {
+      fieldRecEmail.style.display = 'block';
+    } else if (!toSelf && physical) {
+      fieldRecEmail.style.display = 'none';
+    }
+    addressFields.style.display = physical ? 'block' : 'none';
+  }
+
+  // Set min date = tomorrow
+  const dateInput = document.getElementById('delivery_date');
+  const min = new Date();
+  min.setDate(min.getDate() + 1);
+  dateInput.min = min.toISOString().split('T')[0];
+  const maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() + 30);
+  dateInput.max = maxDate.toISOString().split('T')[0];
+
+  // Fill in saved values
+  ['customer_name','customer_email','recipient_name','recipient_email',
+   'recipient_address','recipient_zip','recipient_city','occasion','delivery_date']
+    .forEach(id => {
+      const el = document.getElementById(id);
+      if (el && state[id]) el.value = state[id];
+    });
+}
+
+function validateStep3() {
+  let ok = true;
+  const formError = document.getElementById('form-error-3');
+  formError.classList.remove('show');
+  document.querySelectorAll('#step-3 .field').forEach(clearErr);
+
+  const toSelf = state.recipient_type === 'meg_selv';
+  const physical = state.delivery_type === 'fysisk';
+
+  const name = document.getElementById('customer_name');
+  const email = document.getElementById('customer_email');
+
+  if (!name.value.trim()) { showErr(name.parentElement); ok = false; }
+  if (!isValidEmail(email.value)) { showErr(email.parentElement); ok = false; }
+
+  state.customer_name = name.value.trim();
+  state.customer_email = email.value.trim();
+
+  if (!toSelf) {
+    const rname = document.getElementById('recipient_name');
+    if (!rname.value.trim()) { showErr(rname.parentElement); ok = false; }
+    state.recipient_name = rname.value.trim();
+
+    if (!physical || state.delivery_type === 'tidskapsell') {
+      const remail = document.getElementById('recipient_email');
+      if (!isValidEmail(remail.value)) { showErr(remail.parentElement); ok = false; }
+      state.recipient_email = remail.value.trim();
+    }
+
+    const occ = document.getElementById('occasion');
+    if (!occ.value) { showErr(occ.parentElement); ok = false; }
+    state.occasion = occ.value;
+  }
+
+  if (physical && state.delivery_type !== 'tidskapsell') {
+    const addr = document.getElementById('recipient_address');
+    const zip = document.getElementById('recipient_zip');
+    const city = document.getElementById('recipient_city');
+    if (!addr.value.trim()) { showErr(addr.parentElement); ok = false; }
+    if (!isValidZip(zip.value)) { showErr(zip.parentElement); ok = false; }
+    if (!city.value.trim()) { showErr(city.parentElement); ok = false; }
+    state.recipient_address = addr.value.trim();
+    state.recipient_zip = zip.value.trim();
+    state.recipient_city = city.value.trim();
+  }
+
+  // Delivery date: must be at least tomorrow
+  const date = document.getElementById('delivery_date');
+  const valueDate = new Date(date.value);
+  const minDate = new Date();
+  minDate.setDate(minDate.getDate() + 1);
+  minDate.setHours(0,0,0,0);
+  if (!date.value || isNaN(valueDate) || valueDate < minDate) {
+    showErr(date.parentElement);
+    ok = false;
+  }
+  state.delivery_date = date.value;
+
+  if (!ok) {
+    formError.textContent = 'Vennligst rett opp feltene som er markert med rødt.';
+    formError.classList.add('show');
+  }
+  saveState();
+  return ok;
+}
+
+/* ---------- Step 4: letter editor / upload ---------- */
+function renderStep4() {
+  const isDigital     = state.delivery_type === 'digitalt';
+  const isTidskapsell = state.delivery_type === 'tidskapsell';
+
+  document.getElementById('design-picker').style.display  = isDigital ? 'block' : 'none';
+  document.getElementById('upload-area').style.display    = isTidskapsell ? 'block' : 'none';
+
+  const letterEditor = document.querySelector('.letter-editor');
+  if (letterEditor) letterEditor.style.display = isTidskapsell ? 'none' : 'block';
+
+  // Update step heading dynamically
+  const stepHead = document.querySelector('#step-4 .step-head h2');
+  const stepLead = document.querySelector('#step-4 .step-head p');
+  if (isTidskapsell) {
+    stepHead.textContent = 'Last opp filene dine';
+    stepLead.textContent = 'Legg til bilder eller videoer du vil sende til fremtiden.';
+  } else {
+    stepHead.textContent = 'Skriv brevet';
+    stepLead.textContent = 'Ta deg tid. Skriv fra hjertet. Dette er øyeblikket som skal fryses i tid.';
+  }
+
+  if (!isTidskapsell) {
+    const max = state.delivery_type === 'fysisk' ? 1500 : 3000;
+    const ta = document.getElementById('letter_content');
+    document.getElementById('char-max').textContent = max;
+    ta.setAttribute('maxlength', max);
+    if (state.recipient_type === 'andre' && state.recipient_name) {
+      ta.placeholder = `Kjære fremtidige ${state.recipient_name.split(' ')[0]}…`;
+    } else {
+      ta.placeholder = 'Kjære fremtidige meg…';
+    }
+    if (state.letter_content) ta.value = state.letter_content;
+    updateCharCounter();
+  }
+
+  // Restore design theme selection
+  if (isDigital) {
+    document.querySelectorAll('.design-card').forEach(c => {
+      c.classList.toggle('selected', c.dataset.theme === (state.design_theme || 'klassisk'));
+    });
+  }
+}
+
+function updateCharCounter() {
+  const ta = document.getElementById('letter_content');
+  const max = parseInt(ta.getAttribute('maxlength')) || 3000;
+  const current = ta.value.length;
+  const remaining = max - current;
+  document.getElementById('char-current').textContent = current;
+  document.getElementById('char-remaining').textContent = remaining + ' igjen';
+  const counter = document.getElementById('char-counter');
+  counter.classList.remove('warn','max');
+  if (current >= max) counter.classList.add('max');
+  else if (current >= max * 0.9) counter.classList.add('warn');
+}
+
+document.getElementById('letter_content').addEventListener('input', (e) => {
+  state.letter_content = e.target.value;
+  updateCharCounter();
+  saveState();
+});
+
+// Inspiration cards
+document.querySelectorAll('.insp-card').forEach(card => {
+  const original = card.textContent;
+  card.addEventListener('click', () => {
+    if (card.classList.contains('expanded')) {
+      card.classList.remove('expanded');
+      card.textContent = original;
+    } else {
+      card.classList.add('expanded');
+      card.textContent = card.dataset.hint;
+    }
+  });
+});
+
+function validateStep4() {
+  if (state.delivery_type === 'tidskapsell') {
+    const errorEl = document.getElementById('form-error-upload');
+    errorEl.classList.remove('show');
+    if (pendingFiles.length === 0) {
+      errorEl.textContent = 'Du må laste opp minst én fil.';
+      errorEl.classList.add('show');
+      return false;
+    }
+    return true;
+  }
+  // Existing letter validation for digitalt and fysisk
+  const ta = document.getElementById('letter_content');
+  const field = ta.parentElement;
+  const formError = document.getElementById('form-error-4');
+  formError.classList.remove('show');
+  clearErr(field);
+  if ((ta.value || '').trim().length < 20) {
+    showErr(field);
+    formError.textContent = 'Brevet må inneholde minst 20 tegn.';
+    formError.classList.add('show');
+    return false;
+  }
+  state.letter_content = ta.value;
+  saveState();
+  return true;
+}
+
+/* ---------- Step 5: summary ---------- */
+function renderSummary() {
+  const occasionLabels = {
+    meg_selv:'Til meg selv', konfirmasjon:'Konfirmasjon', bursdag:'Bursdag',
+    bryllup:'Bryllup', nyfodt:'Nyfødt barn', jubileum:'Jubileum', bare_fordi:'Bare fordi'
+  };
+  const leveringsNavn = {
+    digitalt: 'Digitalt brev',
+    fysisk: 'Fysisk brev',
+    tidskapsell: 'Tidskapsell — digital levering'
+  };
+
+  const rows = [];
+  rows.push(['Mottaker', state.recipient_type === 'meg_selv' ? 'Til meg selv' : 'Til noen andre']);
+  rows.push(['Leveringsform', leveringsNavn[state.delivery_type] || state.delivery_type]);
+  rows.push(['Avsender', state.customer_name]);
+  rows.push(['E-post', state.customer_email]);
+
+  if (state.recipient_type === 'andre') {
+    rows.push(['Mottaker', state.recipient_name]);
+    if (state.delivery_type !== 'fysisk') rows.push(['Mottakers e-post', state.recipient_email]);
+    if (state.occasion) rows.push(['Anledning', occasionLabels[state.occasion] || state.occasion]);
+  }
+
+  if (state.delivery_type === 'fysisk') {
+    rows.push(['Adresse', `${state.recipient_address}, ${state.recipient_zip} ${state.recipient_city}`]);
+  }
+
+  if (state.delivery_type === 'digitalt' && state.design_theme) {
+    const themeNames = { klassisk:'Klassisk', romantisk:'Romantisk', moderne:'Moderne', eventyr:'Eventyr' };
+    rows.push(['Brevdesign', themeNames[state.design_theme] || state.design_theme]);
+  }
+
+  let formattedDate = state.delivery_date;
+  try {
+    formattedDate = new Date(state.delivery_date).toLocaleDateString('nb-NO', {
+      day:'numeric', month:'long', year:'numeric'
+    });
+  } catch(e) {}
+  rows.push(['Leveringsdato', formattedDate]);
+
+  if (state.delivery_type === 'tidskapsell') {
+    rows.push(['Antall filer', `${pendingFiles.length} filer (${formatBytes(pendingFiles.reduce((s, f) => s + f.file.size, 0))})`]);
+  } else {
+    rows.push(['Antall tegn i brev', state.letter_content.length]);
+  }
+
+  const detaljer = (typeof window.getPrisDetaljer === 'function')
+    ? window.getPrisDetaljer(state.delivery_type, state.delivery_date)
+    : { total: calcPrice(), tekst: '' };
+
+  let html = rows.map(([l,v]) =>
+    `<div class="summary-row"><span class="label">${l}</span><span class="val">${escapeHtml(String(v||''))}</span></div>`
+  ).join('');
+  html += `
+    <div class="summary-total">
+      <span class="label">Totalt</span>
+      <div style="text-align:right">
+        <span class="val">NOK ${detaljer.total}</span>
+        ${detaljer.tekst ? `<div style="font-size:.78rem;color:var(--muted);margin-top:2px">${detaljer.tekst}</div>` : ''}
+      </div>
+    </div>`;
+  document.getElementById('summary').innerHTML = html;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ---------- Validation per step ---------- */
+function validateStep(n) {
+  if (n === 1) {
+    if (!state.recipient_type) {
+      alert('Vennligst velg hvem brevet er til.');
+      return false;
+    }
+    return true;
+  }
+  if (n === 2) {
+    if (!state.delivery_type) {
+      alert('Vennligst velg hvordan brevet skal leveres.');
+      return false;
+    }
+    return true;
+  }
+  if (n === 3) return validateStep3();
+  if (n === 4) return validateStep4();
+  return true;
+}
+
+/* ---------- Next / Back buttons ---------- */
+document.querySelectorAll('[data-next]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const current = parseInt(btn.dataset.next);
+    if (validateStep(current)) showStep(current + 1);
+  });
+});
+document.querySelectorAll('[data-prev]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const current = parseInt(btn.dataset.prev);
+    showStep(current - 1);
+  });
+});
+
+/* ---------- Payment buttons ---------- */
+// Vipps-knappen aktiveres kun hvis VIPPS_ACTIVE === true i js/config.js.
+// Når den er false, vises knappen som "Kommer snart" og er grået ut.
+function initPaymentButtons() {
+  const vippsBtn = document.getElementById('pay-vipps');
+  const vippsLabel = document.getElementById('vipps-btn-label');
+  const vippsActive = (typeof window.VIPPS_ACTIVE !== 'undefined') ? window.VIPPS_ACTIVE : false;
+
+  if (!vippsActive) {
+    vippsBtn.classList.add('disabled');
+    vippsBtn.disabled = true;
+    vippsLabel.textContent = 'Kommer snart';
+    vippsBtn.setAttribute('aria-disabled', 'true');
+    vippsBtn.title = 'Vipps blir tilgjengelig snart';
+  } else {
+    vippsBtn.classList.remove('disabled');
+    vippsBtn.disabled = false;
+    vippsLabel.textContent = 'Betal med Vipps';
+    vippsBtn.removeAttribute('aria-disabled');
+  }
+}
+
+document.getElementById('pay-vipps').addEventListener('click', () => {
+  const vippsActive = (typeof window.VIPPS_ACTIVE !== 'undefined') ? window.VIPPS_ACTIVE : false;
+  if (!vippsActive) return; // ikke gjør noe hvis deaktivert
+  handlePay('vipps');
+});
+document.getElementById('pay-card').addEventListener('click', () => handlePay('stripe'));
+
+async function handlePay(method) {
+  const btn = method === 'vipps'
+    ? document.getElementById('pay-vipps')
+    : document.getElementById('pay-card');
+
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  const price = calcPrice();
+  const payload = {
+    customer_name:     state.customer_name,
+    customer_email:    state.customer_email,
+    recipient_type:    state.recipient_type,
+    delivery_type:     state.delivery_type,
+    product_type:      state.delivery_type || 'digitalt',
+    recipient_name:    state.recipient_name,
+    recipient_email:   state.recipient_email,
+    recipient_address: state.recipient_address,
+    recipient_zip:     state.recipient_zip,
+    recipient_city:    state.recipient_city,
+    occasion:          state.occasion,
+    delivery_date:     state.delivery_date,
+    letter_content:    state.letter_content,
+    design_theme:      state.design_theme || 'klassisk',
+    amount:            price
+  };
+
+  if (state.delivery_type === 'tidskapsell') {
+    btn.textContent = 'Laster opp filer…';
+    payload.uploaded_files = state.uploaded_files;
+    payload.message_content = state.message_content || '';
+  }
+
+  const endpoint = method === 'vipps'
+    ? '/api/create-vipps-payment'
+    : '/api/create-stripe-session';
+
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Serveren svarte med ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    // Rydd opp lagret utkast — betalingen er startet
+    sessionStorage.removeItem(STORAGE_KEY);
+
+    // Videresend brukeren
+    const redirect = data.url || data.redirectUrl;
+    if (!redirect) throw new Error('Mangler redirect-URL fra server');
+    window.location.href = redirect;
+
+  } catch (err) {
+    console.error('[Betaling]', err);
+    alert('Kunne ikke starte betalingen: ' + err.message + '\nPrøv igjen om et øyeblikk.');
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    if (method === 'vipps') initPaymentButtons(); // gjenopprett disabled-state
+  }
+}
+
+/* ---------- Restore state on load ---------- */
+function restoreChoiceCards() {
+  ['recipient_type','delivery_type'].forEach(field => {
+    if (state[field]) {
+      const card = document.querySelector(`.choice-card[data-field="${field}"][data-value="${state[field]}"]`);
+      if (card) card.classList.add('selected');
+    }
+  });
+}
+
+// ── Design theme picker ──────────────────────────────────────
+document.querySelectorAll('.design-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.design-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    state.design_theme = card.dataset.theme;
+    saveState();
+  });
+});
+
+// ── File Upload (Tidskapsell) ────────────────────────────────
+function renderFileList() {
+  const list = document.getElementById('fileList');
+  list.innerHTML = pendingFiles.map(f => `
+    <div class="file-item ${f.status}" id="fi-${f.id}">
+      <span class="file-name">${escapeHtml(f.file.name)}</span>
+      <span class="file-size">${formatBytes(f.file.size)}</span>
+      ${f.status === 'waiting' ? `<span class="file-remove" data-id="${f.id}">&times;</span>` : ''}
+      ${f.status === 'done' ? '<span style="color:var(--forest)">&check;</span>' : ''}
+      ${f.status === 'error' ? '<span style="color:var(--error)">!</span>' : ''}
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.file-remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      pendingFiles = pendingFiles.filter(f => f.id !== btn.dataset.id);
+      renderFileList();
+    });
+  });
+}
+
+function addFiles(newFiles) {
+  const errorEl = document.getElementById('form-error-upload');
+  errorEl.classList.remove('show');
+
+  const totalAfter = pendingFiles.length + newFiles.length;
+  if (totalAfter > MAX_FILES) {
+    errorEl.textContent = `Maks ${MAX_FILES} filer tillatt.`;
+    errorEl.classList.add('show');
+    return;
+  }
+
+  const currentBytes = pendingFiles.reduce((sum, f) => sum + f.file.size, 0);
+  const newBytes = Array.from(newFiles).reduce((sum, f) => sum + f.size, 0);
+  if (currentBytes + newBytes > MAX_TOTAL_BYTES) {
+    errorEl.textContent = 'Total filstørrelse overskrider 500 MB.';
+    errorEl.classList.add('show');
+    return;
+  }
+
+  Array.from(newFiles).forEach(file => {
+    pendingFiles.push({ file, id: Math.random().toString(36).slice(2), status: 'waiting' });
+  });
+  renderFileList();
+}
+
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag-over');
+  addFiles(e.dataTransfer.files);
+});
+uploadZone.addEventListener('click', () => document.getElementById('fileInput').click());
+document.getElementById('fileInput').addEventListener('change', e => addFiles(e.target.files));
+
+document.getElementById('message_content').addEventListener('input', e => {
+  state.message_content = e.target.value;
+  document.getElementById('msg-current').textContent = e.target.value.length;
+  saveState();
+});
+
+async function uploadAllFiles(orderId) {
+  const progressBar = document.getElementById('uploadFill');
+  const statusText  = document.getElementById('uploadStatusText');
+  document.getElementById('uploadProgress').style.display = 'block';
+
+  const uploaded = [];
+  const failed   = [];
+
+  for (let i = 0; i < pendingFiles.length; i++) {
+    const item = pendingFiles[i];
+    item.status = 'uploading';
+    renderFileList();
+
+    const pct = Math.round((i / pendingFiles.length) * 100);
+    progressBar.style.width = pct + '%';
+    statusText.textContent = `Laster opp ${i + 1} av ${pendingFiles.length}…`;
+
+    try {
+      const path = `${orderId}/${Date.now()}-${item.file.name}`;
+      const { data, error } = await window.supabaseClient.storage
+        .from('tidskapsell-uploads')
+        .upload(path, item.file, { upsert: false });
+
+      if (error) throw error;
+
+      item.status = 'done';
+      uploaded.push({ path: data.path, name: item.file.name, size: item.file.size, type: item.file.type });
+    } catch (err) {
+      item.status = 'error';
+      failed.push({ name: item.file.name, error: err.message });
+      console.error('[upload]', item.file.name, err);
+    }
+    renderFileList();
+  }
+
+  progressBar.style.width = '100%';
+  statusText.textContent = `${uploaded.length} filer lastet opp${failed.length ? `, ${failed.length} feilet` : ''}.`;
+
+  state.uploaded_files = uploaded;
+  saveState();
+  return { uploaded, failed };
+}
+
+// ── Deep-link pre-selection ──────────────────────────────────
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  const type = params.get('type');
+  if (['digitalt', 'fysisk', 'tidskapsell'].includes(type)) {
+    state.delivery_type = type;
+    state.product_type  = type;
+  }
+})();
+
+loadState();
+restoreChoiceCards();
+initPaymentButtons();
+showStep(state.step || 1);
+
+if (new URLSearchParams(window.location.search).get('type')) {
+  setTimeout(() => showStep(3), 400);
+}
+</script>
+
+</body>
+</html>

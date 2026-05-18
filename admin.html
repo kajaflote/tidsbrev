@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — Tidsbrev.no</title>
+<meta name="robots" content="noindex, nofollow" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --cream:#F5F0E8;--cream-2:#FBF6EC;--beige:#E8DCC4;
+  --burgundy:#6B2737;--burgundy-dark:#4E141C;
+  --forest:#2D4A3E;--forest-dark:#1F3A2E;
+  --ink:#2A231C;--muted:#6B5D4C;--gold:#B08A3E;
+  --error:#b13341;--success:#2D6A4F;
+  --shadow:0 4px 20px rgba(42,35,28,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:#ede6d8;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:600}
+a{color:var(--burgundy);text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+
+/* ========== LOGIN ========== */
+.login-wrap{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:var(--cream);padding:20px;
+}
+.login-box{
+  background:var(--cream-2);border:1px solid var(--beige);border-radius:16px;
+  padding:48px 40px;max-width:400px;width:100%;text-align:center;
+  box-shadow:0 20px 60px rgba(42,35,28,.12);
+}
+.login-box .logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--burgundy);margin-bottom:6px}
+.login-box .logo span{color:var(--forest)}
+.login-box h2{font-size:1.2rem;color:var(--muted);font-weight:400;margin-bottom:28px}
+.login-box input{
+  width:100%;padding:14px 16px;border:1.5px solid var(--beige);border-radius:10px;
+  background:var(--cream);font-size:1rem;color:var(--ink);margin-bottom:16px;
+  text-align:center;letter-spacing:2px;
+}
+.login-box input:focus{outline:none;border-color:var(--burgundy)}
+.login-box .btn{
+  width:100%;padding:14px;background:var(--burgundy);color:var(--cream);
+  border:none;border-radius:50px;font-size:1rem;font-weight:500;
+  transition:background .2s;
+}
+.login-box .btn:hover{background:var(--burgundy-dark)}
+.login-err{color:var(--error);font-size:.88rem;margin-top:10px;display:none}
+
+/* ========== NAV ========== */
+.nav{
+  background:var(--burgundy-dark);color:var(--cream);
+  padding:16px 24px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;
+}
+.nav .logo{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--cream)}
+.nav .logo span{color:var(--gold)}
+.nav .badge{font-size:.75rem;background:rgba(255,255,255,.15);padding:4px 10px;border-radius:20px}
+.nav .logout{
+  background:none;border:1px solid rgba(255,255,255,.25);color:var(--cream);
+  padding:6px 16px;border-radius:20px;font-size:.85rem;transition:background .2s;
+}
+.nav .logout:hover{background:rgba(255,255,255,.1)}
+
+/* ========== LAYOUT ========== */
+.dashboard{display:none;max-width:1200px;margin:0 auto;padding:28px 24px 80px}
+
+/* ========== STAT CARDS ========== */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:28px}
+.stat{
+  background:var(--cream-2);border:1px solid var(--beige);border-radius:14px;
+  padding:22px 20px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.stat:nth-child(1)::before{background:var(--burgundy)}
+.stat:nth-child(2)::before{background:var(--forest)}
+.stat:nth-child(3)::before{background:var(--gold)}
+.stat:nth-child(4)::before{background:var(--error)}
+.stat-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:6px}
+.stat-val{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;color:var(--ink)}
+.stat-sub{font-size:.78rem;color:var(--muted);margin-top:4px}
+
+/* ========== TOOLBAR ========== */
+.toolbar{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  margin-bottom:20px;padding:16px 18px;
+  background:var(--cream-2);border:1px solid var(--beige);border-radius:12px;
+}
+.toolbar input,.toolbar select{
+  padding:9px 14px;border:1.5px solid var(--beige);border-radius:8px;
+  background:var(--cream);font-size:.88rem;color:var(--ink);
+}
+.toolbar input:focus,.toolbar select:focus{outline:none;border-color:var(--burgundy)}
+.toolbar input[type=search]{min-width:220px;flex:1}
+.toolbar .spacer{flex:1}
+.toolbar .btn-sm{
+  padding:9px 18px;background:var(--forest);color:var(--cream);
+  border:none;border-radius:8px;font-size:.85rem;font-weight:500;
+  transition:background .2s;white-space:nowrap;
+}
+.toolbar .btn-sm:hover{background:var(--forest-dark)}
+.toolbar .btn-sm.outline{
+  background:transparent;color:var(--forest);border:1.5px solid var(--forest);
+}
+.toolbar .btn-sm.outline:hover{background:var(--forest);color:var(--cream)}
+
+/* ========== TABLE ========== */
+.table-wrap{
+  background:var(--cream-2);border:1px solid var(--beige);border-radius:14px;
+  box-shadow:var(--shadow);overflow-x:auto;
+}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+thead{background:var(--burgundy-dark);color:var(--cream)}
+th{padding:13px 14px;text-align:left;font-weight:500;font-size:.78rem;text-transform:uppercase;letter-spacing:.7px;white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid var(--beige);vertical-align:top}
+tbody tr{cursor:pointer;transition:background .15s}
+tbody tr:hover{background:rgba(107,39,55,.04)}
+tbody tr:last-child td{border-bottom:none}
+
+.badge-status{
+  display:inline-block;padding:3px 10px;border-radius:20px;
+  font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;
+}
+.badge-paid{background:#d4edda;color:#155724}
+.badge-pending{background:#fff3cd;color:#856404}
+.badge-failed{background:#f5dcdf;color:var(--burgundy-dark)}
+.badge-sent{background:#d4edda;color:#155724}
+.badge-posted{background:#cce5ff;color:#004085}
+.badge-type{
+  display:inline-block;padding:3px 10px;border-radius:20px;
+  font-size:.72rem;font-weight:500;letter-spacing:.3px;
+  background:var(--cream);border:1px solid var(--beige);color:var(--muted);
+}
+
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+.table-info{padding:12px 16px;font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+
+/* ========== MODAL ========== */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;
+}
+.modal-overlay.show{opacity:1;visibility:visible}
+.modal{
+  background:var(--cream);border-radius:16px;max-width:700px;width:100%;
+  max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.3);
+  position:relative;
+}
+.modal-head{
+  padding:24px 28px 16px;border-bottom:1px solid var(--beige);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:var(--cream);border-radius:16px 16px 0 0;z-index:1;
+}
+.modal-head h2{font-size:1.15rem;margin:0}
+.modal-close{
+  background:none;border:none;font-size:1.4rem;color:var(--muted);
+  width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+.modal-close:hover{background:var(--beige)}
+.modal-body{padding:24px 28px 28px}
+
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.detail-item{font-size:.9rem}
+.detail-item .label{font-size:.75rem;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:3px}
+.detail-item .value{color:var(--ink);font-weight:500}
+.detail-full{grid-column:1/-1}
+
+.letter-box{
+  background:var(--cream-2);border:1px solid var(--beige);border-radius:12px;
+  padding:22px 24px;font-family:'Playfair Display',Georgia,serif;
+  font-size:.98rem;line-height:1.8;color:var(--ink);white-space:pre-wrap;
+  max-height:300px;overflow-y:auto;margin-top:10px;
+}
+
+.modal-actions{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;padding-top:18px;border-top:1px solid var(--beige);
+}
+.modal-actions .btn{
+  padding:10px 22px;border:none;border-radius:8px;font-size:.88rem;font-weight:500;
+  transition:background .2s;
+}
+.btn-post{background:var(--forest);color:var(--cream)}
+.btn-post:hover{background:var(--forest-dark)}
+.btn-post:disabled{opacity:.5;cursor:not-allowed}
+
+/* ========== RESPONSIVE ========== */
+@media(max-width:768px){
+  .stats{grid-template-columns:1fr 1fr}
+  .toolbar{flex-direction:column}
+  .toolbar input[type=search]{min-width:100%}
+  .detail-grid{grid-template-columns:1fr}
+  .dashboard{padding:20px 14px 60px}
+}
+@media(max-width:480px){
+  .stats{grid-template-columns:1fr}
+  .login-box{padding:36px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== LOGIN ==================== -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="logo">Tidsbrev<span>.no</span></div>
+    <h2>Admin-panel</h2>
+    <form id="loginForm" autocomplete="off">
+      <input type="password" id="loginPass" placeholder="Passord" autofocus />
+      <button type="submit" class="btn">Logg inn</button>
+    </form>
+    <p class="login-err" id="loginErr">Feil passord. Prøv igjen.</p>
+  </div>
+</div>
+
+<!-- ==================== DASHBOARD ==================== -->
+<nav class="nav" id="navBar" style="display:none">
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="logo">Tidsbrev<span>.no</span></div>
+    <span class="badge">Admin</span>
+  </div>
+  <button class="logout" id="logoutBtn">Logg ut</button>
+</nav>
+
+<div class="dashboard" id="dashboard">
+
+  <!-- STAT CARDS -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Totalt ordre</div>
+      <div class="stat-val" id="statTotal">—</div>
+      <div class="stat-sub" id="statTotalSub"></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Total inntekt</div>
+      <div class="stat-val" id="statRevenue">—</div>
+      <div class="stat-sub" id="statRevenueSub"></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Denne måneden</div>
+      <div class="stat-val" id="statMonth">—</div>
+      <div class="stat-sub" id="statMonthSub"></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Leveres innen 30 dager</div>
+      <div class="stat-val" id="statUpcoming">—</div>
+      <div class="stat-sub" id="statUpcomingSub"></div>
+    </div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <input type="search" id="searchInput" placeholder="Søk ordrenr. eller kundenavn..." />
+    <select id="filterStatus">
+      <option value="">Alle statuser</option>
+      <option value="paid">Betalt</option>
+      <option value="pending">Venter</option>
+      <option value="failed">Feilet</option>
+    </select>
+    <select id="filterType">
+      <option value="">Alle typer</option>
+      <option value="digitalt">Digital</option>
+      <option value="fysisk">Fysisk</option>
+      <option value="tidskapsell">Tidskapsell</option>
+    </select>
+    <select id="filterMonth">
+      <option value="">Alle måneder</option>
+    </select>
+    <div class="spacer"></div>
+    <button class="btn-sm outline" id="refreshBtn" title="Oppdater">Oppdater</button>
+    <button class="btn-sm" id="exportBtn">Eksporter CSV</button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Ordre</th>
+          <th>Bestilt</th>
+          <th>Kunde</th>
+          <th>Mottaker</th>
+          <th>Leveres</th>
+          <th>Type</th>
+          <th>Beløp</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="orderTableBody">
+        <tr><td colspan="8" class="empty-state">Laster...</td></tr>
+      </tbody>
+    </table>
+    <div class="table-info">
+      <span id="tableCount"></span>
+      <span id="tableInfo"></span>
+    </div>
+  </div>
+  <!-- TIDSKAPSELL SECTION -->
+  <h2 style="font-size:1.25rem;margin:36px 0 16px;color:var(--burgundy)">Tidskapsell-ordrer</h2>
+  <div id="tidskapsellSection" style="display:grid;grid-template-columns:1fr;gap:16px;">
+    <p class="empty-state" id="tidskapsellEmpty">Laster tidskapsler...</p>
+  </div>
+
+</div>
+
+<!-- ==================== MODAL ==================== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <h2 id="modalTitle">Ordredetaljer</h2>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+
+<!-- ==================== SCRIPTS ==================== -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+
+<script>
+// ================================================================
+// ADMIN DASHBOARD
+// ================================================================
+
+// ---- Passord-hashing (SHA-256) ----
+// Standard admin-passord: "tidsbrev2026"
+// For å endre: åpne konsollen, kjør:
+//   crypto.subtle.digest('SHA-256', new TextEncoder().encode('dittNyePassord'))
+//     .then(b => console.log(Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')))
+// Lim inn resultatet her:
+const ADMIN_HASH = 'f6a7cb743a4b9c27240a278a32031f03593c9c824511d515d6b426a6a49b001e';
+
+// Supabase-klient
+let db = null;
+
+// Alle ordre og brev (cachet lokalt)
+let allOrders = [];
+let allLetters = {};
+
+// ---- Hjelpefunksjoner ----
+function formatDate(iso) {
+  if (!iso) return '—';
+  try { return new Date(iso).toLocaleDateString('nb-NO', { day:'numeric', month:'short', year:'numeric' }); }
+  catch { return iso; }
+}
+function formatNOK(n) {
+  return new Intl.NumberFormat('nb-NO', { style:'currency', currency:'NOK', maximumFractionDigits:0 }).format(n || 0);
+}
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s == null ? '' : s;
+  return d.innerHTML;
+}
+
+const PRODUKT = { digitalt:'Digitalt', fysisk:'Fysisk', tidskapsell:'Tidskapsell', standard:'Standard', premium:'Premium', legacy:'Legacy' };
+const ANLEDNING = {
+  meg_selv:'Til meg selv', konfirmasjon:'Konfirmasjon', bursdag:'Bursdag',
+  bryllup:'Bryllup', nyfodt:'Nyfødt', jubileum:'Jubileum', bare_fordi:'Bare fordi',
+  barnet_mitt:'Til barnet mitt', kjaeresten:'Til kjæresten', annet:'Annet'
+};
+
+
+// ================================================================
+// AUTH
+// ================================================================
+async function hashPassword(pw) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(buf)).map(x => x.toString(16).padStart(2,'0')).join('');
+}
+
+async function checkLogin() {
+  // Sjekk om allerede innlogget (sessionStorage)
+  if (sessionStorage.getItem('tidsbrev_admin') === '1') {
+    showDashboard();
+    return;
+  }
+}
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const pw = document.getElementById('loginPass').value;
+  const hash = await hashPassword(pw);
+
+  if (hash === ADMIN_HASH) {
+    sessionStorage.setItem('tidsbrev_admin', '1');
+    document.getElementById('loginErr').style.display = 'none';
+    showDashboard();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginPass').focus();
+  }
+});
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  sessionStorage.removeItem('tidsbrev_admin');
+  location.reload();
+});
+
+
+// ================================================================
+// DASHBOARD INIT
+// ================================================================
+async function showDashboard() {
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('navBar').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'block';
+
+  db = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+
+  populateMonthFilter();
+  await loadAllData();
+  await loadTidskapsellOrders();
+}
+
+function populateMonthFilter() {
+  const sel = document.getElementById('filterMonth');
+  const now = new Date();
+  for (let i = 0; i < 24; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+    const val = d.toISOString().slice(0, 7);
+    const label = d.toLocaleDateString('nb-NO', { month:'long', year:'numeric' });
+    const opt = document.createElement('option');
+    opt.value = val;
+    opt.textContent = label.charAt(0).toUpperCase() + label.slice(1);
+    sel.appendChild(opt);
+  }
+}
+
+
+// ================================================================
+// LOAD DATA
+// ================================================================
+async function loadAllData() {
+  try {
+    // Hent alle ordrer
+    const { data: orders, error } = await db
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    allOrders = orders || [];
+
+    // Hent alle brev
+    const { data: letters } = await db
+      .from('letters')
+      .select('order_id, letter_content, status, sent_at');
+
+    allLetters = {};
+    (letters || []).forEach(l => { allLetters[l.order_id] = l; });
+
+    updateStats();
+    renderTable();
+  } catch (err) {
+    console.error('[admin] Feil ved lasting:', err);
+    document.getElementById('orderTableBody').innerHTML =
+      `<tr><td colspan="8" class="empty-state">Kunne ikke laste data. Sjekk Supabase-tilkobling.</td></tr>`;
+  }
+}
+
+
+// ================================================================
+// STATISTICS
+// ================================================================
+function updateStats() {
+  const paid = allOrders.filter(o => o.payment_status === 'paid');
+
+  // Totalt
+  document.getElementById('statTotal').textContent = paid.length;
+  document.getElementById('statTotalSub').textContent =
+    `${allOrders.filter(o => o.payment_status === 'pending').length} venter`;
+
+  // Inntekt
+  const totalRev = paid.reduce((s, o) => s + (o.amount || 0), 0);
+  document.getElementById('statRevenue').textContent = formatNOK(totalRev);
+  document.getElementById('statRevenueSub').textContent = `${paid.length} betalte ordre`;
+
+  // Denne måneden
+  const now = new Date();
+  const thisMonth = now.toISOString().slice(0, 7);
+  const monthOrders = paid.filter(o => o.created_at && o.created_at.slice(0, 7) === thisMonth);
+  const monthRev = monthOrders.reduce((s, o) => s + (o.amount || 0), 0);
+  document.getElementById('statMonth').textContent = monthOrders.length;
+  document.getElementById('statMonthSub').textContent = formatNOK(monthRev);
+
+  // Innen 30 dager
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const in30 = new Date(today);
+  in30.setDate(in30.getDate() + 30);
+  const upcoming = paid.filter(o => {
+    const d = new Date(o.delivery_date);
+    return d >= today && d <= in30;
+  });
+  document.getElementById('statUpcoming').textContent = upcoming.length;
+  const fysiske = upcoming.filter(o => o.delivery_type === 'fysisk').length;
+  document.getElementById('statUpcomingSub').textContent =
+    `${fysiske} fysisk${fysiske !== 1 ? 'e' : ''}, ${upcoming.length - fysiske} digital${upcoming.length - fysiske !== 1 ? 'e' : ''}`;
+}
+
+
+// ================================================================
+// TABLE RENDERING
+// ================================================================
+function getFiltered() {
+  let list = [...allOrders];
+
+  const search = document.getElementById('searchInput').value.trim().toLowerCase();
+  const status = document.getElementById('filterStatus').value;
+  const type   = document.getElementById('filterType').value;
+  const month  = document.getElementById('filterMonth').value;
+
+  if (search) {
+    list = list.filter(o =>
+      (o.order_number || '').toLowerCase().includes(search) ||
+      (o.customer_name || '').toLowerCase().includes(search) ||
+      (o.customer_email || '').toLowerCase().includes(search)
+    );
+  }
+  if (status) list = list.filter(o => o.payment_status === status);
+  if (type) list = list.filter(o => o.delivery_type === type);
+  if (month) list = list.filter(o => o.delivery_date && o.delivery_date.slice(0, 7) === month);
+
+  return list;
+}
+
+function renderTable() {
+  const list = getFiltered();
+  const tbody = document.getElementById('orderTableBody');
+
+  if (list.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Ingen ordre funnet.</td></tr>';
+    document.getElementById('tableCount').textContent = '0 ordre';
+    document.getElementById('tableInfo').textContent = '';
+    return;
+  }
+
+  tbody.innerHTML = list.map(o => {
+    const statusClass = o.payment_status === 'paid' ? 'badge-paid' :
+                        o.payment_status === 'pending' ? 'badge-pending' : 'badge-failed';
+    const statusText  = o.payment_status === 'paid' ? 'Betalt' :
+                        o.payment_status === 'pending' ? 'Venter' : 'Feilet';
+
+    const letter = allLetters[o.id];
+    const letterSent = letter && letter.status === 'sent';
+    let fullStatus = statusText;
+    if (o.payment_status === 'paid' && letterSent) fullStatus = 'Sendt';
+    let fullClass = statusClass;
+    if (letterSent) fullClass = 'badge-sent';
+
+    const mottaker = o.recipient_type === 'meg_selv'
+      ? (o.customer_name || '—') + ' (selv)'
+      : (o.recipient_name || '—');
+
+    return `<tr data-id="${o.id}">
+      <td><strong style="color:var(--burgundy)">${escHtml(o.order_number || '—')}</strong></td>
+      <td>${formatDate(o.created_at)}</td>
+      <td>${escHtml(o.customer_name || '—')}<br/><span style="font-size:.78rem;color:var(--muted)">${escHtml(o.customer_email || '')}</span></td>
+      <td>${escHtml(mottaker)}</td>
+      <td>${formatDate(o.delivery_date)}</td>
+      <td><span class="badge-type">${PRODUKT[o.product_type] || (o.delivery_type === 'fysisk' ? 'Fysisk' : 'Digital')}</span></td>
+      <td>${formatNOK(o.amount)}</td>
+      <td><span class="badge-status ${fullClass}">${fullStatus}</span></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('tableCount').textContent = `${list.length} av ${allOrders.length} ordre`;
+  document.getElementById('tableInfo').textContent =
+    `Sum: ${formatNOK(list.filter(o => o.payment_status === 'paid').reduce((s,o) => s + (o.amount||0), 0))}`;
+
+  // Klikk-handler
+  tbody.querySelectorAll('tr[data-id]').forEach(tr => {
+    tr.addEventListener('click', () => openOrderModal(tr.dataset.id));
+  });
+}
+
+// Filtre og søk
+['searchInput','filterStatus','filterType','filterMonth'].forEach(id => {
+  document.getElementById(id).addEventListener('input', renderTable);
+  document.getElementById(id).addEventListener('change', renderTable);
+});
+
+document.getElementById('refreshBtn').addEventListener('click', loadAllData);
+
+
+// ================================================================
+// ORDER MODAL
+// ================================================================
+function openOrderModal(orderId) {
+  const o = allOrders.find(x => x.id === orderId);
+  if (!o) return;
+
+  const letter = allLetters[o.id];
+  const isPhysical = o.delivery_type === 'fysisk';
+  const isPaid = o.payment_status === 'paid';
+  const isSent = letter && letter.status === 'sent';
+
+  document.getElementById('modalTitle').textContent = `Ordre ${o.order_number || '—'}`;
+
+  const adresseHtml = isPhysical ? `
+    <div class="detail-item">
+      <div class="label">Leveringsadresse</div>
+      <div class="value">${escHtml(o.recipient_name || '')}<br/>${escHtml(o.recipient_address || '')}<br/>${escHtml(o.recipient_zip || '')} ${escHtml(o.recipient_city || '')}</div>
+    </div>
+  ` : '';
+
+  document.getElementById('modalBody').innerHTML = `
+    <div class="detail-grid">
+      <div class="detail-item">
+        <div class="label">Ordrenummer</div>
+        <div class="value" style="color:var(--burgundy);font-weight:700">${escHtml(o.order_number || '—')}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Bestilt</div>
+        <div class="value">${formatDate(o.created_at)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Kunde</div>
+        <div class="value">${escHtml(o.customer_name || '—')}<br/><span style="color:var(--muted);font-size:.85rem">${escHtml(o.customer_email || '')}</span></div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Mottakertype</div>
+        <div class="value">${o.recipient_type === 'meg_selv' ? 'Til seg selv' : 'Til en annen'}</div>
+      </div>
+      ${o.recipient_type !== 'meg_selv' ? `
+      <div class="detail-item">
+        <div class="label">Mottaker</div>
+        <div class="value">${escHtml(o.recipient_name || '—')}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Mottaker e-post</div>
+        <div class="value">${escHtml(o.recipient_email || '—')}</div>
+      </div>
+      ` : ''}
+      ${adresseHtml}
+      <div class="detail-item">
+        <div class="label">Produkt</div>
+        <div class="value">${PRODUKT[o.product_type] || o.product_type} — ${o.delivery_type === 'fysisk' ? 'Fysisk' : 'Digital'}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Anledning</div>
+        <div class="value">${ANLEDNING[o.occasion] || o.occasion || '—'}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Leveringsdato</div>
+        <div class="value" style="color:var(--burgundy);font-weight:700;font-size:1.05rem">${formatDate(o.delivery_date)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Beløp</div>
+        <div class="value">${formatNOK(o.amount)}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Betalingsstatus</div>
+        <div class="value"><span class="badge-status ${o.payment_status === 'paid' ? 'badge-paid' : o.payment_status === 'pending' ? 'badge-pending' : 'badge-failed'}">${o.payment_status === 'paid' ? 'Betalt' : o.payment_status === 'pending' ? 'Venter' : 'Feilet'}</span></div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Betalingsmetode</div>
+        <div class="value">${(o.payment_method || '—').toUpperCase()}</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Brevstatus</div>
+        <div class="value">${isSent ? '<span class="badge-status badge-sent">Sendt</span>' + (letter.sent_at ? ' — ' + formatDate(letter.sent_at) : '') : '<span class="badge-status badge-pending">Ikke sendt</span>'}</div>
+      </div>
+    </div>
+
+    <div class="detail-item detail-full">
+      <div class="label">Brevinnhold</div>
+      <div class="letter-box">${letter ? escHtml(letter.letter_content) : '<em style="color:var(--muted)">Ingen brevinnhold funnet</em>'}</div>
+    </div>
+
+    <div class="modal-actions">
+      ${isPhysical && isPaid && !isSent ? `
+        <button class="btn btn-post" id="markPostedBtn" data-order-id="${o.id}">Marker som postet</button>
+      ` : ''}
+      ${isPhysical && isSent ? '<span class="badge-status badge-posted" style="padding:8px 16px">Allerede postet / sendt</span>' : ''}
+    </div>
+  `;
+
+  // "Marker som postet"-knapp
+  const postBtn = document.getElementById('markPostedBtn');
+  if (postBtn) {
+    postBtn.addEventListener('click', async () => {
+      postBtn.disabled = true;
+      postBtn.textContent = 'Oppdaterer...';
+      try {
+        const letterData = allLetters[o.id];
+        if (letterData) {
+          const { error } = await db
+            .from('letters')
+            .update({ status: 'sent', sent_at: new Date().toISOString() })
+            .eq('order_id', o.id);
+          if (error) throw error;
+
+          letterData.status = 'sent';
+          letterData.sent_at = new Date().toISOString();
+
+          await db.from('admin_log').insert({
+            action: 'letter_marked_posted',
+            order_id: o.id,
+            note: `Fysisk brev manuelt markert som postet av admin`
+          });
+        }
+        closeModal();
+        renderTable();
+      } catch (err) {
+        console.error('[admin] Feil ved markering:', err);
+        postBtn.textContent = 'Feil — prøv igjen';
+        postBtn.disabled = false;
+      }
+    });
+  }
+
+  // Vis modal
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
+
+// ================================================================
+// TIDSKAPSELL ORDERS
+// ================================================================
+async function loadTidskapsellOrders() {
+  const container = document.getElementById('tidskapsellSection');
+  const emptyEl = document.getElementById('tidskapsellEmpty');
+
+  try {
+    const { data: orders, error } = await db
+      .from('orders')
+      .select('*')
+      .eq('product_type', 'tidskapsell')
+      .eq('payment_status', 'paid')
+      .order('delivery_date', { ascending: true });
+
+    if (error) throw error;
+
+    if (!orders || orders.length === 0) {
+      emptyEl.textContent = 'Ingen tidskapsell-ordrer ennå.';
+      return;
+    }
+
+    const orderIds = orders.map(o => o.id);
+    const { data: files } = await db
+      .from('tidskapsell_files')
+      .select('*')
+      .in('order_id', orderIds)
+      .order('created_at', { ascending: true });
+
+    const filesByOrder = {};
+    (files || []).forEach(f => {
+      if (!filesByOrder[f.order_id]) filesByOrder[f.order_id] = [];
+      filesByOrder[f.order_id].push(f);
+    });
+
+    emptyEl.style.display = 'none';
+
+    container.innerHTML += orders.map(o => {
+      const oFiles = filesByOrder[o.id] || [];
+      const totalSize = oFiles.reduce((s, f) => s + (f.file_size || 0), 0);
+      const sizeMB = (totalSize / 1024 / 1024).toFixed(1);
+
+      const fileListHtml = oFiles.length > 0
+        ? oFiles.map(f => `<li style="padding:4px 0;font-size:.85rem;color:var(--ink);border-bottom:1px dashed var(--beige)">
+            ${escHtml(f.file_name)} <span style="color:var(--muted);font-size:.78rem">(${(f.file_size/1024/1024).toFixed(2)} MB — ${escHtml(f.mime_type || '')})</span>
+          </li>`).join('')
+        : '<li style="padding:4px 0;font-size:.85rem;color:var(--muted)">Ingen filer lastet opp</li>';
+
+      return `<div style="background:var(--cream-2);border:1px solid var(--beige);border-radius:14px;padding:22px 24px;box-shadow:var(--shadow)">
+        <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+          <div>
+            <strong style="color:var(--burgundy);font-size:1rem">${escHtml(o.order_number || '—')}</strong>
+            <span class="badge-type" style="margin-left:8px">Tidskapsell</span>
+          </div>
+          <span class="badge-status ${o.payment_status === 'paid' ? 'badge-paid' : 'badge-pending'}">${o.payment_status === 'paid' ? 'Betalt' : 'Venter'}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:.88rem;margin-bottom:14px">
+          <div><span style="color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.5px">Kunde</span><br/>${escHtml(o.customer_name || '—')}</div>
+          <div><span style="color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.5px">Leveres</span><br/>${formatDate(o.delivery_date)}</div>
+          <div><span style="color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.5px">Beløp</span><br/>${formatNOK(o.amount)}</div>
+        </div>
+        <details style="margin-top:4px">
+          <summary style="cursor:pointer;font-size:.88rem;font-weight:500;color:var(--forest)">${oFiles.length} fil${oFiles.length !== 1 ? 'er' : ''} (${sizeMB} MB totalt)</summary>
+          <ul style="list-style:none;padding:8px 0 0;margin:0">${fileListHtml}</ul>
+        </details>
+      </div>`;
+    }).join('');
+
+  } catch (err) {
+    console.error('[admin] Feil ved lasting av tidskapsler:', err);
+    emptyEl.textContent = 'Kunne ikke laste tidskapsell-ordrer.';
+  }
+}
+
+
+// ================================================================
+// CSV EXPORT
+// ================================================================
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const list = getFiltered();
+  if (list.length === 0) { alert('Ingen ordre å eksportere.'); return; }
+
+  const headers = ['Ordrenummer','Bestilt','Kunde','E-post','Mottakertype','Mottaker','Mottaker e-post',
+    'Leveringstype','Produkt','Leveringsdato','Anledning','Beløp','Betalingsstatus','Betalingsmetode',
+    'Adresse','Postnr','By','Brevstatus'];
+
+  const rows = list.map(o => {
+    const letter = allLetters[o.id];
+    return [
+      o.order_number || '',
+      o.created_at ? o.created_at.slice(0,10) : '',
+      o.customer_name || '',
+      o.customer_email || '',
+      o.recipient_type || '',
+      o.recipient_name || '',
+      o.recipient_email || '',
+      o.delivery_type || '',
+      o.product_type || '',
+      o.delivery_date || '',
+      o.occasion || '',
+      o.amount || 0,
+      o.payment_status || '',
+      o.payment_method || '',
+      o.recipient_address || '',
+      o.recipient_zip || '',
+      o.recipient_city || '',
+      letter ? letter.status : 'unknown'
+    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(';');
+  });
+
+  const bom = '\uFEFF'; // UTF-8 BOM for Excel-kompatibilitet
+  const csv = bom + headers.join(';') + '\n' + rows.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `tidsbrev-ordre-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+
+// ================================================================
+// INIT — sjekk om allerede innlogget
+// ================================================================
+checkLogin();
+</script>
+
+</body>
+</html>

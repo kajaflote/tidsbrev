@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tidsbrev.no — Send et brev til fremtiden</title>
+  <meta name="description" content="Skriv et brev i dag og la det bli levert om 1 til 30 år. Til deg selv, til barnet ditt, eller til noen du er glad i." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* ─── Layout ─────────────────────────────────────── */
+    .wrap {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── Navbar ──────────────────────────────────────── */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(246, 239, 227, .92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(107, 93, 76, .12);
+    }
+    .site-nav .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      padding-bottom: 16px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo:hover { text-decoration: none; }
+    .nav-seal {
+      color: var(--burgundy);
+      opacity: .78;
+      transition: opacity .2s, transform .3s;
+      flex-shrink: 0;
+    }
+    .nav-logo:hover .nav-seal { opacity: 1; transform: rotate(8deg); }
+    .nav-wordmark {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--burgundy);
+      letter-spacing: .3px;
+    }
+    .nav-links {
+      display: none;
+      gap: 28px;
+      align-items: center;
+    }
+    @media (min-width: 720px) { .nav-links { display: flex; } }
+    .nav-links a {
+      font-size: .92rem;
+      color: var(--ink);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--burgundy); }
+    .nav-links .nav-cta {
+      background: var(--burgundy);
+      color: var(--cream);
+      padding: 9px 22px;
+      border-radius: 50px;
+      font-weight: 500;
+      transition: background .2s, transform .15s;
+    }
+    .nav-links .nav-cta:hover {
+      background: var(--burgundy-dark);
+      transform: translateY(-1px);
+      text-decoration: none;
+      color: var(--cream);
+    }
+
+    /* ─── Hero ────────────────────────────────────────── */
+    .hero {
+      padding: 90px 0 100px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 0%, rgba(176, 138, 62, .10) 0%, transparent 65%),
+        linear-gradient(180deg, var(--cream) 0%, var(--cream-2) 100%);
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-family: 'Caveat', cursive;
+      font-size: 1.4rem;
+      color: var(--burgundy);
+      margin-bottom: 18px;
+      opacity: .9;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      line-height: 1.13;
+      max-width: 820px;
+      margin: 0 auto 22px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--burgundy);
+    }
+    .hero-lead {
+      font-size: clamp(1rem, 1.5vw, 1.18rem);
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.75;
+    }
+    .hero-cta {
+      display: inline-block;
+      background: var(--burgundy);
+      color: var(--cream);
+      padding: 17px 40px;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.02rem;
+      font-weight: 500;
+      letter-spacing: .2px;
+      text-decoration: none;
+      box-shadow: 0 10px 30px rgba(107, 31, 42, .26);
+      transition: background .2s, transform .2s, box-shadow .2s;
+    }
+    .hero-cta:hover {
+      background: var(--burgundy-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 38px rgba(107, 31, 42, .36);
+      text-decoration: none;
+      color: var(--cream);
+    }
+
+    /* ─── Generic section helpers ─────────────────────── */
+    .section { padding: 88px 0; }
+
+    .section-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 56px;
+    }
+    .section-header .eyebrow {
+      display: block;
+      font-family: 'Caveat', cursive;
+      font-size: 1.25rem;
+      color: var(--burgundy);
+      margin-bottom: 10px;
+    }
+    .section-header h2 {
+      font-size: clamp(1.75rem, 3.3vw, 2.5rem);
+      margin-bottom: 12px;
+    }
+    .section-header p {
+      color: var(--muted);
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    /* ─── How it works ────────────────────────────────── */
+    .bg-cream2 { background: var(--cream-2); }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    @media (min-width: 680px) {
+      .steps { grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    }
+    .step { text-align: center; padding: 8px; }
+    .step-icon {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: 2px solid var(--beige);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      color: var(--burgundy);
+    }
+    .step h3 { font-size: 1.3rem; margin-bottom: 10px; }
+    .step p { color: var(--muted); font-size: .97rem; line-height: 1.65; margin: 0; }
+
+    /* ─── Product cards ───────────────────────────────── */
+    .bg-cream { background: var(--cream); }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+    @media (min-width: 680px) {
+      .product-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 900px) {
+      .product-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .product-card {
+      background: var(--cream-2);
+      border: 1px solid var(--beige);
+      border-radius: 18px;
+      padding: 38px 30px;
+      text-align: center;
+      position: relative;
+      transition: transform .28s, box-shadow .28s;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow);
+    }
+    .product-card.featured {
+      background: var(--forest);
+      border-color: var(--forest);
+    }
+    .product-badge {
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: var(--ink);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .product-card h3 {
+      font-size: 1.45rem;
+      margin-bottom: 4px;
+      color: var(--ink);
+    }
+    .product-card.featured h3 { color: var(--cream); }
+    .product-subtitle {
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      color: var(--burgundy);
+      display: block;
+      margin-bottom: 16px;
+    }
+    .product-card.featured .product-subtitle { color: var(--gold); }
+    .product-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.3rem;
+      font-weight: 700;
+      color: var(--ink);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .product-card.featured .product-price { color: var(--cream); }
+    .product-price small {
+      font-size: .87rem;
+      font-weight: 400;
+      color: var(--muted);
+    }
+    .product-card.featured .product-price small { color: rgba(246, 239, 227, .6); }
+    .product-note {
+      font-size: .82rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
+      margin-bottom: 20px;
+    }
+    .product-card.featured .product-note { color: rgba(246, 239, 227, .5); }
+    .product-card ul {
+      list-style: none;
+      text-align: left;
+      margin: 0 0 26px;
+      padding: 0;
+    }
+    .product-card ul li {
+      padding: 7px 0;
+      font-size: .93rem;
+      color: var(--muted);
+      border-bottom: 1px dashed rgba(107, 93, 76, .2);
+    }
+    .product-card ul li:last-child { border: none; }
+    .product-card ul li::before { content: "✦ "; color: var(--burgundy); }
+    .product-card.featured ul li { color: rgba(246, 239, 227, .8); border-color: rgba(246, 239, 227, .1); }
+    .product-card.featured ul li::before { color: var(--gold); }
+    .product-btn {
+      display: inline-block;
+      padding: 11px 26px;
+      border-radius: 50px;
+      border: 1.5px solid var(--burgundy);
+      color: var(--burgundy);
+      font-size: .93rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background .2s, color .2s;
+    }
+    .product-btn:hover {
+      background: var(--burgundy);
+      color: var(--cream);
+      text-decoration: none;
+    }
+    .product-card.featured .product-btn {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .product-card.featured .product-btn:hover {
+      background: var(--gold);
+      color: var(--ink);
+    }
+
+    /* ─── Occasions ───────────────────────────────────── */
+    .bg-forest { background: var(--forest); }
+
+    .bg-forest .section-header h2,
+    .bg-forest .section-header p { color: var(--cream); }
+    .bg-forest .section-header .eyebrow { color: var(--gold); }
+
+    .occasion-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    @media (min-width: 540px) {
+      .occasion-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (min-width: 860px) {
+      .occasion-grid { grid-template-columns: repeat(6, 1fr); gap: 16px; }
+    }
+    .occasion-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 10px;
+      padding: 24px 12px;
+      background: rgba(246, 239, 227, .06);
+      border: 1px solid rgba(246, 239, 227, .1);
+      border-radius: 14px;
+      text-decoration: none;
+      transition: background .2s, transform .2s, border-color .2s;
+    }
+    .occasion-card:hover {
+      background: rgba(246, 239, 227, .12);
+      transform: translateY(-4px);
+      border-color: rgba(176, 138, 62, .4);
+      text-decoration: none;
+    }
+    .occasion-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(176, 138, 62, .14);
+      border: 1px solid rgba(176, 138, 62, .28);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      flex-shrink: 0;
+      transition: background .2s;
+    }
+    .occasion-card:hover .occasion-icon { background: rgba(176, 138, 62, .24); }
+    .occasion-card h3 {
+      font-size: .93rem;
+      color: var(--cream);
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    /* ─── Quotes ──────────────────────────────────────── */
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      max-width: 880px;
+      margin: 0 auto;
+    }
+    @media (max-width: 620px) { .quotes-grid { grid-template-columns: 1fr; } }
+    .quote-card {
+      background: rgba(246, 239, 227, .06);
+      border: 1px solid rgba(246, 239, 227, .1);
+      border-radius: 16px;
+      padding: 44px 26px 24px;
+      position: relative;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.02rem;
+      line-height: 1.72;
+      color: rgba(246, 239, 227, .87);
+      transition: background .2s;
+    }
+    .quote-card:hover { background: rgba(246, 239, 227, .1); }
+    .quote-card::before {
+      content: "\201C";
+      font-size: 3.8rem;
+      line-height: 1;
+      position: absolute;
+      top: 8px;
+      left: 20px;
+      color: var(--gold);
+      font-family: 'Playfair Display', serif;
+      opacity: .38;
+    }
+    .quote-author {
+      display: block;
+      margin-top: 16px;
+      font-family: 'Caveat', cursive;
+      font-style: normal;
+      font-size: 1.12rem;
+      color: var(--gold);
+    }
+
+    /* ─── CTA banner ──────────────────────────────────── */
+    .cta-banner {
+      background: var(--burgundy);
+      padding: 88px 0;
+      text-align: center;
+    }
+    .cta-banner h2 {
+      font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+      color: var(--cream);
+      margin-bottom: 14px;
+    }
+    .cta-banner p {
+      color: rgba(246, 239, 227, .72);
+      font-size: 1.05rem;
+      max-width: 460px;
+      margin: 0 auto 38px;
+    }
+    .cta-light {
+      display: inline-block;
+      background: var(--cream);
+      color: var(--burgundy);
+      padding: 17px 44px;
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.02rem;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 8px 26px rgba(0, 0, 0, .18);
+      transition: background .2s, transform .2s, box-shadow .2s;
+    }
+    .cta-light:hover {
+      background: var(--cream-2);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 38px rgba(0, 0, 0, .26);
+      text-decoration: none;
+      color: var(--burgundy);
+    }
+    .cta-note {
+      display: block;
+      margin-top: 14px;
+      font-size: .82rem;
+      color: rgba(246, 239, 227, .42);
+    }
+
+    /* ─── Footer ──────────────────────────────────────── */
+    .site-footer {
+      background: var(--burgundy-dark);
+      padding: 46px 24px 28px;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--cream);
+      display: block;
+      margin-bottom: 16px;
+    }
+    .footer-links { margin-bottom: 16px; }
+    .footer-links a {
+      color: rgba(246, 239, 227, .72);
+      text-decoration: underline;
+      margin: 0 10px;
+      font-size: .86rem;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-copy {
+      font-size: .78rem;
+      color: rgba(246, 239, 227, .36);
+      margin: 0;
+    }
+
+    /* ─── Fade-in ─────────────────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── Mobile ──────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .hero  { padding: 60px 0 72px; }
+      .section { padding: 60px 0; }
+      .cta-banner { padding: 60px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════ -->
+<nav class="site-nav" role="navigation" aria-label="Hovednavigasjon">
+  <div class="wrap">
+
+    <a href="index.html" class="nav-logo" aria-label="Tidsbrev – gå til forsiden">
+      <!-- SVG-segl: konvolutt i sirkel -->
+      <svg class="nav-seal" width="36" height="36" viewBox="0 0 38 38"
+           fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="19" cy="19" r="17" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="19" cy="19" r="13.5" stroke="currentColor" stroke-width=".7"
+                stroke-dasharray="2 2.5" opacity=".45"/>
+        <rect x="10.5" y="14" width="17" height="11.5" rx="1.6"
+              stroke="currentColor" stroke-width="1.3" fill="none"/>
+        <polyline points="10.5,14 19,21.5 27.5,14"
+                  stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" fill="none"/>
+        <line x1="19" y1="22" x2="19" y2="25.5"
+              stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity=".4"/>
+      </svg>
+      <span class="nav-wordmark">Tidsbrev</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="#hvordan">Hvordan det fungerer</a>
+      <a href="#brev">Våre brev</a>
+      <a href="bestill.html" class="nav-cta">Skriv brev</a>
+    </div>
+
+  </div>
+</nav>
+
+
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<header class="hero">
+  <div class="wrap">
+    <span class="hero-eyebrow">~ et brev til fremtiden ~</span>
+    <h1>Skriv ordene i dag.<br><em>La tiden levere dem.</em></h1>
+    <p class="hero-lead">
+      Tidsbrev lar deg skrive et brev som leveres på nøyaktig riktig dato —
+      om ett, ti eller tretti år. Til deg selv, til barnet ditt, eller til
+      noen du er glad i.
+    </p>
+    <a href="bestill.html" class="hero-cta">Skriv ditt første brev</a>
+  </div>
+</header>
+
+
+<!-- ══════════════════════════════════════
+     HVORDAN DET FUNGERER
+══════════════════════════════════════ -->
+<section class="section bg-cream2" id="hvordan">
+  <div class="wrap">
+
+    <div class="section-header fade-in">
+      <span class="eyebrow">så enkelt er det</span>
+      <h2>Tre steg til et tidsbrev</h2>
+      <p>Vi tar vare på ordene dine helt til det rette øyeblikket.</p>
+    </div>
+
+    <div class="steps">
+
+      <div class="step fade-in">
+        <div class="step-icon" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"/>
+            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+          </svg>
+        </div>
+        <h3>1. Skriv brevet</h3>
+        <p>Ta deg tid. Skriv fra hjertet. Velg hvem det skal til og
+           når det skal leveres — om 1 til 30 år.</p>
+      </div>
+
+      <div class="step fade-in">
+        <div class="step-icon" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <h3>2. Vi tar vare på det</h3>
+        <p>Brevet krypteres og lagres sikkert i vårt norske arkiv
+           frem til leveringsdatoen du har valgt.</p>
+      </div>
+
+      <div class="step fade-in">
+        <div class="step-icon" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <h3>3. Det ankommer</h3>
+        <p>På valgt dato leveres brevet — digitalt på e-post eller
+           som et ekte brev i en vakker konvolutt i posten.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     VÅRE BREV
+══════════════════════════════════════ -->
+<section class="section bg-cream" id="brev">
+  <div class="wrap">
+
+    <div class="section-header fade-in">
+      <span class="eyebrow">våre brev</span>
+      <h2>Velg ditt tidsbrev</h2>
+      <p>Fra et enkelt minnesbrev til en hel livshistorie —
+         vi har en form for hvert øyeblikk.</p>
+    </div>
+
+    <div class="product-grid">
+
+      <!-- Digitalt brev -->
+      <div class="product-card fade-in">
+        <h3>Digitalt Brev</h3>
+        <span class="product-subtitle">Skrives og mottas digitalt</span>
+        <span class="product-price">99 <small>NOK</small></span>
+        <span class="product-note">99 kr start + 19 kr/år lagringsavgift</span>
+        <ul>
+          <li>Skrives direkte i nettleseren</li>
+          <li>Leveres på e-post på valgt dato</li>
+          <li>Sikker kryptering og lagring</li>
+          <li>Til deg selv eller noen du er glad i</li>
+        </ul>
+        <a href="bestill.html?type=digitalt" class="product-btn">Velg Digitalt</a>
+      </div>
+
+      <!-- Fysisk brev -->
+      <div class="product-card featured fade-in">
+        <span class="product-badge">Mest personlig</span>
+        <h3>Fysisk Brev</h3>
+        <span class="product-subtitle">Leveres i vakker konvolutt</span>
+        <span class="product-price">fra 249 <small>NOK</small></span>
+        <span class="product-note">249 kr start + 29 kr/år lagringsavgift</span>
+        <ul>
+          <li>Du sender brevet til oss</li>
+          <li>Vi lagrer og sender det på valgt dato</li>
+          <li>Til deg selv eller noen du er glad i</li>
+          <li>Innpakkes i vakker konvolutt (+79 kr)</li>
+        </ul>
+        <a href="bestill.html?type=fysisk" class="product-btn">Velg Fysisk</a>
+      </div>
+
+      <!-- Tidskapsell -->
+      <div class="product-card fade-in">
+        <span class="product-badge" style="background:var(--forest);color:var(--cream)">Nytt</span>
+        <h3>Tidskapsell</h3>
+        <span class="product-subtitle">Bilder og video til fremtiden</span>
+        <span class="product-price">fra 128 <small>NOK</small></span>
+        <span class="product-note">79 kr start + 49 kr/år lagringsavgift</span>
+        <ul>
+          <li>Last opp bilder, video og dokumenter</li>
+          <li>Leveres digitalt på valgt dato</li>
+          <li>Opptil 500 MB lagringsplass</li>
+          <li>Legg ved en personlig melding</li>
+        </ul>
+        <a href="bestill.html?type=tidskapsell" class="product-btn">Velg Tidskapsell</a>
+      </div>
+
+    </div>
+
+    <div class="price-explainer fade-in" style="max-width:660px;margin:36px auto 0;text-align:center;padding:22px 28px;background:var(--cream-2);border:1px solid var(--beige);border-radius:12px;">
+      <p style="font-size:.92rem;color:var(--muted);margin:0;line-height:1.7;">
+        <strong style="color:var(--ink);">Hvordan prisen fungerer:</strong>
+        Du betaler en startpris når du bestiller, pluss en liten årlig lagringsavgift
+        for hvert år brevet oppbevares. Eksempel: et digitalt brev levert om 5 år
+        koster 99 kr + (4 &times; 19 kr) = <strong style="color:var(--burgundy)">175 kr</strong> totalt.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     ANLEDNINGER
+══════════════════════════════════════ -->
+<section class="section bg-forest" id="anledninger">
+  <div class="wrap">
+
+    <div class="section-header fade-in">
+      <span class="eyebrow">for alle øyeblikk</span>
+      <h2>Hva feirer du?</h2>
+      <p>Et tidsbrev passer like godt til livets store milepæler som til hverdagens stille øyeblikk.</p>
+    </div>
+
+    <div class="occasion-grid">
+
+      <a href="bestill.html" class="occasion-card fade-in">
+        <div class="occasion-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <h3>Til deg selv</h3>
+      </a>
+
+      <a href="bestill.html" class="occasion-card fade-in">
+        <div class="occasion-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <h3>Til barnet ditt</h3>
+      </a>
+
+      <a href="bestill.html" class="occasion-card fade-in">
+        <div class="occasion-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/>
+          </svg>
+        </div>
+        <h3>Til kjæresten</h3>
+      </a>
+
+      <a href="bestill.html" class="occasion-card fade-in">
+        <div class="occasion-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <h3>Konfirmasjon</h3>
+      </a>
+
+      <a href="bestill.html" class="occasion-card fade-in">
+        <div class="occasion-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <h3>Bryllup</h3>
+      </a>
+
+      <a href="bestill.html" class="occasion-card fade-in">
+        <div class="occasion-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <h3>Jubileum</h3>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     SITATER
+══════════════════════════════════════ -->
+<section class="section bg-forest" id="historier">
+  <div class="wrap">
+
+    <div class="section-header fade-in">
+      <span class="eyebrow">ekte historier</span>
+      <h2>Et brev kan forandre et øyeblikk</h2>
+      <p>Noen ganger er det mest verdifulle vi kan gi hverandre
+         tiden det tar å skrive ned det vi føler.</p>
+    </div>
+
+    <div class="quotes-grid">
+
+      <div class="quote-card fade-in">
+        Da datteren min ble født satte jeg meg ned og skrev. Femten år
+        senere kom brevet i posten til konfirmasjonsdagen hennes. Det var
+        den mest ektefølte gaven jeg kunne gitt.
+        <span class="quote-author">— Ingrid, 39</span>
+      </div>
+
+      <div class="quote-card fade-in">
+        Da jeg ble 18 skrev jeg et brev til meg selv om mine mål og
+        ambisjoner. Jeg gleder meg til å se om jeg har klart det jeg
+        drømte om, eller om livet tok meg i en helt annen retning.
+        <span class="quote-author">— Marte, 28</span>
+      </div>
+
+      <div class="quote-card fade-in">
+        På bryllupsdagen skrev jeg et brev til Camilla. Ti år senere
+        fikk hun det i posten på jubileet vårt. Hun sa det var den
+        fineste gaven hun noen gang hadde fått.
+        <span class="quote-author">— Andreas, 41</span>
+      </div>
+
+      <div class="quote-card fade-in">
+        Jeg var på reisefot i tre måneder og sendte et brev til den
+        fremtidige meg. Jeg gleder meg til å la minnene strømme tilbake.
+        Det blir som en tidskapsel i postkassen.
+        <span class="quote-author">— Sofie, 26</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     CTA-BANNER
+══════════════════════════════════════ -->
+<section class="cta-banner">
+  <div class="wrap">
+    <h2>Klar til å skrive?</h2>
+    <p>Det tar under ti minutter. Ordene du skriver i dag kan bety alt om ti år.</p>
+    <a href="bestill.html" class="cta-light">Skriv ditt første brev</a>
+    <span class="cta-note">Fra 99 kr &middot; Norsk drift &middot; Årsavgift kun for lagring</span>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer class="site-footer">
+  <span class="footer-logo">Tidsbrev</span>
+  <div class="footer-links">
+    <a href="personvern.html">Personvern</a>
+    <a href="vilkaar.html">Vilkår</a>
+    <a href="faq.html">FAQ</a>
+    <a href="mailto:tidsbrev@outlook.com">tidsbrev@outlook.com</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Tidsbrev.no — Brev til fremtiden, skrevet i dag.</p>
+</footer>
+
+
+<script>
+  // Fade-in on scroll
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-in').forEach(function (el) {
+    io.observe(el);
+  });
+</script>
+
+</body>
+</html>

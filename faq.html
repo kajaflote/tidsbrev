@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ofte stilte spørsmål — Tidsbrev.no</title>
+<meta name="description" content="Svar på de vanligste spørsmålene om Tidsbrev.no — om levering, betaling, personvern, og hva som skjer i ulike situasjoner." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --cream:#F5F0E8;--cream-2:#FBF6EC;--beige:#E8DCC4;
+    --burgundy:#6B2737;--burgundy-dark:#4E141C;
+    --forest:#2D4A3E;--forest-dark:#1F3A2E;
+    --ink:#2A231C;--muted:#6B5D4C;--gold:#B08A3E;
+    --shadow:0 20px 60px rgba(42,35,28,.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    color:var(--ink);background:var(--cream);
+    line-height:1.7;-webkit-font-smoothing:antialiased;
+    min-height:100vh;display:flex;flex-direction:column;
+  }
+  h1,h2,h3{font-family:'Playfair Display',Georgia,serif;font-weight:600;line-height:1.25}
+  a{color:var(--burgundy);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  main{flex:1;padding:60px 0 100px}
+  .container{max-width:760px;margin:0 auto;padding:0 24px}
+
+  /* --- Hero --- */
+  .page-hero{text-align:center;margin-bottom:60px}
+  .eyebrow{font-family:'Caveat',cursive;font-size:1.2rem;color:var(--burgundy);display:block;margin-bottom:10px}
+  .page-hero h1{font-size:clamp(2rem,4vw,2.8rem);margin-bottom:14px;color:var(--ink)}
+  .page-hero .lead{color:var(--muted);font-size:1.05rem;max-width:520px;margin:0 auto;line-height:1.65}
+
+  /* --- Kategori-tabs --- */
+  .cat-tabs{
+    display:flex;flex-wrap:wrap;gap:10px;
+    justify-content:center;margin-bottom:48px;
+  }
+  .cat-tab{
+    padding:9px 20px;border-radius:50px;font-size:.88rem;font-weight:500;
+    cursor:pointer;transition:all .2s;border:1.5px solid var(--beige);
+    background:var(--cream-2);color:var(--muted);font-family:inherit;
+  }
+  .cat-tab:hover,.cat-tab.active{
+    background:var(--burgundy);color:var(--cream);border-color:var(--burgundy);
+  }
+
+  /* --- FAQ akordeon --- */
+  .faq-group{margin-bottom:48px}
+  .faq-group-title{
+    font-size:1.2rem;color:var(--forest);margin-bottom:20px;
+    padding-bottom:10px;border-bottom:2px solid var(--beige);
+    font-family:'Playfair Display',serif;
+  }
+
+  .faq-item{
+    background:var(--cream-2);border:1px solid var(--beige);
+    border-radius:14px;margin-bottom:12px;overflow:hidden;
+    transition:box-shadow .2s;
+  }
+  .faq-item:hover{box-shadow:0 8px 30px rgba(42,35,28,.08)}
+  .faq-item.open{box-shadow:0 8px 30px rgba(42,35,28,.08)}
+
+  .faq-q{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 24px;cursor:pointer;gap:16px;
+    background:none;border:none;width:100%;text-align:left;
+    font-family:inherit;
+  }
+  .faq-q-text{
+    font-family:'Playfair Display',serif;font-size:1.05rem;
+    font-weight:600;color:var(--ink);line-height:1.3;
+  }
+  .faq-icon{
+    flex-shrink:0;width:28px;height:28px;border-radius:50%;
+    background:var(--cream);border:1.5px solid var(--beige);
+    display:flex;align-items:center;justify-content:center;
+    transition:background .2s,transform .35s;
+    color:var(--burgundy);
+  }
+  .faq-item.open .faq-icon{background:var(--burgundy);border-color:var(--burgundy);color:var(--cream);transform:rotate(45deg)}
+  .faq-a{
+    max-height:0;overflow:hidden;
+    transition:max-height .4s ease, padding .3s ease;
+    padding:0 24px;
+  }
+  .faq-a-inner{
+    padding-bottom:22px;color:var(--muted);font-size:.96rem;line-height:1.75;
+    border-top:1px solid var(--beige);padding-top:16px;
+  }
+  .faq-a-inner p{margin-bottom:12px}
+  .faq-a-inner p:last-child{margin-bottom:0}
+  .faq-a-inner a{color:var(--burgundy);font-weight:500}
+  .faq-a-inner strong{color:var(--ink)}
+  .faq-item.open .faq-a{max-height:800px}
+
+  /* --- CTA-bunn --- */
+  .cta-section{
+    text-align:center;
+    background:linear-gradient(135deg,var(--forest) 0%,var(--forest-dark) 100%);
+    border-radius:20px;padding:48px 36px;margin-top:60px;
+    color:var(--cream);
+  }
+  .cta-section h2{font-size:1.8rem;margin-bottom:12px;color:var(--cream)}
+  .cta-section p{color:rgba(246,239,227,.8);margin-bottom:28px;font-size:1.02rem}
+  .cta-btn{
+    display:inline-block;background:var(--cream);color:var(--forest);
+    padding:16px 40px;border-radius:50px;font-weight:600;font-size:1rem;
+    transition:background .2s,transform .2s;
+  }
+  .cta-btn:hover{background:#fff;transform:translateY(-2px);text-decoration:none}
+  .cta-still-unsure{
+    margin-top:18px;font-size:.88rem;color:rgba(246,239,227,.65);
+  }
+  .cta-still-unsure a{color:var(--gold)}
+</style>
+</head>
+<body data-page="faq">
+
+<main>
+  <div class="container">
+
+    <div class="page-hero">
+      <span class="eyebrow">~ vi har svarene ~</span>
+      <h1>Ofte stilte spørsmål</h1>
+      <p class="lead">Lurer du på noe? Sjansen er stor for at svaret er her. Finner du ikke det du trenger, er vi alltid tilgjengelig på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a>.</p>
+    </div>
+
+    <!-- ===== GRUPPE 1: Om tjenesten ===== -->
+    <div class="faq-group" data-group="tjenesten">
+      <div class="faq-group-title">Om tjenesten</div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Hva er egentlig et tidsbrev?</span>
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p>Et tidsbrev er et brev du skriver i dag, men som leveringsdatoen er satt til å åpnes i fremtiden. Tenk deg et brev til deg selv om 10 år — eller et brev til barnet ditt som åpnes på 18-årsdagen.</p>
+          <p>Vi tar vare på brevet trygt og sikkert, og leverer det på nøyaktig den datoen du velger. Du trenger ikke å huske det — det klarer vi for deg.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Kan jeg skrive til noen andre enn meg selv?</span>
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p>Ja, absolutt. Du kan skrive til hvem du vil: et fremtidig barn, din nåværende partner, en god venn, eller til barnebarnet som ennå ikke er født. Brevet kan leveres digitalt (e-post) eller fysisk (brev i konvolutt).</p>
+          <p>Hvis du skriver til noen andre, oppgir du mottakerens kontaktinformasjon i bestillingsskjemaet.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Hvor langt frem i tid kan brevet leveres?</span>
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p>Leveringsdatoen kan være så tidlig som i morgen, og opptil 30 år frem i tid.</p>
+          <p>Jo lenger du velger å lagre brevet, desto mer spennende blir overraskelsen når det endelig ankommer.</p>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- ===== GRUPPE 2: Levering ===== -->
+    <div class="faq-group" data-group="levering">
+      <div class="faq-group-title">Levering</div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Hva er forskjellen på digitalt og fysisk brev?</span>
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p><strong>Digitalt brev (79 kr):</strong> Levereres som e-post på nøyaktig riktig dato, mellom kl. 07 og 09 norsk tid. Praktisk, enkelt og billig — perfekt om mottakeren bor i et annet land, eller om du skriver til deg selv.</p>
+          <p><strong>Fysisk brev (149 kr + 15 kr/ekstra år):</strong> Et ekte brev i en vakker konvolutt, sendt med posten i god tid før leveringsdatoen. Mer nostalgisk og personlig — noe man kan ta på og bevare. Brev til barnet du venter deg, for eksempel.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Hva om e-postadressen er endret om 10 år?</span>
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p>Dette er en reell utfordring, og vi tenker på det. Noen måneder før leveringsdato sender vi deg en påminnelse på e-post (til deg som avsender) slik at du kan bekrefte at kontaktinformasjonen fortsatt er riktig.</p>
+          <p>Dersom brevet ikke kan leveres digitalt, kontakter vi deg og forsøker alternativ levering. Sitter du og leser dette fordi du vurderer et brev med lang horisont — vurder fysisk levering til en permanent adresse, som foreldrenes hjem.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Kan jeg endre leveringsdatoen etter at jeg har bestilt?</span>
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p>Ikke gjennom nettstedet i dag — men ta kontakt med oss på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a>, og vi løser det manuelt dersom vi kan. Vi er fleksible ved rimelige forespørsler.</p>
+          <p>Vi jobber med en selvbetjeningsportal der du kan administrere bestillingen din. Den er ikke klar ennå.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Hva skjer om mottakeren er gått bort når brevet skal leveres?</span>
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p>Vi forsøker å levere brevet som normalt. Hvis vi ikke får bekreftet mottak (digitalt) eller brevet returneres (fysisk), kontakter vi deg som avsender. Dere bestemmer da hva som skal skje med brevet — om det skal videresendes til familien, bevares, eller slettes.</p>
+          <p>Vi sletter aldri et brev stille. Det er ditt brev, og vi respekterer det.</p>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- ===== GRUPPE 3: Personvern og sikkerhet ===== -->
+    <div class="faq-group" data-group="personvern">
+      <div class="faq-group-title">Personvern og sikkerhet</div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Er brevet mitt kryptert? Kan noen lese det?</span>
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p>Ja — brevet lagres kryptert i databasen vår (kryptering i hvile), og all overføring skjer via HTTPS. Vi er det et lite team og vi har ikke interesse av — eller behov for — å lese brevene dine.</p>
+          <p>Innholdet leses kun av det automatiserte systemet som sender det på leveringsdagen. Under normal drift ser ingen mennesker brevteksten din. Les mer i <a href="/personvern.html">personvernerklæringen</a>.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Hvor lagres dataene mine?</span>
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p>All data lagres på servere i EU (Frankfurt, Germany), hos vår databaseleverandør Supabase. Vi er GDPR-kompatible og behandler personopplysninger i tråd med norsk og europeisk personvernlovgivning.</p>
+          <p>Vi selger aldri data til tredjeparter. Vi sender ikke markedsføring uten ditt eksplisitte samtykke.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Hva skjer med brevet mitt hvis Tidsbrev legger ned?</span>
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p><strong>Ingen brev forsvinner.</strong> Dersom vi legger ned tjenesten, sender vi alle uleverte brev umiddelbart — digitalt eller fysisk. Du varsles minst 90 dager i forveien.</p>
+          <p>Dette er vår sterkeste garanti. Brevene er skrevet med kjærlighet, og de fortjener å nå frem uansett hva som skjer med oss som selskap.</p>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- ===== GRUPPE 4: Betaling og refusjon ===== -->
+    <div class="faq-group" data-group="betaling">
+      <div class="faq-group-title">Betaling og refusjon</div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Kan jeg få pengene tilbake hvis jeg angrer?</span>
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p>Ja — innen 24 timer fra kjøpstidspunktet tilbyr vi full refusjon, ingen spørsmål stilt. Send oss en e-post på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a> med ordrenummeret ditt.</p>
+          <p>Etter 24 timer kan vi dessverre ikke tilby refusjon, ettersom brevet da er lagret og prosessert i systemet. Se <a href="/vilkaar.html">vilkårene</a> for full oversikt over refusjonspolicyen.</p>
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          <span class="faq-q-text">Hvilke betalingsmetoder godtar dere?</span>
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="7" y1="1" x2="7" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="1" y1="7" x2="13" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">
+          <p>Vi godtar kortbetaling via Stripe (Visa, Mastercard, American Express) og mobilbetaling via Vipps. Ingen kortinformasjon lagres hos oss — det håndteres av Stripe og Vipps.</p>
+          <p>Vipps aktiveres gradvis — sjekk bestillingsskjemaet for oppdatert status.</p>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <h2>Klar til å skrive?</h2>
+      <p>Det tar bare noen minutter å sette ord på det du vil si — men ordene varer for alltid.</p>
+      <a href="/bestill.html" class="cta-btn">Skriv ditt tidsbrev</a>
+      <p class="cta-still-unsure">Har du et spørsmål som ikke er besvart her? <a href="mailto:hei@tidsbrev.no">Send oss en e-post</a>.</p>
+    </div>
+
+  </div>
+</main>
+
+<script src="js/nav.js"></script>
+<script>
+// ================================================================
+// FAQ — akkordeon-logikk
+// ================================================================
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const wasOpen = item.classList.contains('open');
+
+    // Lukk alle andre i samme gruppe
+    item.closest('.faq-group').querySelectorAll('.faq-item').forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+    });
+
+    // Åpne/lukk denne
+    if (!wasOpen) {
+      item.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  });
+});
+</script>
+</body>
+</html>
