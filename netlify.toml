@@ -15,6 +15,12 @@
   # Ingen build-kommando siden vi bruker ren HTML/CSS/JS
   command = "echo 'Ingen build trengs — ren HTML/CSS/JS'"
 
+  # Supabase URL og anon key er offentlige nøkler som MÅ ligge i
+  # frontend-koden (config.js). Netlify secrets scanner flagrer dem
+  # fordi de også finnes som miljøvariabler — dette er trygt å ignorere.
+  [build.environment]
+    SECRETS_SCAN_OMIT_KEYS = "SUPABASE_URL,SUPABASE_ANON_KEY"
+
 # ----------------------------------------------------------------
 # Functions-innstillinger
 # ----------------------------------------------------------------
