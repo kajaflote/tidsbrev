@@ -31,8 +31,8 @@ const CONFIG = {
   //   2. Velg prosjektet ditt → Settings → API
   //   3. Kopier "Project URL" og "anon / public"-nøkkelen
   // ----------------------------------------------------------------
-  SUPABASE_URL: "https://DIN-PROSJEKT-ID.supabase.co",
-  SUPABASE_ANON_KEY: "LIM-INN-ANON-PUBLIC-KEY-HER",
+  SUPABASE_URL: "https://bfnrccknrluxbukwdsjy.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmbnJjY2tucmx1eGJ1a3dkc2p5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5MjAzODEsImV4cCI6MjA5MTQ5NjM4MX0.p0dr-XU_ALJlPZFTFFSnONppaXlv2Dbr3RgFKCB36VU",
 
 
   // ----------------------------------------------------------------
