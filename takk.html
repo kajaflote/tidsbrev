@@ -327,51 +327,62 @@
 // ================================================================
 
 const PRODUKT_NAVN = {
-  digitalt: 'Digitalt Brev',
-  fysisk:   'Fysisk Brev',
-  // Bakoverkompatibilitet med eldre produktnavn
-  standard: 'Standard Brev',
-  premium:  'Premium Brev',
-  legacy:   'Legacy Pakke'
+  digitalt:    'Digitalt Brev',
+  fysisk:      'Fysisk Brev',
+  tidskapsell: 'Tidskapsell',
+  standard:    'Standard Brev',
+  premium:     'Premium Brev',
+  legacy:      'Legacy Pakke'
 };
 const LEVERING_TEKST = {
-  digitalt: 'Digital levering (e-post)',
-  fysisk:   'Fysisk brev i vakker konvolutt'
+  digitalt:    'Digital levering (e-post)',
+  fysisk:      'Fysisk brev i vakker konvolutt',
+  tidskapsell: 'Digital levering (e-post)'
 };
 
-// ----------------------------------------------------------------
-// Polling: Stripe redirecter hit FØR webhooken treffer — vi prøver
-// å hente ordren opptil MAX_FORSOK ganger med VENTETID_MS mellom
-// hvert forsøk. Gir betalingen tid til å bekrefte seg.
-// ----------------------------------------------------------------
-const MAX_FORSOK  = 6;
+const SELECT_FIELDS = 'order_number, product_type, delivery_type, delivery_date, recipient_type, recipient_name, customer_name, amount, payment_status';
+const MAX_FORSOK  = 10;
 const VENTETID_MS = 2000;
 
 function vent(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-async function hentBetaltOrdre(db, orderNumber) {
+async function hentOrdre(db) {
+  const orderNumber = Utils.urlParam('order');
+  const sessionId   = Utils.urlParam('session_id');
+
   for (let i = 0; i < MAX_FORSOK; i++) {
-    const { data: order } = await db
-      .from('orders')
-      .select('order_number, product_type, delivery_type, delivery_date, recipient_type, recipient_name, customer_name, amount, payment_status')
-      .eq('order_number', orderNumber)
-      .single();
+    let order = null;
+
+    if (orderNumber) {
+      const { data } = await db
+        .from('orders')
+        .select(SELECT_FIELDS)
+        .eq('order_number', orderNumber)
+        .single();
+      order = data;
+    } else if (sessionId) {
+      const { data } = await db
+        .from('orders')
+        .select(SELECT_FIELDS)
+        .eq('stripe_session_id', sessionId)
+        .single();
+      order = data;
+    }
 
     if (order && order.payment_status === 'paid') return order;
 
-    // Ordre funnet men ikke betalt ennå — oppdater lastingstekst og vent
     if (order && order.payment_status === 'pending') {
       const txt = document.getElementById('loadingText');
-      if (txt) txt.textContent = i < 2
+      if (txt) txt.textContent = i < 3
         ? 'Bekrefter betalingen din...'
         : 'Nesten klar — venter på bekreftelse fra banken...';
       await vent(VENTETID_MS);
       continue;
     }
 
-    // Ordre ikke funnet i det hele tatt
-    if (i === 0) await vent(VENTETID_MS); // Vent én gang i tilfelle litt sen DB-skriv
-    else break;
+    // Order not found yet — wait once in case DB write is slow
+    if (i < 2) { await vent(VENTETID_MS); continue; }
+    break;
   }
   return null;
 }
@@ -381,10 +392,10 @@ async function hentBetaltOrdre(db, orderNumber) {
   const content    = document.getElementById('content');
   const errorState = document.getElementById('errorState');
 
-  // Hent ordrenummer fra URL (?order=FRB-2026-001)
   const orderNumber = Utils.urlParam('order');
+  const sessionId   = Utils.urlParam('session_id');
 
-  if (!orderNumber) {
+  if (!orderNumber && !sessionId) {
     loading.style.display = 'none';
     errorState.style.display = 'block';
     return;
@@ -396,7 +407,7 @@ async function hentBetaltOrdre(db, orderNumber) {
       CONFIG.SUPABASE_ANON_KEY
     );
 
-    const order = await hentBetaltOrdre(db, orderNumber);
+    const order = await hentOrdre(db);
 
     if (!order) {
       throw new Error('Ordre ikke funnet eller ikke betalt');

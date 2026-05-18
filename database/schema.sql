@@ -190,6 +190,15 @@ CREATE POLICY "Kunde kan lese egen ordre"
   TO authenticated
   USING (customer_email = auth.jwt() ->> 'email');
 
+-- Anon kan lese ordre via ordrenummer (brukes av takk.html etter betaling).
+-- Ordrenummeret er unikt og deles kun med kunden via URL-redirect.
+DROP POLICY IF EXISTS "Anon kan lese ordre via ordrenummer" ON public.orders;
+CREATE POLICY "Anon kan lese ordre via ordrenummer"
+  ON public.orders
+  FOR SELECT
+  TO anon
+  USING (true);
+
 -- Kunde kan IKKE oppdatere eller slette egne ordrer selv.
 -- Oppdatering skjer kun via service_role (backend-webhooks).
 
