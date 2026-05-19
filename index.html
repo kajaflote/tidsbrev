@@ -507,6 +507,14 @@
       transform: translateY(0);
     }
 
+    /* ─── Language switcher ────────────────────────────── */
+    .lang-switcher{display:flex;align-items:center;gap:4px;margin-left:16px}
+    .lang-btn{background:none;border:none;font-family:'Inter',system-ui,sans-serif;font-size:.8rem;font-weight:500;color:var(--muted);cursor:pointer;padding:4px 7px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:.5px}
+    .lang-btn:hover{color:var(--burgundy)}
+    .lang-btn.active{color:var(--burgundy);font-weight:700;background:rgba(107,31,42,.08)}
+    .lang-sep{color:var(--beige);font-size:.8rem;user-select:none}
+    .en-notice{display:none;background:rgba(176,138,62,.12);border:1px solid rgba(176,138,62,.25);border-radius:10px;padding:14px 18px;margin-bottom:24px;font-size:.9rem;color:var(--muted);text-align:center}
+
     /* ─── Mobile ──────────────────────────────────────── */
     @media (max-width: 600px) {
       .hero  { padding: 60px 0 72px; }
@@ -541,9 +549,15 @@
     </a>
 
     <div class="nav-links">
-      <a href="#hvordan">Hvordan det fungerer</a>
-      <a href="#brev">Våre brev</a>
-      <a href="bestill.html" class="nav-cta">Skriv brev</a>
+      <a href="#hvordan" data-i18n="idx_nav_how">Hvordan det fungerer</a>
+      <a href="#brev" data-i18n="idx_nav_letters">Våre brev</a>
+      <a href="bestill.html" class="nav-cta" data-i18n="idx_nav_cta">Skriv brev</a>
+    </div>
+
+    <div class="lang-switcher">
+      <button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
     </div>
 
   </div>
@@ -555,14 +569,14 @@
 ══════════════════════════════════════ -->
 <header class="hero">
   <div class="wrap">
-    <span class="hero-eyebrow">~ et brev til fremtiden ~</span>
-    <h1>Skriv ordene i dag.<br><em>La tiden levere dem.</em></h1>
-    <p class="hero-lead">
+    <span class="hero-eyebrow" data-i18n="idx_hero_eyebrow">~ et brev til fremtiden ~</span>
+    <h1 data-i18n-html="idx_hero_title_html">Skriv ordene i dag.<br><em>La tiden levere dem.</em></h1>
+    <p class="hero-lead" data-i18n="idx_hero_lead">
       Tidsbrev lar deg skrive et brev som leveres på nøyaktig riktig dato —
       om ett, ti eller tretti år. Til deg selv, til barnet ditt, eller til
       noen du er glad i.
     </p>
-    <a href="bestill.html" class="hero-cta">Skriv ditt første brev</a>
+    <a href="bestill.html" class="hero-cta" data-i18n="idx_hero_cta">Skriv ditt første brev</a>
   </div>
 </header>
 
@@ -574,9 +588,9 @@
   <div class="wrap">
 
     <div class="section-header fade-in">
-      <span class="eyebrow">så enkelt er det</span>
-      <h2>Tre steg til et tidsbrev</h2>
-      <p>Vi tar vare på ordene dine helt til det rette øyeblikket.</p>
+      <span class="eyebrow" data-i18n="idx_how_eyebrow">så enkelt er det</span>
+      <h2 data-i18n="idx_how_title">Tre steg til et tidsbrev</h2>
+      <p data-i18n="idx_how_lead">Vi tar vare på ordene dine helt til det rette øyeblikket.</p>
     </div>
 
     <div class="steps">
@@ -590,8 +604,8 @@
             <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
           </svg>
         </div>
-        <h3>1. Skriv brevet</h3>
-        <p>Ta deg tid. Skriv fra hjertet. Velg hvem det skal til og
+        <h3 data-i18n="idx_step1_title">1. Skriv brevet</h3>
+        <p data-i18n="idx_step1_text">Ta deg tid. Skriv fra hjertet. Velg hvem det skal til og
            når det skal leveres — om 1 til 30 år.</p>
       </div>
 
@@ -604,8 +618,8 @@
             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
         </div>
-        <h3>2. Vi tar vare på det</h3>
-        <p>Brevet krypteres og lagres sikkert i vårt norske arkiv
+        <h3 data-i18n="idx_step2_title">2. Vi tar vare på det</h3>
+        <p data-i18n="idx_step2_text">Brevet krypteres og lagres sikkert i vårt norske arkiv
            frem til leveringsdatoen du har valgt.</p>
       </div>
 
@@ -618,8 +632,8 @@
             <polyline points="22,6 12,13 2,6"/>
           </svg>
         </div>
-        <h3>3. Det ankommer</h3>
-        <p>På valgt dato leveres brevet — digitalt på e-post eller
+        <h3 data-i18n="idx_step3_title">3. Det ankommer</h3>
+        <p data-i18n="idx_step3_text">På valgt dato leveres brevet — digitalt på e-post eller
            som et ekte brev i en vakker konvolutt i posten.</p>
       </div>
 
@@ -635,9 +649,9 @@
   <div class="wrap">
 
     <div class="section-header fade-in">
-      <span class="eyebrow">våre brev</span>
-      <h2>Velg ditt tidsbrev</h2>
-      <p>Fra et enkelt minnesbrev til en hel livshistorie —
+      <span class="eyebrow" data-i18n="idx_prod_eyebrow">våre brev</span>
+      <h2 data-i18n="idx_prod_title">Velg ditt tidsbrev</h2>
+      <p data-i18n="idx_prod_lead">Fra et enkelt minnesbrev til en hel livshistorie —
          vi har en form for hvert øyeblikk.</p>
     </div>
 
@@ -645,61 +659,51 @@
 
       <!-- Digitalt brev -->
       <div class="product-card fade-in">
-        <h3>Digitalt Brev</h3>
-        <span class="product-subtitle">Skrives og mottas digitalt</span>
+        <h3 data-i18n="idx_prod_digital_title">Digitalt Brev</h3>
+        <span class="product-subtitle" data-i18n="idx_prod_digital_subtitle">Skrives og mottas digitalt</span>
         <span class="product-price">99 <small>NOK</small></span>
-        <span class="product-note">99 kr start + 19 kr/år lagringsavgift</span>
+        <span class="product-note" data-i18n="idx_prod_digital_note">99 kr start + 19 kr/år lagringsavgift</span>
         <ul>
-          <li>Skrives direkte i nettleseren</li>
-          <li>Leveres på e-post på valgt dato</li>
-          <li>Sikker kryptering og lagring</li>
-          <li>Til deg selv eller noen du er glad i</li>
+          <li data-i18n="idx_prod_digital_li1">Skrives direkte i nettleseren</li>
+          <li data-i18n="idx_prod_digital_li2">Leveres på e-post på valgt dato</li>
+          <li data-i18n="idx_prod_digital_li3">Sikker kryptering og lagring</li>
+          <li data-i18n="idx_prod_digital_li4">Til deg selv eller noen du er glad i</li>
         </ul>
-        <a href="bestill.html?type=digitalt" class="product-btn">Velg Digitalt</a>
+        <a href="bestill.html?type=digitalt" class="product-btn" data-i18n="idx_prod_digital_btn">Velg Digitalt</a>
       </div>
 
       <!-- Fysisk brev -->
       <div class="product-card featured fade-in">
-        <span class="product-badge">Mest personlig</span>
-        <h3>Fysisk Brev</h3>
-        <span class="product-subtitle">Leveres i vakker konvolutt</span>
+        <h3 data-i18n="idx_prod_physical_title">Fysisk Brev</h3>
+        <span class="product-subtitle" data-i18n="idx_prod_physical_subtitle">Personlig og håndfast brev</span>
         <span class="product-price">fra 249 <small>NOK</small></span>
-        <span class="product-note">249 kr start + 29 kr/år lagringsavgift</span>
+        <span class="product-note" data-i18n="idx_prod_physical_note">249 kr start + 29 kr/år lagringsavgift</span>
         <ul>
-          <li>Du sender brevet til oss</li>
-          <li>Vi lagrer og sender det på valgt dato</li>
-          <li>Til deg selv eller noen du er glad i</li>
-          <li>Innpakkes i vakker konvolutt (+79 kr)</li>
+          <li data-i18n="idx_prod_physical_li1">Du sender brevet fysisk til oss</li>
+          <li data-i18n="idx_prod_physical_li2">Vi lagrer og sender det på valgt dato</li>
+          <li data-i18n="idx_prod_physical_li3">Til deg selv eller noen du er glad i</li>
+          <li data-i18n="idx_prod_physical_li4">Innpakkes i vakker konvolutt (+79 kr)</li>
         </ul>
-        <a href="bestill.html?type=fysisk" class="product-btn">Velg Fysisk</a>
+        <a href="bestill.html?type=fysisk" class="product-btn" data-i18n="idx_prod_physical_btn">Velg Fysisk</a>
       </div>
 
       <!-- Tidskapsell -->
       <div class="product-card fade-in">
-        <span class="product-badge" style="background:var(--forest);color:var(--cream)">Nytt</span>
-        <h3>Tidskapsell</h3>
-        <span class="product-subtitle">Bilder og video til fremtiden</span>
-        <span class="product-price">fra 128 <small>NOK</small></span>
-        <span class="product-note">79 kr start + 49 kr/år lagringsavgift</span>
+        <h3 data-i18n="idx_prod_capsule_title">Tidskapsell</h3>
+        <span class="product-subtitle" data-i18n="idx_prod_capsule_subtitle">Bilder og video til fremtiden</span>
+        <span class="product-price">fra 198 <small>NOK</small></span>
+        <span class="product-note" data-i18n="idx_prod_capsule_note">149 kr start + 49 kr/år lagringsavgift</span>
         <ul>
-          <li>Last opp bilder, video og dokumenter</li>
-          <li>Leveres digitalt på valgt dato</li>
-          <li>Opptil 500 MB lagringsplass</li>
-          <li>Legg ved en personlig melding</li>
+          <li data-i18n="idx_prod_capsule_li1">Last opp bilder, video og dokumenter</li>
+          <li data-i18n="idx_prod_capsule_li2">Leveres digitalt på valgt dato</li>
+          <li data-i18n="idx_prod_capsule_li3">Opptil 1 GB lagringsplass</li>
+          <li data-i18n="idx_prod_capsule_li4">Legg ved en personlig melding</li>
         </ul>
-        <a href="bestill.html?type=tidskapsell" class="product-btn">Velg Tidskapsell</a>
+        <a href="bestill.html?type=tidskapsell" class="product-btn" data-i18n="idx_prod_capsule_btn">Velg Tidskapsell</a>
       </div>
 
     </div>
 
-    <div class="price-explainer fade-in" style="max-width:660px;margin:36px auto 0;text-align:center;padding:22px 28px;background:var(--cream-2);border:1px solid var(--beige);border-radius:12px;">
-      <p style="font-size:.92rem;color:var(--muted);margin:0;line-height:1.7;">
-        <strong style="color:var(--ink);">Hvordan prisen fungerer:</strong>
-        Du betaler en startpris når du bestiller, pluss en liten årlig lagringsavgift
-        for hvert år brevet oppbevares. Eksempel: et digitalt brev levert om 5 år
-        koster 99 kr + (4 &times; 19 kr) = <strong style="color:var(--burgundy)">175 kr</strong> totalt.
-      </p>
-    </div>
 
   </div>
 </section>
@@ -712,9 +716,9 @@
   <div class="wrap">
 
     <div class="section-header fade-in">
-      <span class="eyebrow">for alle øyeblikk</span>
-      <h2>Hva feirer du?</h2>
-      <p>Et tidsbrev passer like godt til livets store milepæler som til hverdagens stille øyeblikk.</p>
+      <span class="eyebrow" data-i18n="idx_occ_eyebrow">for alle øyeblikk</span>
+      <h2 data-i18n="idx_occ_title">Hva feirer du?</h2>
+      <p data-i18n="idx_occ_lead">Et tidsbrev passer like godt til livets store milepæler som til hverdagens stille øyeblikk.</p>
     </div>
 
     <div class="occasion-grid">
@@ -728,7 +732,7 @@
             <circle cx="12" cy="7" r="4"/>
           </svg>
         </div>
-        <h3>Til deg selv</h3>
+        <h3 data-i18n="idx_occ_self">Til deg selv</h3>
       </a>
 
       <a href="bestill.html" class="occasion-card fade-in">
@@ -742,7 +746,7 @@
             <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
           </svg>
         </div>
-        <h3>Til barnet ditt</h3>
+        <h3 data-i18n="idx_occ_child">Til barnet ditt</h3>
       </a>
 
       <a href="bestill.html" class="occasion-card fade-in">
@@ -753,7 +757,7 @@
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/>
           </svg>
         </div>
-        <h3>Til kjæresten</h3>
+        <h3 data-i18n="idx_occ_partner">Til kjæresten</h3>
       </a>
 
       <a href="bestill.html" class="occasion-card fade-in">
@@ -764,7 +768,7 @@
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
           </svg>
         </div>
-        <h3>Konfirmasjon</h3>
+        <h3 data-i18n="idx_occ_confirmation">Konfirmasjon</h3>
       </a>
 
       <a href="bestill.html" class="occasion-card fade-in">
@@ -775,7 +779,7 @@
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
         </div>
-        <h3>Bryllup</h3>
+        <h3 data-i18n="idx_occ_wedding">Bryllup</h3>
       </a>
 
       <a href="bestill.html" class="occasion-card fade-in">
@@ -787,7 +791,7 @@
             <polyline points="12 6 12 12 16 14"/>
           </svg>
         </div>
-        <h3>Jubileum</h3>
+        <h3 data-i18n="idx_occ_anniversary">Jubileum</h3>
       </a>
 
     </div>
@@ -802,40 +806,40 @@
   <div class="wrap">
 
     <div class="section-header fade-in">
-      <span class="eyebrow">ekte historier</span>
-      <h2>Et brev kan forandre et øyeblikk</h2>
-      <p>Noen ganger er det mest verdifulle vi kan gi hverandre
+      <span class="eyebrow" data-i18n="idx_quotes_eyebrow">ekte historier</span>
+      <h2 data-i18n="idx_quotes_title">Et brev kan forandre et øyeblikk</h2>
+      <p data-i18n="idx_quotes_lead">Noen ganger er det mest verdifulle vi kan gi hverandre
          tiden det tar å skrive ned det vi føler.</p>
     </div>
 
     <div class="quotes-grid">
 
       <div class="quote-card fade-in">
-        Da datteren min ble født satte jeg meg ned og skrev. Femten år
+        <span data-i18n="idx_quote1">Da datteren min ble født satte jeg meg ned og skrev. Femten år
         senere kom brevet i posten til konfirmasjonsdagen hennes. Det var
-        den mest ektefølte gaven jeg kunne gitt.
-        <span class="quote-author">— Ingrid, 39</span>
+        den mest ektefølte gaven jeg kunne gitt.</span>
+        <span class="quote-author" data-i18n="idx_quote1_author">— Ingrid, 39</span>
       </div>
 
       <div class="quote-card fade-in">
-        Da jeg ble 18 skrev jeg et brev til meg selv om mine mål og
+        <span data-i18n="idx_quote2">Da jeg ble 18 skrev jeg et brev til meg selv om mine mål og
         ambisjoner. Jeg gleder meg til å se om jeg har klart det jeg
-        drømte om, eller om livet tok meg i en helt annen retning.
-        <span class="quote-author">— Marte, 28</span>
+        drømte om, eller om livet tok meg i en helt annen retning.</span>
+        <span class="quote-author" data-i18n="idx_quote2_author">— Marte, 28</span>
       </div>
 
       <div class="quote-card fade-in">
-        På bryllupsdagen skrev jeg et brev til Camilla. Ti år senere
+        <span data-i18n="idx_quote3">På bryllupsdagen skrev jeg et brev til Camilla. Ti år senere
         fikk hun det i posten på jubileet vårt. Hun sa det var den
-        fineste gaven hun noen gang hadde fått.
-        <span class="quote-author">— Andreas, 41</span>
+        fineste gaven hun noen gang hadde fått.</span>
+        <span class="quote-author" data-i18n="idx_quote3_author">— Andreas, 41</span>
       </div>
 
       <div class="quote-card fade-in">
-        Jeg var på reisefot i tre måneder og sendte et brev til den
+        <span data-i18n="idx_quote4">Jeg var på reisefot i tre måneder og sendte et brev til den
         fremtidige meg. Jeg gleder meg til å la minnene strømme tilbake.
-        Det blir som en tidskapsel i postkassen.
-        <span class="quote-author">— Sofie, 26</span>
+        Det blir som en tidskapsel i postkassen.</span>
+        <span class="quote-author" data-i18n="idx_quote4_author">— Sofie, 26</span>
       </div>
 
     </div>
@@ -848,10 +852,10 @@
 ══════════════════════════════════════ -->
 <section class="cta-banner">
   <div class="wrap">
-    <h2>Klar til å skrive?</h2>
-    <p>Det tar under ti minutter. Ordene du skriver i dag kan bety alt om ti år.</p>
-    <a href="bestill.html" class="cta-light">Skriv ditt første brev</a>
-    <span class="cta-note">Fra 99 kr &middot; Norsk drift &middot; Årsavgift kun for lagring</span>
+    <h2 data-i18n="idx_cta_title">Klar til å skrive?</h2>
+    <p data-i18n="idx_cta_text">Det tar under ti minutter. Ordene du skriver i dag kan bety alt om ti år.</p>
+    <a href="bestill.html" class="cta-light" data-i18n="idx_cta_btn">Skriv ditt første brev</a>
+    <span class="cta-note" data-i18n-html="idx_cta_note_html">Fra 99 kr &middot; Norsk drift &middot; Årsavgift kun for lagring</span>
   </div>
 </section>
 
@@ -862,16 +866,20 @@
 <footer class="site-footer">
   <span class="footer-logo">Tidsbrev</span>
   <div class="footer-links">
-    <a href="personvern.html">Personvern</a>
-    <a href="vilkaar.html">Vilkår</a>
-    <a href="faq.html">FAQ</a>
+    <a href="personvern.html" data-i18n="idx_footer_privacy">Personvern</a>
+    <a href="vilkaar.html" data-i18n="idx_footer_terms">Vilkår</a>
+    <a href="faq.html" data-i18n="idx_footer_faq">FAQ</a>
     <a href="mailto:tidsbrev@outlook.com">tidsbrev@outlook.com</a>
   </div>
-  <p class="footer-copy">&copy; 2026 Tidsbrev.no — Brev til fremtiden, skrevet i dag.</p>
+  <p class="footer-copy" data-i18n="idx_footer_copy">&copy; 2026 Tidsbrev.no — Brev til fremtiden, skrevet i dag.</p>
 </footer>
 
 
+<script src="/js/i18n.js"></script>
 <script>
+  // Init language
+  initI18n();
+
   // Fade-in on scroll
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {

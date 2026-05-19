@@ -30,7 +30,7 @@ const PRIS_DIGITALT_BASE      = 99;
 const PRIS_DIGITALT_PER_AAR   = 19;
 const PRIS_FYSISK_BASE        = 249;
 const PRIS_FYSISK_PER_AAR     = 29;
-const PRIS_TIDSKAPSELL_BASE   = 79;
+const PRIS_TIDSKAPSELL_BASE   = 149;
 const PRIS_TIDSKAPSELL_PER_AAR = 49;
 
 // Legacy-tabell for bakoverkompatibilitet
@@ -91,8 +91,10 @@ exports.handler = async (event) => {
     const data = JSON.parse(event.body || '{}');
 
     // ---- 1. Valider innkommende data ----
+    const isTidskapsell = data.product_type === 'tidskapsell';
     const required = ['customer_name','customer_email','recipient_type',
-                      'delivery_type','product_type','delivery_date','letter_content'];
+                      'delivery_type','product_type','delivery_date'];
+    if (!isTidskapsell) required.push('letter_content');
     for (const f of required) {
       if (!data[f]) {
         return {
@@ -100,6 +102,13 @@ exports.handler = async (event) => {
           body: JSON.stringify({ error: `Mangler felt: ${f}` })
         };
       }
+    }
+
+    if (isTidskapsell && (!data.uploaded_files || data.uploaded_files.length === 0)) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Tidskapsell krever minst én opplastet fil' })
+      };
     }
 
     const gyldigeTyper = ['digitalt', 'fysisk', 'tidskapsell'];
@@ -154,23 +163,63 @@ exports.handler = async (event) => {
       };
     }
 
-    // Lagre brevinnholdet i letters-tabellen
-    const { error: letterErr } = await supabase
-      .from('letters')
-      .insert({
-        order_id: order.id,
-        letter_content: data.letter_content,
-        status: 'stored'
-      });
+    if (isTidskapsell) {
+      // Store file metadata in tidskapsell_files
+      const fileRows = (data.uploaded_files || []).map(f => ({
+        order_id:  order.id,
+        file_path: f.path,
+        file_name: f.name,
+        file_size: f.size,
+        mime_type: f.type
+      }));
+      const { error: fileErr } = await supabase
+        .from('tidskapsell_files')
+        .insert(fileRows);
 
-    if (letterErr) {
-      console.error('[create-stripe-session] Letter insert feilet:', letterErr);
-      // Rull tilbake ordren så vi ikke sitter igjen med et foreldreløst kjøp
-      await supabase.from('orders').delete().eq('id', order.id);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: 'Kunne ikke lagre brev' })
-      };
+      if (fileErr) {
+        console.error('[create-stripe-session] Tidskapsell files insert feilet:', fileErr);
+        await supabase.from('orders').delete().eq('id', order.id);
+        return {
+          statusCode: 500,
+          body: JSON.stringify({ error: 'Kunne ikke lagre filinformasjon' })
+        };
+      }
+
+      // Store optional personal message in letters table
+      const { error: letterErr } = await supabase
+        .from('letters')
+        .insert({
+          order_id: order.id,
+          letter_content: data.message_content || '',
+          status: 'stored'
+        });
+
+      if (letterErr) {
+        console.error('[create-stripe-session] Message insert feilet:', letterErr);
+        await supabase.from('orders').delete().eq('id', order.id);
+        return {
+          statusCode: 500,
+          body: JSON.stringify({ error: 'Kunne ikke lagre melding' })
+        };
+      }
+    } else {
+      // Store letter content for digitalt/fysisk
+      const { error: letterErr } = await supabase
+        .from('letters')
+        .insert({
+          order_id: order.id,
+          letter_content: data.letter_content,
+          status: 'stored'
+        });
+
+      if (letterErr) {
+        console.error('[create-stripe-session] Letter insert feilet:', letterErr);
+        await supabase.from('orders').delete().eq('id', order.id);
+        return {
+          statusCode: 500,
+          body: JSON.stringify({ error: 'Kunne ikke lagre brev' })
+        };
+      }
     }
 
     // ---- 3. Opprett Stripe Checkout Session ----

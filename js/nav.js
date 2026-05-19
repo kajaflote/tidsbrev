@@ -19,15 +19,15 @@
 
   // ---- Navigasjonslenker ----
   const NAV_LINKS = [
-    { href: '/',            label: 'Hjem',   key: 'hjem'    },
-    { href: '/bestill.html', label: 'Bestill', key: 'bestill' },
-    { href: '/faq.html',    label: 'FAQ',    key: 'faq'     },
+    { href: '/',            label: 'Hjem',   key: 'hjem',    i18n: 'nav_home'  },
+    { href: '/bestill.html', label: 'Bestill', key: 'bestill', i18n: 'nav_order' },
+    { href: '/faq.html',    label: 'FAQ',    key: 'faq',     i18n: 'nav_faq'   },
   ];
 
   function navLinkHtml(links) {
     return links.map(l => {
       const active = currentPage === l.key ? ' style="color:var(--burgundy);font-weight:600"' : '';
-      return `<a href="${l.href}" class="nav-link"${active}>${l.label}</a>`;
+      return `<a href="${l.href}" class="nav-link" data-i18n="${l.i18n}"${active}>${l.label}</a>`;
     }).join('');
   }
 
@@ -159,8 +159,9 @@
     </a>
     <div class="nav-links" id="navLinks">
       ${navLinkHtml(NAV_LINKS)}
-      <a href="/bestill.html" class="nav-link nav-cta">Bestill brev</a>
+      <a href="/bestill.html" class="nav-link nav-cta" data-i18n="nav_order_cta">Bestill brev</a>
     </div>
+    ${typeof buildLangSwitcher === 'function' ? buildLangSwitcher() : ''}
     ${HAMBURGER}
   </div>
 </nav>`;
@@ -174,24 +175,24 @@
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-logo">Tidsbrev</div>
-      <p class="footer-tagline">Brev til fremtiden,<br>skrevet i dag.</p>
+      <p class="footer-tagline" data-i18n-html="footer_tagline_html">Brev til fremtiden,<br>skrevet i dag.</p>
     </div>
     <div class="footer-col">
-      <h4>Sider</h4>
-      <a href="/">Hjem</a>
-      <a href="/bestill.html">Bestill brev</a>
-      <a href="/faq.html">Ofte stilte spørsmål</a>
+      <h4 data-i18n="footer_pages">Sider</h4>
+      <a href="/" data-i18n="footer_home">Hjem</a>
+      <a href="/bestill.html" data-i18n="footer_order">Bestill brev</a>
+      <a href="/faq.html" data-i18n="footer_faq">Ofte stilte spørsmål</a>
     </div>
     <div class="footer-col">
-      <h4>Info</h4>
-      <a href="/personvern.html">Personvernerklæring</a>
-      <a href="/vilkaar.html">Vilkår og betingelser</a>
+      <h4 data-i18n="footer_info">Info</h4>
+      <a href="/personvern.html" data-i18n="footer_privacy">Personvernerklæring</a>
+      <a href="/vilkaar.html" data-i18n="footer_terms">Vilkår og betingelser</a>
       <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>&copy; ${year} Tidsbrev.no — Norsk drift</span>
-    <span>Lagret sikkert i EU &nbsp;·&nbsp; GDPR-trygt</span>
+    <span>&copy; ${year} Tidsbrev.no — <span data-i18n="footer_copy">Norsk drift</span></span>
+    <span data-i18n="footer_eu">Lagret sikkert i EU &nbsp;·&nbsp; GDPR-trygt</span>
   </div>
 </footer>`;
   }
@@ -235,6 +236,7 @@
     injectCSS();
     injectHTML();
     initHamburger();
+    if (typeof initI18n === 'function') initI18n();
   }
 
   if (document.readyState === 'loading') {

@@ -561,11 +561,159 @@ https://tidsbrev.no
 }
 
 
+// ================================================================
+// 7) TIDSKAPSEL-LEVERING — sendes til mottaker på leveringsdag
+// ================================================================
+function deliverTidskapsell({ order, files, personalMessage }) {
+  const avsenderNavn = order.customer_name || 'en som er glad i deg';
+  const mottakerNavn = order.recipient_type === 'andre'
+    ? (order.recipient_name || 'deg').split(' ')[0]
+    : order.customer_name.split(' ')[0];
+  const skrevetDato = formatDateNO(order.created_at);
+
+  const filListe = files.map(f => {
+    const isVideo = f.type && f.type.startsWith('video/');
+    const icon = isVideo ? '&#9654;' : '&#128247;';
+    const sizeMB = (f.size / (1024 * 1024)).toFixed(1);
+    return `
+      <tr>
+        <td style="padding:12px 16px;border-bottom:1px solid #E8DCC4;">
+          <span style="font-size:18px;margin-right:8px;">${icon}</span>
+          <a href="${escapeHtml(f.url)}" style="color:#6B2737;font-weight:600;text-decoration:underline;font-size:14px;">
+            ${escapeHtml(f.name)}
+          </a>
+          <span style="color:#6B5D4C;font-size:12px;margin-left:8px;">(${sizeMB} MB)</span>
+        </td>
+      </tr>`;
+  }).join('');
+
+  const meldingsBlokk = personalMessage && personalMessage.trim() ? `
+    <div style="margin:28px 0 0;">
+      <div style="font-family:Georgia,serif;color:#6B2737;font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Personlig hilsen</div>
+      <div style="background:#fffdf7;border:1px solid #E8DCC4;border-radius:10px;padding:20px 24px;font-family:Georgia,serif;font-size:15px;line-height:1.7;color:#2A231C;font-style:italic;">
+        ${formatLetterBody(personalMessage)}
+      </div>
+    </div>` : '';
+
+  const body = `
+    <p style="font-family:Georgia,'Caveat',cursive;font-size:20px;color:#6B2737;margin:0 0 6px;font-style:italic;">~ din tidskapsel er ankommet ~</p>
+    <h1 style="font-family:Georgia,serif;font-size:26px;color:#2A231C;margin:0 0 18px;line-height:1.2;">Minner fra fortiden har funnet deg</h1>
+
+    <p style="margin:0 0 16px;color:#2A231C;font-size:16px;">
+      Kjære ${escapeHtml(mottakerNavn)},
+    </p>
+
+    <p style="margin:0 0 22px;color:#2A231C;font-size:16px;">
+      <strong style="color:#6B2737;">${escapeHtml(avsenderNavn)}</strong> lagret denne tidskapselen
+      den ${escapeHtml(skrevetDato)} — og nå er dagen endelig her. Nedenfor finner du
+      ${files.length === 1 ? 'filen' : `alle ${files.length} filene`} som ble lagt ved.
+    </p>
+
+    <!-- Filer -->
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+      style="background:#F5F0E8;border:1px solid #E8DCC4;border-radius:12px;margin:24px 0;overflow:hidden;">
+      <tr>
+        <td style="padding:14px 16px;background:#2D4A3E;color:#F5F0E8;font-size:12px;text-transform:uppercase;letter-spacing:1px;font-weight:700;">
+          Dine filer — last ned innen 30 dager
+        </td>
+      </tr>
+      ${filListe}
+    </table>
+
+    <p style="margin:0 0 8px;color:#6B5D4C;font-size:13px;font-style:italic;">
+      Lenkene utløper om 30 dager. Last ned filene du vil beholde.
+    </p>
+
+    ${meldingsBlokk}
+
+    <p style="margin:28px 0 0;color:#6B5D4C;font-size:14px;">
+      Varme hilsener,<br/>
+      <span style="font-family:Georgia,'Caveat',cursive;color:#6B2737;font-size:18px;font-style:italic;">Teamet bak Tidsbrev</span>
+    </p>
+  `;
+
+  return {
+    subject: 'Din tidskapsel er ankommet',
+    html: baseLayout({
+      title: 'Din tidskapsel er ankommet',
+      preheader: `${avsenderNavn} lagret en tidskapsel til deg — nå er den her.`,
+      bodyHtml: body
+    })
+  };
+}
+
+
+// ================================================================
+// 8) AVSENDERPÅMINNELSE — 30 dager før levering
+// ================================================================
+function senderReminder(order) {
+  const produktNavn = PRODUKT_NAVN[order.product_type] || order.product_type;
+  const leveringsDato = formatDateNO(order.delivery_date);
+  const mottakerTekst = order.recipient_type === 'meg_selv'
+    ? 'deg selv'
+    : (order.recipient_name || 'mottakeren');
+
+  const body = `
+    <p style="font-family:Georgia,'Caveat',cursive;font-size:20px;color:#6B2737;margin:0 0 6px;font-style:italic;">~ en påminnelse ~</p>
+    <h1 style="font-family:Georgia,serif;font-size:26px;color:#2A231C;margin:0 0 18px;line-height:1.2;">Snart leveres brevet ditt</h1>
+
+    <p style="margin:0 0 16px;color:#2A231C;font-size:16px;">
+      Kjære ${escapeHtml(order.customer_name || 'du')},
+    </p>
+
+    <p style="margin:0 0 22px;color:#2A231C;font-size:16px;">
+      Om 30 dager — den <strong style="color:#6B2737;">${escapeHtml(leveringsDato)}</strong> —
+      leverer vi din <strong>${escapeHtml(produktNavn)}</strong> til ${escapeHtml(mottakerTekst)}.
+    </p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+      style="background:#F5F0E8;border:1px solid #E8DCC4;border-radius:12px;margin:24px 0;">
+      <tr><td style="padding:20px 24px;">
+        <table role="presentation" width="100%" cellpadding="6" cellspacing="0" border="0" style="font-size:14px;">
+          <tr>
+            <td style="color:#6B5D4C;width:40%;">Ordrenummer</td>
+            <td style="color:#2A231C;font-weight:600;">${escapeHtml(order.order_number || '')}</td>
+          </tr>
+          <tr>
+            <td style="color:#6B5D4C;">Leveringsdato</td>
+            <td style="color:#6B2737;font-weight:700;font-family:Georgia,serif;">${escapeHtml(leveringsDato)}</td>
+          </tr>
+          <tr>
+            <td style="color:#6B5D4C;">Produkt</td>
+            <td style="color:#2A231C;">${escapeHtml(produktNavn)}</td>
+          </tr>
+        </table>
+      </td></tr>
+    </table>
+
+    <p style="margin:0 0 22px;color:#2A231C;font-size:16px;">
+      Du trenger ikke gjøre noe — vi tar oss av alt. Bare vent på den magiske dagen.
+    </p>
+
+    <p style="margin:0;color:#6B5D4C;font-size:14px;">
+      Med varme hilsener,<br/>
+      <span style="font-family:Georgia,'Caveat',cursive;color:#6B2737;font-size:18px;font-style:italic;">Teamet bak Tidsbrev</span>
+    </p>
+  `;
+
+  return {
+    subject: `Påminnelse: Brevet ditt leveres ${leveringsDato}`,
+    html: baseLayout({
+      title: 'Snart leveres brevet ditt',
+      preheader: `Om 30 dager leverer vi brevet ditt til ${mottakerTekst}.`,
+      bodyHtml: body
+    })
+  };
+}
+
+
 module.exports = {
   orderConfirmation,
   adminNewOrder,
   deliverLetter,
   adminReminder,
   deliverLetterHtml,
-  deliverLetterText
+  deliverLetterText,
+  deliverTidskapsell,
+  senderReminder
 };

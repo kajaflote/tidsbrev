@@ -110,7 +110,100 @@ async function dailyLetterJob() {
   }
 
   // ================================================================
-  // 2. PÅMINNELSE TIL ADMIN OM FYSISKE BREV (kun når et brev treffer 30-dagersmerket)
+  // 2. SEND TIDSKAPSLER SOM HAR LEVERINGSDATO I DAG
+  // ================================================================
+  try {
+    const { data: kapsler, error: kapselErr } = await supabase
+      .from('orders')
+      .select('id, order_number')
+      .eq('delivery_type', 'tidskapsell')
+      .eq('payment_status', 'paid')
+      .eq('delivery_date', idag);
+
+    if (kapselErr) {
+      console.error('[send-brev] Feil ved henting av tidskapsler:', kapselErr);
+      resultater.feil.push('Henting av tidskapsler feilet: ' + kapselErr.message);
+    } else if (kapsler && kapsler.length > 0) {
+      console.log(`[send-brev] Fant ${kapsler.length} tidskapsler å levere`);
+
+      for (const ordre of kapsler) {
+        try {
+          const { data: letter } = await supabase
+            .from('letters')
+            .select('id, status')
+            .eq('order_id', ordre.id)
+            .single();
+
+          if (letter && letter.status === 'sent') {
+            console.log(`[send-brev] Tidskapsel for ordre ${ordre.order_number} er allerede sendt — hopper over`);
+            continue;
+          }
+
+          await sendEmail({
+            type:     'deliver_tidskapsell',
+            order_id: ordre.id
+          });
+
+          resultater.digitale_sendt++;
+          console.log(`[send-brev] ✓ Tidskapsel levert for ordre ${ordre.order_number}`);
+        } catch (err) {
+          resultater.digitale_feilet++;
+          resultater.feil.push(`Tidskapsel ${ordre.order_number}: ${err.message}`);
+          console.error(`[send-brev] ✗ Feil ved levering av tidskapsel ${ordre.order_number}:`, err.message);
+
+          await supabase.from('admin_log').insert({
+            action: 'capsule_delivery_failed',
+            order_id: ordre.id,
+            note: `Automatisk tidskapsel-levering feilet: ${err.message}`
+          });
+        }
+      }
+    } else {
+      console.log('[send-brev] Ingen tidskapsler å levere i dag');
+    }
+  } catch (err) {
+    console.error('[send-brev] Uventet feil i tidskapsel-levering:', err);
+    resultater.feil.push('Tidskapsel-levering krasjet: ' + err.message);
+  }
+
+  // ================================================================
+  // 3. SENDER-PÅMINNELSE 30 DAGER FØR LEVERING (alle typer)
+  // ================================================================
+  try {
+    const om30 = new Date();
+    om30.setDate(om30.getDate() + 30);
+    const om30str = om30.toISOString().split('T')[0];
+
+    const { data: reminderOrders, error: reminderErr } = await supabase
+      .from('orders')
+      .select('id, order_number, customer_email, customer_name, delivery_type, delivery_date')
+      .eq('payment_status', 'paid')
+      .eq('delivery_date', om30str);
+
+    if (reminderErr) {
+      console.error('[send-brev] Feil ved henting av påminnelses-ordrer:', reminderErr);
+    } else if (reminderOrders && reminderOrders.length > 0) {
+      for (const ordre of reminderOrders) {
+        try {
+          await sendEmail({
+            type:     'sender_reminder',
+            order_id: ordre.id
+          });
+          console.log(`[send-brev] ✓ Avsenderpåminnelse sendt for ordre ${ordre.order_number}`);
+        } catch (err) {
+          console.error(`[send-brev] ✗ Avsenderpåminnelse feilet for ${ordre.order_number}:`, err.message);
+        }
+      }
+    } else {
+      console.log('[send-brev] Ingen avsenderpåminnelser å sende i dag');
+    }
+  } catch (err) {
+    console.error('[send-brev] Feil ved avsenderpåminnelse:', err.message);
+    resultater.feil.push('Avsenderpåminnelse feilet: ' + err.message);
+  }
+
+  // ================================================================
+  // 4. PÅMINNELSE TIL ADMIN OM FYSISKE BREV (kun når et brev treffer 30-dagersmerket)
   // ================================================================
   // Vi sender én påminnelse pr. brev, nøyaktig 30 dager før leveringsdato.
   // E-posten inneholder en samlet liste over ALLE fysiske brev innen 30 dager.

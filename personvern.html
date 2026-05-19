@@ -107,21 +107,23 @@
   <div class="container">
 
     <div class="page-hero">
-      <span class="eyebrow">~ trygghet og åpenhet ~</span>
-      <h1>Personvernerklæring</h1>
-      <p class="lead">Vi lagrer bare det vi trenger, vi forteller deg hva og hvorfor, og vi sletter det når brevet er levert. Ingen mer, ingen mindre.</p>
+      <span class="eyebrow" data-i18n="pv_eyebrow">~ trygghet og åpenhet ~</span>
+      <h1 data-i18n="pv_title">Personvernerklæring</h1>
+      <p class="lead" data-i18n="pv_lead">Vi lagrer bare det vi trenger, vi forteller deg hva og hvorfor, og vi sletter det når brevet er levert. Ingen mer, ingen mindre.</p>
     </div>
+
+    <div class="en-notice" data-i18n="pv_en_notice"></div>
 
     <!-- 1. Hvem er vi -->
     <div class="section">
-      <h2>Hvem er vi?</h2>
+      <h2 data-i18n="pv_s1_title">Hvem er vi?</h2>
       <p>Tidsbrev.no er en norsk tjeneste som lar deg skrive brev til fremtiden — til deg selv eller til noen du er glad i. Brevet oppbevares trygt hos oss og leveres på den datoen du velger, enten digitalt via e-post eller fysisk i posten.</p>
       <p>Vi er behandlingsansvarlig for personopplysningene du gir oss. Har du spørsmål, er vi alltid tilgjengelig på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a>.</p>
     </div>
 
     <!-- 2. Hva vi lagrer -->
     <div class="section">
-      <h2>Hva lagrer vi om deg?</h2>
+      <h2 data-i18n="pv_s2_title">Hva lagrer vi om deg?</h2>
       <p>Vi lagrer bare det vi trenger for å levere brevet ditt:</p>
 
       <h3>Informasjon om deg (avsenderen)</h3>
@@ -151,7 +153,7 @@
 
     <!-- 3. Kryptering -->
     <div class="section">
-      <h2>Er brevet mitt kryptert?</h2>
+      <h2 data-i18n="pv_s3_title">Er brevet mitt kryptert?</h2>
       <div class="highlight-box">
         <div class="box-title">Ja — alltid.</div>
         <p>All kommunikasjon mellom nettleseren din og våre servere skjer via HTTPS (TLS). Brevinnhold og personopplysninger lagres kryptert i databasen (kryptering i hvile). Vi benytter Supabase som databaseleverandør, som drifter serverne sine i EU (Frankfurt, Germany) i tråd med GDPR.</p>
@@ -161,7 +163,7 @@
 
     <!-- 4. Servere i EU -->
     <div class="section">
-      <h2>Hvor lagres dataene?</h2>
+      <h2 data-i18n="pv_s4_title">Hvor lagres dataene?</h2>
       <p>Alle data lagres på servere i EU, hos følgende underleverandører:</p>
       <ul>
         <li><strong>Supabase</strong> (database) — servere i Frankfurt, EU. <a href="https://supabase.com/privacy" target="_blank" rel="noopener">Personvernerklæring ↗</a></li>
@@ -174,7 +176,7 @@
 
     <!-- 5. Hvor lenge -->
     <div class="section">
-      <h2>Hvor lenge beholder vi dataene?</h2>
+      <h2 data-i18n="pv_s5_title">Hvor lenge beholder vi dataene?</h2>
 
       <div class="highlight-box">
         <div class="box-title">Frem til brevet er levert — og ikke lenger.</div>
@@ -188,7 +190,7 @@
 
     <!-- 6. Rettslig grunnlag -->
     <div class="section">
-      <h2>Hva er det rettslige grunnlaget?</h2>
+      <h2 data-i18n="pv_s6_title">Hva er det rettslige grunnlaget?</h2>
       <p>Vi behandler personopplysninger på følgende grunnlag (GDPR art. 6):</p>
       <ul>
         <li><strong>Avtaloppfyllelse (art. 6 nr. 1 b)</strong> — behandling som er nødvendig for å levere tjenesten du har bestilt. Dette gjelder brevinnhold, navn, e-post og leveringsinformasjon.</li>
@@ -199,7 +201,7 @@
 
     <!-- 7. Dine rettigheter -->
     <div class="section">
-      <h2>Dine rettigheter</h2>
+      <h2 data-i18n="pv_s7_title">Dine rettigheter</h2>
       <p>Du har følgende rettigheter etter GDPR. Send oss en e-post på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a>, så svarer vi innen 30 dager:</p>
 
       <div class="rights-grid">
@@ -232,15 +234,15 @@
 
     <!-- 8. Informasjonskapsler -->
     <div class="section">
-      <h2>Informasjonskapsler (cookies)</h2>
+      <h2 data-i18n="pv_s8_title">Informasjonskapsler (cookies)</h2>
       <p>Vi bruker et minimum av informasjonskapsler. Nettstedet bruker sessionStorage (ikke cookies) for å ta vare på bestillingsutkastet ditt mens du fyller ut skjemaet — dette forsvinner automatisk når du lukker nettleserfanen.</p>
       <p>Vi bruker anonym statistikk (PostHog og Google Analytics) for å forstå hvordan nettsiden brukes. Disse samler ikke inn personopplysninger knyttet til identiteten din.</p>
     </div>
 
     <!-- Kontaktkort -->
     <div class="contact-card">
-      <h3>Spørsmål om personvern?</h3>
-      <p>Vi svarer alltid innen 30 dager — som regel mye raskere. Skriv til oss på e-post, og vi hjelper deg.</p>
+      <h3 data-i18n="pv_contact_title">Spørsmål om personvern?</h3>
+      <p data-i18n="pv_contact_text">Vi svarer alltid innen 30 dager — som regel mye raskere. Skriv til oss på e-post, og vi hjelper deg.</p>
       <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a>
     </div>
 
@@ -249,6 +251,7 @@
   </div>
 </main>
 
+<script src="/js/i18n.js"></script>
 <script src="/js/nav.js"></script>
 </body>
 </html>

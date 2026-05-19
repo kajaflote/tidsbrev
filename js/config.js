@@ -95,7 +95,7 @@ const CONFIG = {
   // Under 1 år = kun startpris. Eksempler:
   // Digitalt 10 år: 99 + 10×19 = 289 kr
   // Fysisk 5 år:    249 + 5×29 = 394 kr
-  // Tidskapsell 10 år: 79 + 10×49 = 569 kr
+  // Tidskapsell 10 år: 149 + 10×49 = 639 kr
   // ----------------------------------------------------------------
   PRIS_DIGITALT_BASE:      99,   // startpris digitalt brev
   PRIS_DIGITALT_PER_AAR:   19,   // årsavgift digitalt
@@ -103,7 +103,7 @@ const CONFIG = {
   PRIS_FYSISK_BASE:       249,   // startpris fysisk brev
   PRIS_FYSISK_PER_AAR:    29,    // årsavgift fysisk
 
-  PRIS_TIDSKAPSELL_BASE:   79,   // startpris tidskapsell
+  PRIS_TIDSKAPSELL_BASE:  149,   // startpris tidskapsell
   PRIS_TIDSKAPSELL_PER_AAR: 49,  // årsavgift tidskapsell
 
   PRIS_KONVOLUTT:          79,   // tillegg for premium konvolutt (fysisk)

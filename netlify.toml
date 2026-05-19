@@ -64,11 +64,20 @@
     Cache-Control = "public, max-age=31536000, immutable"
 
 # ----------------------------------------------------------------
+# Background Functions (lang kjøretid, opptil 15 min)
+# ----------------------------------------------------------------
+# convert-video-background konverterer MOV/AVI → MP4 for tidskapsler.
+# Trigges fra stripe-webhook etter vellykket betaling.
+[functions."convert-video-background"]
+  type = "background"
+
+# ----------------------------------------------------------------
 # Scheduled Functions (cron-jobber)
 # ----------------------------------------------------------------
 # send-brev kjører daglig kl 07:00 UTC (09:00 norsk tid)
 # og sender ut alle digitale brev som har leveringsdato i dag,
-# pluss admin-påminnelse om fysiske brev innen 30 dager.
+# pluss tidskapsler, avsenderpåminnelser, og admin-påminnelse
+# om fysiske brev innen 30 dager.
 [functions."send-brev"]
   schedule = "0 7 * * *"
 

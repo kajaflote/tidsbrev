@@ -300,6 +300,58 @@
     color:var(--muted);
   }
 
+  /* ---------- Physical letter info ---------- */
+  .fysisk-info{
+    background:var(--cream-2);
+    border:1px solid var(--beige);
+    border-radius:18px;
+    padding:40px 36px;
+    box-shadow:var(--shadow);
+    margin-bottom:30px;
+    text-align:center;
+  }
+  @media(max-width:560px){.fysisk-info{padding:28px 22px}}
+  .fysisk-info .fi-icon{
+    width:72px;height:72px;border-radius:50%;
+    background:var(--burgundy);
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 24px;
+  }
+  .fysisk-info .fi-icon svg{color:var(--cream)}
+  .fysisk-info h3{font-size:1.25rem;color:var(--ink);margin-bottom:8px}
+  .fysisk-info .fi-lead{
+    font-family:'Caveat',cursive;font-size:1.1rem;
+    color:var(--burgundy);font-style:italic;margin-bottom:24px;
+  }
+  .fysisk-info .fi-steps{
+    text-align:left;max-width:480px;margin:0 auto 28px;
+  }
+  .fysisk-info .fi-step{
+    display:flex;align-items:flex-start;gap:14px;
+    padding:14px 0;border-bottom:1px solid var(--beige);
+  }
+  .fysisk-info .fi-step:last-child{border-bottom:none}
+  .fysisk-info .fi-num{
+    width:32px;height:32px;border-radius:50%;flex-shrink:0;
+    background:var(--burgundy);color:var(--cream);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:600;font-size:.85rem;
+  }
+  .fysisk-info .fi-step p{font-size:.95rem;color:var(--ink);line-height:1.55}
+  .fysisk-info .fi-step p span{display:block;color:var(--muted);font-size:.85rem;margin-top:2px}
+  .fysisk-info .fi-address{
+    background:var(--cream);border:1px dashed var(--beige);
+    border-radius:12px;padding:20px 24px;
+    margin:0 auto 24px;max-width:360px;
+    font-family:'Playfair Display',serif;
+    font-size:1rem;line-height:1.7;color:var(--ink);
+  }
+  .fysisk-info .fi-safe{
+    font-size:.9rem;color:var(--muted);font-style:italic;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .fysisk-info .fi-safe svg{flex-shrink:0}
+
   /* ---------- Summary ---------- */
   .summary{
     background:var(--cream-2);
@@ -499,6 +551,14 @@
     border-radius: 8px;
     font-size: .88rem;
   }
+  .file-thumb {
+    width: 44px; height: 44px; border-radius: 6px; object-fit: cover; flex-shrink: 0;
+    background: var(--beige);
+  }
+  .file-thumb-video {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted);
+  }
   .file-item .file-name { flex: 1; color: var(--ink); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .file-item .file-size { color: var(--muted); flex-shrink: 0; }
   .file-item .file-remove { color: var(--muted); cursor: pointer; flex-shrink: 0; font-size: 1.1rem; line-height: 1; }
@@ -519,6 +579,12 @@
     transition: width .3s ease;
     width: 0%;
   }
+
+  .lang-switcher{display:flex;align-items:center;gap:4px;margin-left:auto}
+  .lang-btn{background:none;border:none;font-family:'Inter',system-ui,sans-serif;font-size:.8rem;font-weight:500;color:var(--muted);cursor:pointer;padding:4px 7px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:.5px}
+  .lang-btn:hover{color:var(--burgundy)}
+  .lang-btn.active{color:var(--burgundy);font-weight:700;background:rgba(107,31,42,.08)}
+  .lang-sep{color:var(--beige);font-size:.8rem;user-select:none}
 </style>
 </head>
 <body>
@@ -526,7 +592,12 @@
 <header class="nav">
   <div class="container" style="display:flex;align-items:center;justify-content:space-between">
     <a href="index.html" class="logo">Tidsbrev<span>.no</span></a>
-    <a href="index.html" style="font-size:.9rem;color:var(--muted)">← Tilbake til forsiden</a>
+    <a href="index.html" style="font-size:.9rem;color:var(--muted)">← <span data-i18n="nav_back">Tilbake til forsiden</span></a>
+    <div class="lang-switcher">
+      <button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+    </div>
   </div>
 </header>
 
@@ -539,23 +610,23 @@
         <div class="progress-fill" id="progressFill"></div>
         <div class="progress-step active" data-step="1">
           <div class="progress-circle">1</div>
-          <div class="progress-label">Mottaker</div>
+          <div class="progress-label" data-i18n="ord_progress_1">Mottaker</div>
         </div>
         <div class="progress-step" data-step="2">
           <div class="progress-circle">2</div>
-          <div class="progress-label">Levering</div>
+          <div class="progress-label" data-i18n="ord_progress_2">Levering</div>
         </div>
         <div class="progress-step" data-step="3">
           <div class="progress-circle">3</div>
-          <div class="progress-label">Informasjon</div>
+          <div class="progress-label" data-i18n="ord_progress_3">Informasjon</div>
         </div>
         <div class="progress-step" data-step="4">
           <div class="progress-circle">4</div>
-          <div class="progress-label">Skriv brev</div>
+          <div class="progress-label" data-i18n="ord_progress_4">Skriv brev</div>
         </div>
         <div class="progress-step" data-step="5">
           <div class="progress-circle">5</div>
-          <div class="progress-label">Betaling</div>
+          <div class="progress-label" data-i18n="ord_progress_5">Betaling</div>
         </div>
       </div>
     </div>
@@ -563,9 +634,9 @@
     <!-- ================ STEG 1 — Mottaker ================ -->
     <section class="step-panel active" id="step-1">
       <div class="step-head">
-        <span class="eyebrow">~ la oss begynne ~</span>
-        <h2>Hvem er brevet til?</h2>
-        <p>Et tidsbrev kan være en gave til deg selv eller til noen du er glad i.</p>
+        <span class="eyebrow" data-i18n="ord_s1_eyebrow">~ la oss begynne ~</span>
+        <h2 data-i18n="ord_s1_title">Hvem er brevet til?</h2>
+        <p data-i18n="ord_s1_text">Et tidsbrev kan være en gave til deg selv eller til noen du er glad i.</p>
       </div>
 
       <div class="choice-grid">
@@ -575,8 +646,8 @@
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
             </svg>
           </div>
-          <h3>Til meg selv</h3>
-          <p>Et brev fra deg i dag til deg i fremtiden.</p>
+          <h3 data-i18n="ord_s1_self_title">Til meg selv</h3>
+          <p data-i18n="ord_s1_self_text">Et brev fra deg i dag til deg i fremtiden.</p>
         </div>
 
         <div class="choice-card" data-value="andre" data-field="recipient_type">
@@ -585,23 +656,23 @@
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/>
             </svg>
           </div>
-          <h3>Til noen andre</h3>
-          <p>Overrask noen du er glad i på en fremtidig dato.</p>
+          <h3 data-i18n="ord_s1_other_title">Til noen andre</h3>
+          <p data-i18n="ord_s1_other_text">Overrask noen du er glad i på en fremtidig dato.</p>
         </div>
       </div>
 
       <div class="nav-btns">
         <span></span>
-        <button class="btn btn-primary" data-next="1">Neste →</button>
+        <button class="btn btn-primary" data-next="1" data-i18n="ord_next">Neste →</button>
       </div>
     </section>
 
     <!-- ================ STEG 2 — Levering ================ -->
     <section class="step-panel" id="step-2">
       <div class="step-head">
-        <span class="eyebrow">~ hvordan skal det komme frem ~</span>
-        <h2>Hvordan skal brevet leveres?</h2>
-        <p>Velg hvordan du vil at brevet skal ankomme på leveringsdagen.</p>
+        <span class="eyebrow" data-i18n="ord_s2_eyebrow">~ hvordan skal det komme frem ~</span>
+        <h2 data-i18n="ord_s2_title">Hvordan skal brevet leveres?</h2>
+        <p data-i18n="ord_s2_text">Velg hvordan du vil at brevet skal ankomme på leveringsdagen.</p>
       </div>
 
       <div class="choice-grid">
@@ -611,25 +682,23 @@
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z"/><polyline points="22,6 12,13 2,6"/>
             </svg>
           </div>
-          <h3>Digitalt brev</h3>
-          <p>Vi sender en e-post på nøyaktig riktig dato.</p>
+          <h3 data-i18n="ord_s2_digital_title">Digitalt brev</h3>
+          <p data-i18n="ord_s2_digital_text">Vi sender en e-post på nøyaktig riktig dato.</p>
           <div class="price" id="price-digitalt">fra 99 kr</div>
         </div>
 
         <div class="choice-card" data-value="fysisk" data-field="delivery_type">
-          <span class="badge-popular">Mest populær</span>
           <div class="icon">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/>
             </svg>
           </div>
-          <h3>Fysisk brev i konvolutt</h3>
-          <p>Et ekte brev leveres i vakker konvolutt.</p>
+          <h3 data-i18n="ord_s2_physical_title">Fysisk brev i konvolutt</h3>
+          <p data-i18n="ord_s2_physical_text">Et ekte brev leveres i vakker konvolutt.</p>
           <div class="price" id="price-fysisk">fra 249 kr</div>
         </div>
 
         <div class="choice-card" data-value="tidskapsell" data-field="delivery_type">
-          <span class="badge-popular" style="background:var(--forest);color:var(--cream)">Nytt</span>
           <div class="icon">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -637,24 +706,24 @@
               <rect x="1" y="6" width="14" height="12" rx="2"/>
             </svg>
           </div>
-          <h3>Tidskapsell</h3>
-          <p>Last opp bilder eller videoer som leveres digitalt på valgt dato.</p>
-          <div class="price" id="price-tidskapsell">fra 79 kr</div>
+          <h3 data-i18n="ord_s2_capsule_title">Tidskapsell</h3>
+          <p data-i18n="ord_s2_capsule_text">Last opp bilder eller videoer som leveres digitalt på valgt dato.</p>
+          <div class="price" id="price-tidskapsell">fra 149 kr</div>
         </div>
       </div>
 
       <div class="nav-btns">
-        <button class="btn btn-secondary" data-prev="2">← Tilbake</button>
-        <button class="btn btn-primary" data-next="2">Neste →</button>
+        <button class="btn btn-secondary" data-prev="2" data-i18n="ord_back">← Tilbake</button>
+        <button class="btn btn-primary" data-next="2" data-i18n="ord_next">Neste →</button>
       </div>
     </section>
 
     <!-- ================ STEG 3 — Informasjon ================ -->
     <section class="step-panel" id="step-3">
       <div class="step-head">
-        <span class="eyebrow">~ det praktiske ~</span>
-        <h2>Informasjon</h2>
-        <p id="step3-intro">Fortell oss hvem som skal motta brevet og når.</p>
+        <span class="eyebrow" data-i18n="ord_s3_eyebrow">~ det praktiske ~</span>
+        <h2 data-i18n="ord_s3_title">Informasjon</h2>
+        <p id="step3-intro" data-i18n="ord_s3_intro">Fortell oss hvem som skal motta brevet og når.</p>
       </div>
 
       <div class="form-card">
@@ -662,115 +731,115 @@
 
         <!-- Avsender — vises alltid, label endres dynamisk -->
         <div class="field">
-          <label id="lbl-sender-name">Ditt navn</label>
-          <input type="text" id="customer_name" placeholder="Fornavn Etternavn" autocomplete="name"/>
-          <div class="err-msg">Vennligst fyll inn navnet ditt.</div>
+          <label id="lbl-sender-name" data-i18n="ord_s3_your_name">Ditt navn</label>
+          <input type="text" id="customer_name" placeholder="Fornavn Etternavn" data-i18n-placeholder="ord_placeholder_name" autocomplete="name"/>
+          <div class="err-msg" data-i18n="ord_s3_err_name">Vennligst fyll inn navnet ditt.</div>
         </div>
 
         <div class="field">
-          <label id="lbl-sender-email">Din e-post</label>
-          <input type="email" id="customer_email" placeholder="din@epost.no" autocomplete="email"/>
-          <div class="err-msg">Vennligst fyll inn en gyldig e-postadresse.</div>
+          <label id="lbl-sender-email" data-i18n="ord_s3_your_email">Din e-post</label>
+          <input type="email" id="customer_email" placeholder="din@epost.no" data-i18n-placeholder="ord_placeholder_email" autocomplete="email"/>
+          <div class="err-msg" data-i18n="ord_s3_err_email">Vennligst fyll inn en gyldig e-postadresse.</div>
         </div>
 
         <!-- Mottaker — vises kun ved "til andre" -->
         <div id="recipient-fields" style="display:none">
           <div class="field">
-            <label id="lbl-recipient-name">Mottakers fulle navn</label>
-            <input type="text" id="recipient_name" placeholder="Fornavn Etternavn"/>
-            <div class="err-msg">Vennligst fyll inn mottakerens navn.</div>
+            <label id="lbl-recipient-name" data-i18n="ord_s3_recipient_name">Mottakers fulle navn</label>
+            <input type="text" id="recipient_name" placeholder="Fornavn Etternavn" data-i18n-placeholder="ord_placeholder_name"/>
+            <div class="err-msg" data-i18n="ord_s3_err_recipient_name">Vennligst fyll inn mottakerens navn.</div>
           </div>
 
           <div class="field" id="field-recipient-email">
-            <label>Mottakers e-post</label>
-            <input type="email" id="recipient_email" placeholder="mottaker@epost.no"/>
-            <div class="err-msg">Vennligst fyll inn en gyldig e-postadresse.</div>
+            <label data-i18n="ord_s3_recipient_email">Mottakers e-post</label>
+            <input type="email" id="recipient_email" placeholder="mottaker@epost.no" data-i18n-placeholder="ord_placeholder_recipient_email"/>
+            <div class="err-msg" data-i18n="ord_s3_err_recipient_email">Vennligst fyll inn en gyldig e-postadresse.</div>
           </div>
 
           <div class="field">
-            <label>Anledning</label>
+            <label data-i18n="ord_s3_occasion">Anledning</label>
             <select id="occasion">
-              <option value="">Velg anledning…</option>
-              <option value="meg_selv">Til meg selv</option>
-              <option value="konfirmasjon">Konfirmasjon</option>
-              <option value="bursdag">Bursdag</option>
-              <option value="bryllup">Bryllup</option>
-              <option value="nyfodt">Nyfødt barn</option>
-              <option value="jubileum">Jubileum</option>
-              <option value="bare_fordi">Bare fordi</option>
+              <option value="" data-i18n="ord_s3_occasion_select">Velg anledning…</option>
+              <option value="meg_selv" data-i18n="ord_s3_occasion_self">Til meg selv</option>
+              <option value="konfirmasjon" data-i18n="ord_s3_occasion_confirmation">Konfirmasjon</option>
+              <option value="bursdag" data-i18n="ord_s3_occasion_birthday">Bursdag</option>
+              <option value="bryllup" data-i18n="ord_s3_occasion_wedding">Bryllup</option>
+              <option value="nyfodt" data-i18n="ord_s3_occasion_newborn">Nyfødt barn</option>
+              <option value="jubileum" data-i18n="ord_s3_occasion_anniversary">Jubileum</option>
+              <option value="bare_fordi" data-i18n="ord_s3_occasion_justbecause">Bare fordi</option>
             </select>
-            <div class="err-msg">Vennligst velg en anledning.</div>
+            <div class="err-msg" data-i18n="ord_s3_err_occasion">Vennligst velg en anledning.</div>
           </div>
         </div>
 
         <!-- Fysisk adresse — vises ved fysisk levering -->
         <div id="address-fields" style="display:none">
           <div class="field">
-            <label>Gateadresse</label>
-            <input type="text" id="recipient_address" placeholder="Eksempelveien 12" autocomplete="street-address"/>
-            <div class="err-msg">Vennligst fyll inn gateadresse.</div>
+            <label data-i18n="ord_s3_address">Gateadresse</label>
+            <input type="text" id="recipient_address" placeholder="Eksempelveien 12" data-i18n-placeholder="ord_placeholder_address" autocomplete="street-address"/>
+            <div class="err-msg" data-i18n="ord_s3_err_address">Vennligst fyll inn gateadresse.</div>
           </div>
 
           <div class="field-row two">
             <div class="field">
-              <label>Postnummer</label>
-              <input type="text" id="recipient_zip" placeholder="0123" maxlength="4" inputmode="numeric" autocomplete="postal-code"/>
-              <div class="err-msg">Ugyldig postnummer.</div>
+              <label data-i18n="ord_s3_zip">Postnummer</label>
+              <input type="text" id="recipient_zip" placeholder="0123" data-i18n-placeholder="ord_placeholder_zip" maxlength="4" inputmode="numeric" autocomplete="postal-code"/>
+              <div class="err-msg" data-i18n="ord_s3_err_zip">Ugyldig postnummer.</div>
             </div>
             <div class="field">
-              <label>Poststed</label>
-              <input type="text" id="recipient_city" placeholder="Oslo" autocomplete="address-level2"/>
-              <div class="err-msg">Vennligst fyll inn poststed.</div>
+              <label data-i18n="ord_s3_city">Poststed</label>
+              <input type="text" id="recipient_city" placeholder="Oslo" data-i18n-placeholder="ord_placeholder_city" autocomplete="address-level2"/>
+              <div class="err-msg" data-i18n="ord_s3_err_city">Vennligst fyll inn poststed.</div>
             </div>
           </div>
         </div>
 
         <!-- Leveringsdato — vises alltid -->
         <div class="field">
-          <label>Leveringsdato</label>
+          <label data-i18n="ord_s3_date">Leveringsdato</label>
           <input type="date" id="delivery_date"/>
-          <div class="err-msg">Leveringsdatoen må være minst i morgen.</div>
+          <div class="err-msg" data-i18n="ord_s3_err_date">Leveringsdatoen må være minst i morgen.</div>
         </div>
       </div>
 
       <div class="nav-btns">
-        <button class="btn btn-secondary" data-prev="3">← Tilbake</button>
-        <button class="btn btn-primary" data-next="3">Neste →</button>
+        <button class="btn btn-secondary" data-prev="3" data-i18n="ord_back">← Tilbake</button>
+        <button class="btn btn-primary" data-next="3" data-i18n="ord_next">Neste →</button>
       </div>
     </section>
 
     <!-- ================ STEG 4 — Skriv brevet ================ -->
     <section class="step-panel" id="step-4">
       <div class="step-head">
-        <span class="eyebrow">~ ordene dine ~</span>
-        <h2>Skriv brevet</h2>
-        <p>Ta deg tid. Skriv fra hjertet. Dette er øyeblikket som skal fryses i tid.</p>
+        <span class="eyebrow" data-i18n="ord_s4_eyebrow">~ ordene dine ~</span>
+        <h2 data-i18n="ord_s4_title">Skriv brevet</h2>
+        <p data-i18n="ord_s4_text">Ta deg tid. Skriv fra hjertet. Dette er øyeblikket som skal fryses i tid.</p>
       </div>
 
       <div id="design-picker" style="display:none; margin-bottom: 28px;">
-        <p style="font-size:.9rem;font-weight:500;color:var(--ink);margin-bottom:14px;">
+        <p style="font-size:.9rem;font-weight:500;color:var(--ink);margin-bottom:14px;" data-i18n="ord_s4_design_label">
           Velg utseende på brevet
         </p>
         <div class="design-grid">
           <div class="design-card selected" data-theme="klassisk">
             <div class="design-preview klassisk-preview"></div>
-            <span class="design-name">Klassisk</span>
-            <span class="design-desc">Rent og tidløst</span>
+            <span class="design-name" data-i18n="ord_s4_design_klassisk">Klassisk</span>
+            <span class="design-desc" data-i18n="ord_s4_design_klassisk_desc">Rent og tidløst</span>
           </div>
           <div class="design-card" data-theme="romantisk">
             <div class="design-preview romantisk-preview"></div>
-            <span class="design-name">Romantisk</span>
-            <span class="design-desc">Varm og personlig</span>
+            <span class="design-name" data-i18n="ord_s4_design_romantisk">Romantisk</span>
+            <span class="design-desc" data-i18n="ord_s4_design_romantisk_desc">Varm og personlig</span>
           </div>
           <div class="design-card" data-theme="moderne">
             <div class="design-preview moderne-preview"></div>
-            <span class="design-name">Moderne</span>
-            <span class="design-desc">Enkel og stilren</span>
+            <span class="design-name" data-i18n="ord_s4_design_moderne">Moderne</span>
+            <span class="design-desc" data-i18n="ord_s4_design_moderne_desc">Enkel og stilren</span>
           </div>
           <div class="design-card" data-theme="eventyr">
             <div class="design-preview eventyr-preview"></div>
-            <span class="design-name">Eventyr</span>
-            <span class="design-desc">Håndskrevet følelse</span>
+            <span class="design-name" data-i18n="ord_s4_design_eventyr">Eventyr</span>
+            <span class="design-desc" data-i18n="ord_s4_design_eventyr_desc">Håndskrevet følelse</span>
           </div>
         </div>
       </div>
@@ -786,9 +855,9 @@
               <polyline points="17 8 12 3 7 8"/>
               <line x1="12" y1="3" x2="12" y2="15"/>
             </svg>
-            <p>Dra og slipp filer her, eller <label for="fileInput" class="upload-link">velg filer</label></p>
-            <p class="upload-hint">Bilder og videoer · maks 500 MB totalt · maks 20 filer</p>
-            <input type="file" id="fileInput" multiple accept="image/*,video/*" style="display:none"/>
+            <p><span data-i18n="ord_s4_upload_drop">Dra og slipp filer her, eller</span> <label for="fileInput" class="upload-link" data-i18n="ord_s4_upload_browse">velg filer</label></p>
+            <p class="upload-hint" data-i18n="ord_s4_upload_hint">JPG, PNG, GIF, WebP, MP4, MOV, AVI · maks 1 GB totalt · maks 10 filer</p>
+            <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi" style="display:none"/>
           </div>
 
           <div id="fileList" class="file-list"></div>
@@ -800,7 +869,7 @@
           </div>
 
           <div class="field" style="margin-top:24px">
-            <label>Legg til en personlig hilsen <span style="color:var(--muted);font-weight:400">(valgfritt)</span></label>
+            <label><span data-i18n="ord_s4_upload_message_label">Legg til en personlig hilsen</span> <span style="color:var(--muted);font-weight:400" data-i18n="ord_s4_upload_message_optional">(valgfritt)</span></label>
             <textarea id="message_content" placeholder="Hei fremtidige meg…"
                       style="min-height:120px" maxlength="500"></textarea>
             <div class="char-counter" id="msg-counter">
@@ -808,6 +877,52 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div id="fysisk-info" class="fysisk-info" style="display:none">
+        <div class="fi-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/>
+          </svg>
+        </div>
+        <h3 data-i18n="ord_s4_fysisk_title">Du skriver brevet selv</h3>
+        <p class="fi-lead" data-i18n="ord_s4_fysisk_lead">~ for hånd eller på maskin ~</p>
+
+        <div class="fi-steps">
+          <div class="fi-step">
+            <div class="fi-num">1</div>
+            <p>
+              <strong data-i18n="ord_s4_fysisk_step1_title">Skriv brevet ditt</strong>
+              <span data-i18n="ord_s4_fysisk_step1_text">Skriv for hånd eller print det ut — helt opp til deg. Det viktigste er ordene.</span>
+            </p>
+          </div>
+          <div class="fi-step">
+            <div class="fi-num">2</div>
+            <p>
+              <strong data-i18n="ord_s4_fysisk_step2_title">Send det til oss i posten</strong>
+              <span data-i18n="ord_s4_fysisk_step2_text">Etter bestilling får du en bekreftelse med adresse og instruksjoner. Legg brevet i en konvolutt og send det til:</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="fi-address">
+          Tidsbrev.no<br>
+          [ADRESSE]<br>
+          [POSTNR] [STED]
+        </div>
+
+        <div class="fi-step" style="max-width:480px;margin:0 auto 20px;display:flex;align-items:flex-start;gap:14px;padding:14px 0">
+          <div class="fi-num">3</div>
+          <p style="font-size:.95rem;color:var(--ink);line-height:1.55">
+            <strong data-i18n="ord_s4_fysisk_step3_title">Vi oppbevarer det trygt</strong>
+            <span style="display:block;color:var(--muted);font-size:.85rem;margin-top:2px" data-i18n="ord_s4_fysisk_step3_text">Brevet lagres forsvarlig hos oss helt til leveringsdatoen du har valgt. Da sender vi det videre til mottakeren i en vakker konvolutt.</span>
+          </p>
+        </div>
+
+        <p class="fi-safe">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span data-i18n="ord_s4_fysisk_safe">Brevet ditt er i trygge hender. Vi behandler det med omtanke.</span>
+        </p>
       </div>
 
       <div class="form-card letter-editor">
@@ -819,28 +934,28 @@
             <span><span id="char-current">0</span> / <span id="char-max">3000</span> tegn</span>
             <span id="char-remaining">3000 igjen</span>
           </div>
-          <div class="err-msg">Brevet må inneholde minst 20 tegn.</div>
+          <div class="err-msg" data-i18n="ord_s4_err_letter">Brevet må inneholde minst 20 tegn.</div>
         </div>
 
         <div class="inspiration">
-          <button type="button" class="insp-card" data-hint="Tenk på noe du har oppnådd i det siste — en liten eller stor seier — og beskriv hvordan det føltes. Hva lærte du om deg selv?">Hva er du stolt av akkurat nå?</button>
-          <button type="button" class="insp-card" data-hint="Om verden, om deg selv, om menneskene rundt deg. Hva drømmer du om skal være annerledes når brevet ankommer?">Hva håper du har forandret seg?</button>
-          <button type="button" class="insp-card" data-hint="Hva er de små og store tingene fra tiden din som du ønsker at fremtiden ikke skal glemme? Tenk lyder, lukter, øyeblikk.">Hva vil du at fremtiden skal huske?</button>
+          <button type="button" class="insp-card" data-hint-key="ord_s4_insp1_hint" data-hint="Tenk på noe du har oppnådd i det siste — en liten eller stor seier — og beskriv hvordan det føltes. Hva lærte du om deg selv?" data-i18n="ord_s4_insp1">Hva er du stolt av akkurat nå?</button>
+          <button type="button" class="insp-card" data-hint-key="ord_s4_insp2_hint" data-hint="Om verden, om deg selv, om menneskene rundt deg. Hva drømmer du om skal være annerledes når brevet ankommer?" data-i18n="ord_s4_insp2">Hva håper du har forandret seg?</button>
+          <button type="button" class="insp-card" data-hint-key="ord_s4_insp3_hint" data-hint="Hva er de små og store tingene fra tiden din som du ønsker at fremtiden ikke skal glemme? Tenk lyder, lukter, øyeblikk." data-i18n="ord_s4_insp3">Hva vil du at fremtiden skal huske?</button>
         </div>
       </div>
 
       <div class="nav-btns">
-        <button class="btn btn-secondary" data-prev="4">← Tilbake</button>
-        <button class="btn btn-primary" data-next="4">Neste →</button>
+        <button class="btn btn-secondary" data-prev="4" data-i18n="ord_back">← Tilbake</button>
+        <button class="btn btn-primary" data-next="4" data-i18n="ord_next">Neste →</button>
       </div>
     </section>
 
     <!-- ================ STEG 5 — Oppsummering og betaling ================ -->
     <section class="step-panel" id="step-5">
       <div class="step-head">
-        <span class="eyebrow">~ siste steg ~</span>
-        <h2>Oppsummering og betaling</h2>
-        <p>Sjekk at alt stemmer, og velg hvordan du vil betale.</p>
+        <span class="eyebrow" data-i18n="ord_s5_eyebrow">~ siste steg ~</span>
+        <h2 data-i18n="ord_s5_title">Oppsummering og betaling</h2>
+        <p data-i18n="ord_s5_text">Sjekk at alt stemmer, og velg hvordan du vil betale.</p>
       </div>
 
       <div class="summary" id="summary">
@@ -849,9 +964,9 @@
 
       <div style="margin-bottom:18px">
         <button class="pay-btn pay-vipps" id="pay-vipps">
-          <span class="vipps-logo">vipps</span> <span id="vipps-btn-label">Betal med Vipps</span>
+          <span class="vipps-logo">vipps</span> <span id="vipps-btn-label" data-i18n="ord_s5_vipps">Betal med Vipps</span>
         </button>
-        <button class="pay-btn pay-card" id="pay-card">
+        <button class="pay-btn pay-card" id="pay-card" data-i18n="ord_s5_card">
           Betal med kort
         </button>
       </div>
@@ -859,20 +974,20 @@
       <div class="trust">
         <div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Sikker betaling
+          <span data-i18n="ord_s5_trust_secure">Sikker betaling</span>
         </div>
         <div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          GDPR-trygt
+          <span data-i18n="ord_s5_trust_gdpr">GDPR-trygt</span>
         </div>
         <div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
-          Norsk drift
+          <span data-i18n="ord_s5_trust_norway">Norsk drift</span>
         </div>
       </div>
 
       <div class="nav-btns">
-        <button class="btn btn-secondary" data-prev="5">← Tilbake</button>
+        <button class="btn btn-secondary" data-prev="5" data-i18n="ord_back">← Tilbake</button>
         <span></span>
       </div>
     </section>
@@ -880,6 +995,7 @@
   </div>
 </main>
 
+<script src="/js/i18n.js"></script>
 <script src="/js/config.js"></script>
 <script src="/js/nav.js"></script>
 <script>
@@ -934,13 +1050,15 @@ function calcPrice() {
     ? Math.max(0, Math.floor((new Date(state.delivery_date) - new Date()) / (1000*60*60*24*365.25)))
     : 0;
   if (type === 'fysisk') return 249 + aar * 29;
-  if (type === 'tidskapsell') return 79 + aar * 49;
+  if (type === 'tidskapsell') return 149 + aar * 49;
   return 99 + aar * 19;
 }
 
 /* ---------- File upload state (declared early for use in validate/summary) ---------- */
-const MAX_TOTAL_BYTES = 500 * 1024 * 1024;
-const MAX_FILES = 20;
+const MAX_TOTAL_BYTES = 1024 * 1024 * 1024; // 1 GB
+const MAX_FILES = 10;
+const ACCEPTED_TYPES = ['image/jpeg','image/png','image/gif','image/webp','video/mp4','video/quicktime','video/x-msvideo'];
+const ACCEPTED_EXT = ['.jpg','.jpeg','.png','.gif','.webp','.mp4','.mov','.avi'];
 let pendingFiles = [];
 
 function formatBytes(bytes) {
@@ -1014,21 +1132,21 @@ function renderStep3() {
   const physical = state.delivery_type === 'fysisk';
 
   if (toSelf) {
-    lblSenderName.textContent = 'Ditt navn';
-    lblSenderEmail.textContent = 'Din e-post';
+    lblSenderName.textContent = t('ord_s3_your_name');
+    lblSenderEmail.textContent = t('ord_s3_your_email');
     recipientFields.style.display = 'none';
-    intro.textContent = 'Fortell oss hvor vi skal sende brevet når tiden er inne.';
+    intro.textContent = t('ord_s3_intro_self');
   } else {
-    lblSenderName.textContent = 'Ditt navn (avsender)';
-    lblSenderEmail.textContent = 'Din e-post (avsender)';
+    lblSenderName.textContent = t('ord_s3_your_name_sender');
+    lblSenderEmail.textContent = t('ord_s3_your_email_sender');
     recipientFields.style.display = 'block';
-    intro.textContent = 'Fortell oss hvem som skal motta brevet og hvilken anledning det er for.';
+    intro.textContent = t('ord_s3_intro_other');
   }
 
   if (state.delivery_type === 'tidskapsell') {
     addressFields.style.display = 'none';
     if (!toSelf) fieldRecEmail.style.display = 'block';
-    intro.textContent = 'Fortell oss hvem som skal motta tidskapselen og når.';
+    intro.textContent = t('ord_s3_intro_capsule');
   } else {
     // Recipient email only needed for digital delivery to others
     if (!toSelf && !physical) {
@@ -1039,13 +1157,14 @@ function renderStep3() {
     addressFields.style.display = physical ? 'block' : 'none';
   }
 
-  // Set min date = tomorrow
+  // Set min date = tomorrow, max depends on delivery type
   const dateInput = document.getElementById('delivery_date');
   const min = new Date();
   min.setDate(min.getDate() + 1);
   dateInput.min = min.toISOString().split('T')[0];
+  const maxYears = state.delivery_type === 'tidskapsell' ? 15 : 30;
   const maxDate = new Date();
-  maxDate.setFullYear(maxDate.getFullYear() + 30);
+  maxDate.setFullYear(maxDate.getFullYear() + maxYears);
   dateInput.max = maxDate.toISOString().split('T')[0];
 
   // Fill in saved values
@@ -1116,7 +1235,7 @@ function validateStep3() {
   state.delivery_date = date.value;
 
   if (!ok) {
-    formError.textContent = 'Vennligst rett opp feltene som er markert med rødt.';
+    formError.textContent = t('ord_s3_err_form');
     formError.classList.add('show');
   }
   saveState();
@@ -1127,29 +1246,36 @@ function validateStep3() {
 function renderStep4() {
   const isDigital     = state.delivery_type === 'digitalt';
   const isTidskapsell = state.delivery_type === 'tidskapsell';
+  const isFysisk      = state.delivery_type === 'fysisk';
 
   document.getElementById('design-picker').style.display  = isDigital ? 'block' : 'none';
-  document.getElementById('upload-area').style.display    = isTidskapsell ? 'block' : 'none';
+  document.getElementById('upload-area').style.display     = isTidskapsell ? 'block' : 'none';
+  document.getElementById('fysisk-info').style.display     = isFysisk ? 'block' : 'none';
 
   const letterEditor = document.querySelector('.letter-editor');
-  if (letterEditor) letterEditor.style.display = isTidskapsell ? 'none' : 'block';
+  if (letterEditor) letterEditor.style.display = (isDigital) ? 'block' : 'none';
 
-  // Update step heading dynamically
   const stepHead = document.querySelector('#step-4 .step-head h2');
   const stepLead = document.querySelector('#step-4 .step-head p');
+  const stepEye  = document.querySelector('#step-4 .step-head .eyebrow');
   if (isTidskapsell) {
-    stepHead.textContent = 'Last opp filene dine';
-    stepLead.textContent = 'Legg til bilder eller videoer du vil sende til fremtiden.';
+    stepHead.textContent = t('ord_s4_title_upload');
+    stepLead.textContent = t('ord_s4_text_upload');
+    stepEye.textContent  = t('ord_s4_eyebrow');
+  } else if (isFysisk) {
+    stepHead.textContent = t('ord_s4_fysisk_heading');
+    stepLead.textContent = t('ord_s4_fysisk_text');
+    stepEye.textContent  = t('ord_s4_fysisk_eyebrow');
   } else {
-    stepHead.textContent = 'Skriv brevet';
-    stepLead.textContent = 'Ta deg tid. Skriv fra hjertet. Dette er øyeblikket som skal fryses i tid.';
+    stepHead.textContent = t('ord_s4_title');
+    stepLead.textContent = t('ord_s4_text');
+    stepEye.textContent  = t('ord_s4_eyebrow');
   }
 
-  if (!isTidskapsell) {
-    const max = state.delivery_type === 'fysisk' ? 1500 : 3000;
+  if (isDigital) {
     const ta = document.getElementById('letter_content');
-    document.getElementById('char-max').textContent = max;
-    ta.setAttribute('maxlength', max);
+    document.getElementById('char-max').textContent = 3000;
+    ta.setAttribute('maxlength', 3000);
     if (state.recipient_type === 'andre' && state.recipient_name) {
       ta.placeholder = `Kjære fremtidige ${state.recipient_name.split(' ')[0]}…`;
     } else {
@@ -1157,10 +1283,7 @@ function renderStep4() {
     }
     if (state.letter_content) ta.value = state.letter_content;
     updateCharCounter();
-  }
 
-  // Restore design theme selection
-  if (isDigital) {
     document.querySelectorAll('.design-card').forEach(c => {
       c.classList.toggle('selected', c.dataset.theme === (state.design_theme || 'klassisk'));
     });
@@ -1188,30 +1311,31 @@ document.getElementById('letter_content').addEventListener('input', (e) => {
 
 // Inspiration cards
 document.querySelectorAll('.insp-card').forEach(card => {
-  const original = card.textContent;
+  const originalKey = card.dataset.i18n;
+  const hintKey = card.dataset.hintKey;
   card.addEventListener('click', () => {
     if (card.classList.contains('expanded')) {
       card.classList.remove('expanded');
-      card.textContent = original;
+      card.textContent = t(originalKey);
     } else {
       card.classList.add('expanded');
-      card.textContent = card.dataset.hint;
+      card.textContent = hintKey ? t(hintKey) : card.dataset.hint;
     }
   });
 });
 
 function validateStep4() {
+  if (state.delivery_type === 'fysisk') return true;
   if (state.delivery_type === 'tidskapsell') {
     const errorEl = document.getElementById('form-error-upload');
     errorEl.classList.remove('show');
     if (pendingFiles.length === 0) {
-      errorEl.textContent = 'Du må laste opp minst én fil.';
+      errorEl.textContent = t('ord_s4_err_upload');
       errorEl.classList.add('show');
       return false;
     }
     return true;
   }
-  // Existing letter validation for digitalt and fysisk
   const ta = document.getElementById('letter_content');
   const field = ta.parentElement;
   const formError = document.getElementById('form-error-4');
@@ -1219,7 +1343,7 @@ function validateStep4() {
   clearErr(field);
   if ((ta.value || '').trim().length < 20) {
     showErr(field);
-    formError.textContent = 'Brevet må inneholde minst 20 tegn.';
+    formError.textContent = t('ord_s4_err_letter');
     formError.classList.add('show');
     return false;
   }
@@ -1231,34 +1355,34 @@ function validateStep4() {
 /* ---------- Step 5: summary ---------- */
 function renderSummary() {
   const occasionLabels = {
-    meg_selv:'Til meg selv', konfirmasjon:'Konfirmasjon', bursdag:'Bursdag',
-    bryllup:'Bryllup', nyfodt:'Nyfødt barn', jubileum:'Jubileum', bare_fordi:'Bare fordi'
+    meg_selv: t('ord_s3_occasion_self'), konfirmasjon: t('ord_s3_occasion_confirmation'), bursdag: t('ord_s3_occasion_birthday'),
+    bryllup: t('ord_s3_occasion_wedding'), nyfodt: t('ord_s3_occasion_newborn'), jubileum: t('ord_s3_occasion_anniversary'), bare_fordi: t('ord_s3_occasion_justbecause')
   };
   const leveringsNavn = {
-    digitalt: 'Digitalt brev',
-    fysisk: 'Fysisk brev',
-    tidskapsell: 'Tidskapsell — digital levering'
+    digitalt: t('ord_sum_digital'),
+    fysisk: t('ord_sum_physical'),
+    tidskapsell: t('ord_sum_capsule')
   };
 
   const rows = [];
-  rows.push(['Mottaker', state.recipient_type === 'meg_selv' ? 'Til meg selv' : 'Til noen andre']);
-  rows.push(['Leveringsform', leveringsNavn[state.delivery_type] || state.delivery_type]);
-  rows.push(['Avsender', state.customer_name]);
-  rows.push(['E-post', state.customer_email]);
+  rows.push([t('ord_sum_recipient'), state.recipient_type === 'meg_selv' ? t('ord_sum_to_self') : t('ord_sum_to_other')]);
+  rows.push([t('ord_sum_delivery'), leveringsNavn[state.delivery_type] || state.delivery_type]);
+  rows.push([t('ord_sum_sender'), state.customer_name]);
+  rows.push([t('ord_sum_email'), state.customer_email]);
 
   if (state.recipient_type === 'andre') {
-    rows.push(['Mottaker', state.recipient_name]);
-    if (state.delivery_type !== 'fysisk') rows.push(['Mottakers e-post', state.recipient_email]);
-    if (state.occasion) rows.push(['Anledning', occasionLabels[state.occasion] || state.occasion]);
+    rows.push([t('ord_sum_recipient_name'), state.recipient_name]);
+    if (state.delivery_type !== 'fysisk') rows.push([t('ord_sum_recipient_email'), state.recipient_email]);
+    if (state.occasion) rows.push([t('ord_sum_occasion'), occasionLabels[state.occasion] || state.occasion]);
   }
 
   if (state.delivery_type === 'fysisk') {
-    rows.push(['Adresse', `${state.recipient_address}, ${state.recipient_zip} ${state.recipient_city}`]);
+    rows.push([t('ord_sum_address'), `${state.recipient_address}, ${state.recipient_zip} ${state.recipient_city}`]);
   }
 
   if (state.delivery_type === 'digitalt' && state.design_theme) {
-    const themeNames = { klassisk:'Klassisk', romantisk:'Romantisk', moderne:'Moderne', eventyr:'Eventyr' };
-    rows.push(['Brevdesign', themeNames[state.design_theme] || state.design_theme]);
+    const themeNames = { klassisk: t('ord_s4_design_klassisk'), romantisk: t('ord_s4_design_romantisk'), moderne: t('ord_s4_design_moderne'), eventyr: t('ord_s4_design_eventyr') };
+    rows.push([t('ord_sum_design'), themeNames[state.design_theme] || state.design_theme]);
   }
 
   let formattedDate = state.delivery_date;
@@ -1267,12 +1391,14 @@ function renderSummary() {
       day:'numeric', month:'long', year:'numeric'
     });
   } catch(e) {}
-  rows.push(['Leveringsdato', formattedDate]);
+  rows.push([t('ord_sum_date'), formattedDate]);
 
   if (state.delivery_type === 'tidskapsell') {
-    rows.push(['Antall filer', `${pendingFiles.length} filer (${formatBytes(pendingFiles.reduce((s, f) => s + f.file.size, 0))})`]);
+    rows.push([t('ord_sum_files'), `${pendingFiles.length} filer (${formatBytes(pendingFiles.reduce((s, f) => s + f.file.size, 0))})`]);
+  } else if (state.delivery_type === 'fysisk') {
+    rows.push([t('ord_sum_letter_format'), t('ord_sum_letter_physical')]);
   } else {
-    rows.push(['Antall tegn i brev', state.letter_content.length]);
+    rows.push([t('ord_sum_chars'), state.letter_content.length]);
   }
 
   const detaljer = (typeof window.getPrisDetaljer === 'function')
@@ -1284,7 +1410,7 @@ function renderSummary() {
   ).join('');
   html += `
     <div class="summary-total">
-      <span class="label">Totalt</span>
+      <span class="label">${t('ord_sum_total')}</span>
       <div style="text-align:right">
         <span class="val">NOK ${detaljer.total}</span>
         ${detaljer.tekst ? `<div style="font-size:.78rem;color:var(--muted);margin-top:2px">${detaljer.tekst}</div>` : ''}
@@ -1301,14 +1427,14 @@ function escapeHtml(s) {
 function validateStep(n) {
   if (n === 1) {
     if (!state.recipient_type) {
-      alert('Vennligst velg hvem brevet er til.');
+      alert(t('ord_alert_choose_recipient'));
       return false;
     }
     return true;
   }
   if (n === 2) {
     if (!state.delivery_type) {
-      alert('Vennligst velg hvordan brevet skal leveres.');
+      alert(t('ord_alert_choose_delivery'));
       return false;
     }
     return true;
@@ -1343,13 +1469,13 @@ function initPaymentButtons() {
   if (!vippsActive) {
     vippsBtn.classList.add('disabled');
     vippsBtn.disabled = true;
-    vippsLabel.textContent = 'Kommer snart';
+    vippsLabel.textContent = t('ord_s5_vipps_soon');
     vippsBtn.setAttribute('aria-disabled', 'true');
-    vippsBtn.title = 'Vipps blir tilgjengelig snart';
+    vippsBtn.title = t('ord_s5_vipps_soon');
   } else {
     vippsBtn.classList.remove('disabled');
     vippsBtn.disabled = false;
-    vippsLabel.textContent = 'Betal med Vipps';
+    vippsLabel.textContent = t('ord_s5_vipps');
     vippsBtn.removeAttribute('aria-disabled');
   }
 }
@@ -1383,7 +1509,7 @@ async function handlePay(method) {
     recipient_city:    state.recipient_city,
     occasion:          state.occasion,
     delivery_date:     state.delivery_date,
-    letter_content:    state.letter_content,
+    letter_content:    state.delivery_type === 'fysisk' ? '' : state.letter_content,
     design_theme:      state.design_theme || 'klassisk',
     amount:            price
   };
@@ -1422,7 +1548,7 @@ async function handlePay(method) {
 
   } catch (err) {
     console.error('[Betaling]', err);
-    alert('Kunne ikke starte betalingen: ' + err.message + '\nPrøv igjen om et øyeblikk.');
+    alert(t('ord_alert_payment_fail') + err.message + t('ord_alert_payment_retry'));
     btn.classList.remove('loading');
     btn.disabled = false;
     if (method === 'vipps') initPaymentButtons(); // gjenopprett disabled-state
@@ -1452,15 +1578,22 @@ document.querySelectorAll('.design-card').forEach(card => {
 // ── File Upload (Tidskapsell) ────────────────────────────────
 function renderFileList() {
   const list = document.getElementById('fileList');
-  list.innerHTML = pendingFiles.map(f => `
-    <div class="file-item ${f.status}" id="fi-${f.id}">
+  list.innerHTML = pendingFiles.map(f => {
+    const isVideo = f.file.type.startsWith('video/');
+    const thumb = f.preview
+      ? `<img src="${f.preview}" class="file-thumb" alt="">`
+      : isVideo
+        ? `<span class="file-thumb file-thumb-video"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>`
+        : '';
+    return `<div class="file-item ${f.status}" id="fi-${f.id}">
+      ${thumb}
       <span class="file-name">${escapeHtml(f.file.name)}</span>
       <span class="file-size">${formatBytes(f.file.size)}</span>
       ${f.status === 'waiting' ? `<span class="file-remove" data-id="${f.id}">&times;</span>` : ''}
       ${f.status === 'done' ? '<span style="color:var(--forest)">&check;</span>' : ''}
       ${f.status === 'error' ? '<span style="color:var(--error)">!</span>' : ''}
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 
   list.querySelectorAll('.file-remove').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1474,23 +1607,37 @@ function addFiles(newFiles) {
   const errorEl = document.getElementById('form-error-upload');
   errorEl.classList.remove('show');
 
-  const totalAfter = pendingFiles.length + newFiles.length;
+  const validFiles = Array.from(newFiles).filter(f => {
+    const ext = '.' + f.name.split('.').pop().toLowerCase();
+    return ACCEPTED_TYPES.includes(f.type) || ACCEPTED_EXT.includes(ext);
+  });
+  if (validFiles.length < newFiles.length) {
+    errorEl.textContent = t('ord_s4_err_filetype');
+    errorEl.classList.add('show');
+    if (validFiles.length === 0) return;
+  }
+
+  const totalAfter = pendingFiles.length + validFiles.length;
   if (totalAfter > MAX_FILES) {
-    errorEl.textContent = `Maks ${MAX_FILES} filer tillatt.`;
+    errorEl.textContent = t('ord_s4_err_maxfiles');
     errorEl.classList.add('show');
     return;
   }
 
   const currentBytes = pendingFiles.reduce((sum, f) => sum + f.file.size, 0);
-  const newBytes = Array.from(newFiles).reduce((sum, f) => sum + f.size, 0);
+  const newBytes = validFiles.reduce((sum, f) => sum + f.size, 0);
   if (currentBytes + newBytes > MAX_TOTAL_BYTES) {
-    errorEl.textContent = 'Total filstørrelse overskrider 500 MB.';
+    errorEl.textContent = t('ord_s4_err_maxsize');
     errorEl.classList.add('show');
     return;
   }
 
-  Array.from(newFiles).forEach(file => {
-    pendingFiles.push({ file, id: Math.random().toString(36).slice(2), status: 'waiting' });
+  validFiles.forEach(file => {
+    const entry = { file, id: Math.random().toString(36).slice(2), status: 'waiting', preview: null };
+    if (file.type.startsWith('image/')) {
+      entry.preview = URL.createObjectURL(file);
+    }
+    pendingFiles.push(entry);
   });
   renderFileList();
 }
@@ -1527,7 +1674,7 @@ async function uploadAllFiles(orderId) {
 
     const pct = Math.round((i / pendingFiles.length) * 100);
     progressBar.style.width = pct + '%';
-    statusText.textContent = `Laster opp ${i + 1} av ${pendingFiles.length}…`;
+    statusText.textContent = t('ord_s4_upload_progress').replace('{n}', i + 1).replace('{total}', pendingFiles.length);
 
     try {
       const path = `${orderId}/${Date.now()}-${item.file.name}`;
@@ -1548,7 +1695,7 @@ async function uploadAllFiles(orderId) {
   }
 
   progressBar.style.width = '100%';
-  statusText.textContent = `${uploaded.length} filer lastet opp${failed.length ? `, ${failed.length} feilet` : ''}.`;
+  statusText.textContent = t('ord_s4_upload_done').replace('{n}', uploaded.length) + (failed.length ? `, ${failed.length} ${t('ord_s4_upload_failed')}` : '');
 
   state.uploaded_files = uploaded;
   saveState();
@@ -1566,6 +1713,7 @@ async function uploadAllFiles(orderId) {
 })();
 
 loadState();
+initI18n();
 restoreChoiceCards();
 initPaymentButtons();
 showStep(state.step || 1);

@@ -42,6 +42,11 @@
   .logo{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--burgundy);letter-spacing:.3px}
   .logo span{color:var(--forest)}
   .nav-link{font-size:.92rem;color:var(--muted)}
+  .lang-switcher{display:flex;align-items:center;gap:4px;margin-left:auto}
+  .lang-btn{background:none;border:none;font-family:'Inter',system-ui,sans-serif;font-size:.8rem;font-weight:500;color:var(--muted);cursor:pointer;padding:4px 7px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:.5px}
+  .lang-btn:hover{color:var(--burgundy)}
+  .lang-btn.active{color:var(--burgundy);font-weight:700;background:rgba(107,31,42,.08)}
+  .lang-sep{color:var(--beige);font-size:.8rem;user-select:none}
 
   /* --- Hovedinnhold --- */
   main{flex:1;display:flex;align-items:center;justify-content:center}
@@ -133,7 +138,12 @@
 <nav class="nav">
   <div class="wrap">
     <a href="/" class="logo">Tidsbrev<span>.no</span></a>
-    <a href="/" class="nav-link">Tilbake til forsiden</a>
+    <a href="/" class="nav-link" data-i18n="nav_back">Tilbake til forsiden</a>
+    <div class="lang-switcher">
+      <button class="lang-btn" data-lang="no" onclick="setLang('no')">NO</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+    </div>
   </div>
 </nav>
 
@@ -151,11 +161,11 @@
     </div>
 
     <!-- Overskrift (oppdateres av JS basert på feiltype) -->
-    <h1 class="title" id="errTitle">Det gikk ikke helt som planlagt</h1>
-    <p class="subtitle" id="errSubtitle">~ men brevet ditt er ikke tapt ~</p>
+    <h1 class="title" id="errTitle" data-i18n="err_title">Det gikk ikke helt som planlagt</h1>
+    <p class="subtitle" id="errSubtitle" data-i18n="err_subtitle">~ men brevet ditt er ikke tapt ~</p>
 
     <!-- Forklaring (oppdateres av JS) -->
-    <p class="message" id="errMessage">
+    <p class="message" id="errMessage" data-i18n="err_message">
       Betalingen ble dessverre ikke fullført denne gangen. Ikke bekymre deg —
       ingenting har blitt trukket fra kontoen din, og du kan enkelt
       prøve igjen når du er klar.
@@ -163,15 +173,15 @@
 
     <!-- Hjelp-kort -->
     <div class="help-card">
-      <h3>Hva kan du gjøre?</h3>
+      <h3 data-i18n="err_help_title">Hva kan du gjøre?</h3>
 
       <div class="help-item">
         <div class="help-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
         </div>
         <div class="help-text">
-          <strong>Prøv igjen</strong>
-          <span>Gå tilbake til bestillingen og forsøk betalingen på nytt. Det tar bare et minutt.</span>
+          <strong data-i18n="err_help_retry_title">Prøv igjen</strong>
+          <span data-i18n="err_help_retry_text">Gå tilbake til bestillingen og forsøk betalingen på nytt. Det tar bare et minutt.</span>
         </div>
       </div>
 
@@ -180,8 +190,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
         </div>
         <div class="help-text">
-          <strong>Sjekk betalingskortet</strong>
-          <span>Kontroller at kortet har dekning og at utløpsdatoen er riktig.</span>
+          <strong data-i18n="err_help_card_title">Sjekk betalingskortet</strong>
+          <span data-i18n="err_help_card_text">Kontroller at kortet har dekning og at utløpsdatoen er riktig.</span>
         </div>
       </div>
 
@@ -190,19 +200,19 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z"/><polyline points="22,6 12,13 2,6"/></svg>
         </div>
         <div class="help-text">
-          <strong>Ta kontakt med oss</strong>
-          <span>Send oss en e-post på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a> — vi hjelper deg gjerne.</span>
+          <strong data-i18n="err_help_contact_title">Ta kontakt med oss</strong>
+          <span data-i18n-html="err_help_contact_text_html">Send oss en e-post på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a> — vi hjelper deg gjerne.</span>
         </div>
       </div>
     </div>
 
     <!-- Knapper -->
     <div>
-      <a href="/bestill.html" class="btn">Prøv igjen</a>
-      <a href="/" class="btn btn-ghost">Til forsiden</a>
+      <a href="/bestill.html" class="btn" data-i18n="err_btn_retry">Prøv igjen</a>
+      <a href="/" class="btn btn-ghost" data-i18n="err_btn_home">Til forsiden</a>
     </div>
 
-    <p class="reassurance">
+    <p class="reassurance" data-i18n="err_reassurance">
       Ordene dine fortjener å bli levert. Vi er her for å hjelpe deg dit.
     </p>
 
@@ -221,7 +231,9 @@
   </div>
 </footer>
 
+<script src="/js/i18n.js"></script>
 <script>
+initI18n();
 // ================================================================
 // FEIL-SIDE — Tilpass melding etter årsak i URL
 // ================================================================
@@ -240,45 +252,21 @@
 (function () {
   const reason = new URLSearchParams(window.location.search).get('reason') || '';
 
-  const meldinger = {
-    cancelled: {
-      title:    'Du avbrøt betalingen',
-      subtitle: '~ ingen ting er trukket fra kontoen din ~',
-      message:  'Det er helt greit — noen ganger trenger man litt mer tid. ' +
-                'Ordene dine venter på deg. Kom tilbake når du er klar, ' +
-                'og brevet ditt vil være der akkurat der du slapp.'
-    },
-    expired: {
-      title:    'Betalingssiden gikk ut på tid',
-      subtitle: '~ ingen ting er trukket fra kontoen din ~',
-      message:  'Betalingslenken din ble dessverre for gammel. ' +
-                'Det skjer av og til — det tar bare et minutt å starte på nytt. ' +
-                'Brevet du har skrevet er lagret i nettleseren din så lenge du ikke lukker fanen.'
-    },
-    card_error: {
-      title:    'Kortet ble ikke godkjent',
-      subtitle: '~ prøv et annet kort eller betalingsmåte ~',
-      message:  'Det ser ut til at det ble et lite hinder med kortet denne gangen. ' +
-                'Ingen ting er trukket, og du kan prøve med et annet kort, ' +
-                'eller betale med Vipps hvis det er enklere.'
-    },
-    vipps: {
-      title:    'Vipps-betalingen ble ikke fullført',
-      subtitle: '~ ingen ting er trukket fra Vipps-kontoen din ~',
-      message:  'Det oppstod et lite hinder med Vipps-betalingen. ' +
-                'Ingen ting har blitt belastet. Du kan prøve igjen med Vipps, ' +
-                'eller betale med kort hvis det er enklere.'
-    }
+  const reasonKeys = {
+    cancelled:  { title: 'err_cancelled_title', subtitle: 'err_cancelled_subtitle', message: 'err_cancelled_message' },
+    expired:    { title: 'err_expired_title',   subtitle: 'err_expired_subtitle',   message: 'err_expired_message' },
+    card_error: { title: 'err_card_title',      subtitle: 'err_card_subtitle',      message: 'err_card_message' },
+    vipps:      { title: 'err_vipps_title',     subtitle: 'err_vipps_subtitle',     message: 'err_vipps_message' }
   };
 
-  const valgt = meldinger[reason];
+  const valgt = reasonKeys[reason];
   if (valgt) {
     const titleEl    = document.getElementById('errTitle');
     const subtitleEl = document.getElementById('errSubtitle');
     const msgEl      = document.getElementById('errMessage');
-    if (titleEl)    titleEl.textContent    = valgt.title;
-    if (subtitleEl) subtitleEl.textContent = valgt.subtitle;
-    if (msgEl)      msgEl.textContent      = valgt.message;
+    if (titleEl)    titleEl.textContent    = t(valgt.title);
+    if (subtitleEl) subtitleEl.textContent = t(valgt.subtitle);
+    if (msgEl)      msgEl.textContent      = t(valgt.message);
   }
 })();
 </script>

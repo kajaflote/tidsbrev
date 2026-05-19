@@ -129,14 +129,16 @@
   <div class="container">
 
     <div class="page-hero">
-      <span class="eyebrow">~ vi har svarene ~</span>
-      <h1>Ofte stilte spørsmål</h1>
-      <p class="lead">Lurer du på noe? Sjansen er stor for at svaret er her. Finner du ikke det du trenger, er vi alltid tilgjengelig på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a>.</p>
+      <span class="eyebrow" data-i18n="faq_eyebrow">~ vi har svarene ~</span>
+      <h1 data-i18n="faq_title">Ofte stilte spørsmål</h1>
+      <p class="lead" data-i18n-html="faq_lead_html">Lurer du på noe? Sjansen er stor for at svaret er her. Finner du ikke det du trenger, er vi alltid tilgjengelig på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a>.</p>
     </div>
+
+    <div class="en-notice" data-i18n="faq_en_notice"></div>
 
     <!-- ===== GRUPPE 1: Om tjenesten ===== -->
     <div class="faq-group" data-group="tjenesten">
-      <div class="faq-group-title">Om tjenesten</div>
+      <div class="faq-group-title" data-i18n="faq_group_service">Om tjenesten</div>
 
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">
@@ -180,7 +182,7 @@
 
     <!-- ===== GRUPPE 2: Levering ===== -->
     <div class="faq-group" data-group="levering">
-      <div class="faq-group-title">Levering</div>
+      <div class="faq-group-title" data-i18n="faq_group_delivery">Levering</div>
 
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">
@@ -237,7 +239,7 @@
 
     <!-- ===== GRUPPE 3: Personvern og sikkerhet ===== -->
     <div class="faq-group" data-group="personvern">
-      <div class="faq-group-title">Personvern og sikkerhet</div>
+      <div class="faq-group-title" data-i18n="faq_group_privacy">Personvern og sikkerhet</div>
 
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">
@@ -281,7 +283,7 @@
 
     <!-- ===== GRUPPE 4: Betaling og refusjon ===== -->
     <div class="faq-group" data-group="betaling">
-      <div class="faq-group-title">Betaling og refusjon</div>
+      <div class="faq-group-title" data-i18n="faq_group_payment">Betaling og refusjon</div>
 
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">
@@ -312,15 +314,16 @@
 
     <!-- CTA -->
     <div class="cta-section">
-      <h2>Klar til å skrive?</h2>
-      <p>Det tar bare noen minutter å sette ord på det du vil si — men ordene varer for alltid.</p>
-      <a href="/bestill.html" class="cta-btn">Skriv ditt tidsbrev</a>
-      <p class="cta-still-unsure">Har du et spørsmål som ikke er besvart her? <a href="mailto:hei@tidsbrev.no">Send oss en e-post</a>.</p>
+      <h2 data-i18n="faq_cta_title">Klar til å skrive?</h2>
+      <p data-i18n="faq_cta_text">Det tar bare noen minutter å sette ord på det du vil si — men ordene varer for alltid.</p>
+      <a href="/bestill.html" class="cta-btn" data-i18n="faq_cta_btn">Skriv ditt tidsbrev</a>
+      <p class="cta-still-unsure" data-i18n-html="faq_cta_unsure_html">Har du et spørsmål som ikke er besvart her? <a href="mailto:hei@tidsbrev.no">Send oss en e-post</a>.</p>
     </div>
 
   </div>
 </main>
 
+<script src="/js/i18n.js"></script>
 <script src="/js/nav.js"></script>
 <script>
 // ================================================================

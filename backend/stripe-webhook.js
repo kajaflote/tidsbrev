@@ -123,6 +123,26 @@ exports.handler = async (event) => {
           console.error(`[stripe-webhook] Kunne ikke sende admin-varsel:`, emailErr.message);
         }
 
+        // Trigger video conversion for tidskapsell orders
+        if (session.metadata && session.metadata.delivery_type === 'tidskapsell') {
+          try {
+            const sideUrl = process.env.SIDE_URL || 'https://tidsbrev.no';
+            await fetch(`${sideUrl}/api/convert-video-background`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ order_id: orderId })
+            });
+            console.log(`[stripe-webhook] Video-konvertering trigget for ordre ${orderId}`);
+          } catch (convErr) {
+            console.error(`[stripe-webhook] Kunne ikke trigge video-konvertering:`, convErr.message);
+            await supabase.from('admin_log').insert({
+              action: 'video_conversion_trigger_failed',
+              order_id: orderId,
+              note: `Kunne ikke trigge konvertering: ${convErr.message}`
+            });
+          }
+        }
+
         console.log(`[stripe-webhook] Ordre ${orderId} markert som betalt`);
         break;
       }

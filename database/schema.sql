@@ -16,8 +16,9 @@
 --
 -- 1. Create Storage bucket named: tidskapsell-uploads
 --    Settings: Private bucket (not public)
---    Allowed MIME types: image/*, video/*
---    Max file size: 524288000 (500 MB)
+--    Allowed MIME types: image/jpeg, image/png, image/gif, image/webp,
+--                        video/mp4, video/quicktime, video/x-msvideo
+--    Max file size: 1073741824 (1 GB)
 --
 -- 2. Run this SQL after creating the bucket to allow service role access:
 --    INSERT INTO storage.buckets (id, name, public)
@@ -38,7 +39,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
   customer_name     TEXT NOT NULL,
   customer_email    TEXT NOT NULL,
   recipient_type    TEXT NOT NULL CHECK (recipient_type IN ('meg_selv','andre')),
-  delivery_type     TEXT NOT NULL CHECK (delivery_type IN ('digitalt','fysisk')),
+  delivery_type     TEXT NOT NULL CHECK (delivery_type IN ('digitalt','fysisk','tidskapsell')),
   recipient_name    TEXT,
   recipient_email   TEXT,
   recipient_address TEXT,
@@ -62,7 +63,7 @@ COMMENT ON TABLE public.orders IS 'Alle bestillinger av tidsbrev';
 CREATE TABLE IF NOT EXISTS public.letters (
   id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id       UUID NOT NULL REFERENCES public.orders(id) ON DELETE CASCADE,
-  letter_content TEXT NOT NULL,
+  letter_content TEXT NOT NULL DEFAULT '',
   created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   sent_at        TIMESTAMPTZ,
   status         TEXT NOT NULL DEFAULT 'stored'
@@ -242,6 +243,11 @@ CREATE POLICY "Kunde kan lese eget brev"
 ALTER TABLE public.orders DROP CONSTRAINT IF EXISTS orders_product_type_check;
 ALTER TABLE public.orders ADD CONSTRAINT orders_product_type_check
   CHECK (product_type IN ('digitalt', 'fysisk', 'tidskapsell'));
+
+-- Update orders delivery_type constraint to include 'tidskapsell'
+ALTER TABLE public.orders DROP CONSTRAINT IF EXISTS orders_delivery_type_check;
+ALTER TABLE public.orders ADD CONSTRAINT orders_delivery_type_check
+  CHECK (delivery_type IN ('digitalt', 'fysisk', 'tidskapsell'));
 
 -- Add design_theme column to letters
 ALTER TABLE public.letters
