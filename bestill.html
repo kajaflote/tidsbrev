@@ -1515,7 +1515,21 @@ async function handlePay(method) {
   };
 
   if (state.delivery_type === 'tidskapsell') {
+    if (pendingFiles.length === 0) {
+      alert(t('ord_s4_err_upload'));
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      return;
+    }
     btn.textContent = 'Laster opp filer…';
+    const tempId = 'order-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+    const { uploaded, failed } = await uploadAllFiles(tempId);
+    if (uploaded.length === 0) {
+      alert(t('ord_alert_payment_fail') + (failed.length ? failed[0].error : 'Ukjent feil'));
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      return;
+    }
     payload.uploaded_files = state.uploaded_files;
     payload.message_content = state.message_content || '';
   }

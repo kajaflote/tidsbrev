@@ -21,7 +21,7 @@
 // Miljøvariabler som MÅ settes i Netlify dashboard:
 //
 //   RESEND_API_KEY           — re_...  (https://resend.com/api-keys)
-//   EPOST_AVSENDER           — "Tidsbrev.no <hei@tidsbrev.no>"
+//   EPOST_AVSENDER           — "Tidsbrev.no <post@tidsbrev.no>"
 //                              (må være verifisert domene i Resend)
 //   ADMIN_EPOST              — din admin-e-post for interne varsler
 //   SUPABASE_URL
@@ -46,7 +46,7 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
     process.env.SUPABASE_URL,
     process.env.SUPABASE_SERVICE_ROLE_KEY
   );
-  const avsender = process.env.EPOST_AVSENDER || 'Tidsbrev.no <onboarding@resend.dev>';
+  const avsender = process.env.EPOST_AVSENDER || 'Tidsbrev.no <post@tidsbrev.no>';
   const adminEpost = process.env.ADMIN_EPOST || 'hei@tidsbrev.no';
 
   switch (type) {
