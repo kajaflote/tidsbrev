@@ -1676,6 +1676,11 @@ document.getElementById('message_content').addEventListener('input', e => {
 });
 
 async function uploadAllFiles(orderId) {
+  if (!window.db || !window.db.storage) {
+    console.error('Supabase client:', window.db);
+    throw new Error('Supabase er ikke initialisert — kan ikke laste opp filer');
+  }
+
   const progressBar = document.getElementById('uploadFill');
   const statusText  = document.getElementById('uploadStatusText');
   document.getElementById('uploadProgress').style.display = 'block';
@@ -1694,9 +1699,6 @@ async function uploadAllFiles(orderId) {
 
     try {
       const path = `${orderId}/${Date.now()}-${item.file.name}`;
-      if (!window.db || !window.db.storage) {
-        throw new Error('Supabase er ikke initialisert');
-      }
       const { data, error } = await window.db.storage
         .from('tidskapsell-uploads')
         .upload(path, item.file, { upsert: false });
