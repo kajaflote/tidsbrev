@@ -87,6 +87,24 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
+  // Sjekk at nødvendige miljøvariabler finnes
+  const envCheck = {
+    STRIPE_SECRET_KEY:        !!process.env.STRIPE_SECRET_KEY,
+    SUPABASE_URL:             !!process.env.SUPABASE_URL,
+    SUPABASE_SERVICE_ROLE_KEY:!!process.env.SUPABASE_SERVICE_ROLE_KEY,
+    SIDE_URL:                 !!process.env.SIDE_URL
+  };
+  console.log('[create-stripe-session] Env check:', envCheck);
+
+  const missingEnv = Object.entries(envCheck).filter(([,v]) => !v).map(([k]) => k);
+  if (missingEnv.length > 0) {
+    console.error('[create-stripe-session] Mangler miljøvariabler:', missingEnv);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: `Serverkonfigurasjon mangler: ${missingEnv.join(', ')}` })
+    };
+  }
+
   try {
     const data = JSON.parse(event.body || '{}');
 
@@ -156,10 +174,16 @@ exports.handler = async (event) => {
       .single();
 
     if (orderErr) {
-      console.error('[create-stripe-session] Supabase insert feilet:', orderErr);
+      console.error('[create-stripe-session] Supabase insert feilet:', JSON.stringify(orderErr, null, 2));
+      console.error('[create-stripe-session] Insert-data var:', JSON.stringify({
+        product_type: data.product_type,
+        delivery_type: data.delivery_type,
+        delivery_date: data.delivery_date,
+        has_uploaded_files: !!(data.uploaded_files && data.uploaded_files.length)
+      }));
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: 'Kunne ikke opprette ordre' })
+        body: JSON.stringify({ error: 'Kunne ikke opprette ordre: ' + (orderErr.message || orderErr.code || 'ukjent databasefeil') })
       };
     }
 
@@ -271,10 +295,11 @@ exports.handler = async (event) => {
     };
 
   } catch (err) {
-    console.error('[create-stripe-session]', err);
+    console.error('[create-stripe-session] Uventet feil:', err.message || err);
+    console.error('[create-stripe-session] Stack:', err.stack || 'ingen stack');
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: err.message || 'Ukjent feil' })
+      body: JSON.stringify({ error: err.message || 'Ukjent serverfeil' })
     };
   }
 };
