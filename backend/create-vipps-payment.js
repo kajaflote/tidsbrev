@@ -113,8 +113,11 @@ exports.handler = async (event) => {
     const miljo = process.env.VIPPS_MILJO || 'test';
 
     // ---- 1. Valider innkommende data ----
+    const isTidskapsell = data.product_type === 'tidskapsell';
+    const isFysisk      = data.product_type === 'fysisk';
     const required = ['customer_name','customer_email','recipient_type',
-                      'delivery_type','product_type','delivery_date','letter_content'];
+                      'delivery_type','product_type','delivery_date'];
+    if (!isTidskapsell && !isFysisk) required.push('letter_content');
     for (const f of required) {
       if (!data[f]) {
         return {

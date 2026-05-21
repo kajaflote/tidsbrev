@@ -110,9 +110,10 @@ exports.handler = async (event) => {
 
     // ---- 1. Valider innkommende data ----
     const isTidskapsell = data.product_type === 'tidskapsell';
+    const isFysisk      = data.product_type === 'fysisk';
     const required = ['customer_name','customer_email','recipient_type',
                       'delivery_type','product_type','delivery_date'];
-    if (!isTidskapsell) required.push('letter_content');
+    if (!isTidskapsell && !isFysisk) required.push('letter_content');
     for (const f of required) {
       if (!data[f]) {
         return {
