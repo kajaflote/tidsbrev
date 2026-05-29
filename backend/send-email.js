@@ -26,6 +26,7 @@
 //   ADMIN_EPOST              — din admin-e-post for interne varsler
 //   SUPABASE_URL
 //   SUPABASE_SERVICE_ROLE_KEY
+//   BROWSERLESS_API_KEY          — for PDF generation (chrome.browserless.io)
 //
 // MERK: For å sende e-post fra @tidsbrev.no må domenet være
 // verifisert hos Resend (DNS SPF + DKIM). Frem til da kan du bruke
@@ -173,8 +174,20 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
         day: 'numeric', month: 'long', year: 'numeric'
       });
 
-      // 6. Send email via Resend
-      const { error: emailErr } = await resend.emails.send({
+      // 6. Generate PDF attachment (non-blocking — email sends even if this fails)
+      const { generateLetterPdf } = require('./generate-letter-pdf');
+      const pdfBase64 = await generateLetterPdf(order, letter.letter_content);
+      const attachments = pdfBase64
+        ? [{ filename: 'ditt-tidsbrev.pdf', content: pdfBase64 }]
+        : undefined;
+      if (pdfBase64) {
+        console.log(`[send-email] PDF generated for letter ${letter.id}`);
+      } else {
+        console.warn(`[send-email] PDF generation returned null for letter ${letter.id} — sending without attachment`);
+      }
+
+      // 7. Send email via Resend
+      const emailPayload = {
         from:    avsender,
         to:      toEmail,
         subject: `Ditt tidsbrev er ankommet`,
@@ -187,13 +200,17 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
                    viewerUrl, letterContent: letter.letter_content
                  }),
         reply_to: 'hei@tidsbrev.no'
-      });
+      };
+      if (attachments) {
+        emailPayload.attachments = attachments;
+      }
+      const { error: emailErr } = await resend.emails.send(emailPayload);
 
       if (emailErr) {
         throw new Error(`Resend send failed: ${emailErr.message}`);
       }
 
-      // 7. Mark letter as sent
+      // 8. Mark letter as sent
       await supabase
         .from('letters')
         .update({ status: 'sent', sent_at: new Date().toISOString() })
@@ -270,19 +287,34 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
         : order.customer_email;
       if (!toEmail) throw new Error(`Mangler mottaker-e-post for ordre ${order.id}`);
 
+      const personalMessage = letter ? letter.letter_content : '';
+
       const mail = templates.deliverTidskapsell({
         order,
         files: fileLinks,
-        personalMessage: letter ? letter.letter_content : ''
+        personalMessage
       });
 
-      const res = await resend.emails.send({
+      // Generate PDF attachment (non-blocking — email sends even if this fails)
+      const { generateCapsulePdf } = require('./generate-letter-pdf');
+      const capsulePdf = await generateCapsulePdf(order, fileLinks, personalMessage);
+      if (capsulePdf) {
+        console.log(`[send-email] Capsule PDF generated for order ${order_id}`);
+      } else {
+        console.warn(`[send-email] Capsule PDF returned null for order ${order_id} — sending without attachment`);
+      }
+
+      const capsuleEmailPayload = {
         from:     avsender,
         to:       toEmail,
         subject:  mail.subject,
         html:     mail.html,
         reply_to: 'hei@tidsbrev.no'
-      });
+      };
+      if (capsulePdf) {
+        capsuleEmailPayload.attachments = [{ filename: 'din-tidskapsel.pdf', content: capsulePdf }];
+      }
+      const res = await resend.emails.send(capsuleEmailPayload);
 
       // Mark as sent
       if (letter) {

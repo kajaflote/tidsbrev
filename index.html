@@ -496,16 +496,7 @@
       margin: 0;
     }
 
-    /* ─── Fade-in ─────────────────────────────────────── */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity .7s ease, transform .7s ease;
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    /* ─── Animations handled by GSAP + ScrollTrigger ──── */
 
     /* ─── Language switcher ────────────────────────────── */
     .lang-switcher{display:flex;align-items:center;gap:4px;margin-left:16px}
@@ -587,7 +578,7 @@
 <section class="section bg-cream2" id="hvordan">
   <div class="wrap">
 
-    <div class="section-header fade-in">
+    <div class="section-header">
       <span class="eyebrow" data-i18n="idx_how_eyebrow">så enkelt er det</span>
       <h2 data-i18n="idx_how_title">Tre steg til et tidsbrev</h2>
       <p data-i18n="idx_how_lead">Vi tar vare på ordene dine helt til det rette øyeblikket.</p>
@@ -595,7 +586,7 @@
 
     <div class="steps">
 
-      <div class="step fade-in">
+      <div class="step">
         <div class="step-icon" aria-hidden="true">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="1.6"
@@ -609,7 +600,7 @@
            når det skal leveres — om 1 til 30 år.</p>
       </div>
 
-      <div class="step fade-in">
+      <div class="step">
         <div class="step-icon" aria-hidden="true">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="1.6"
@@ -623,7 +614,7 @@
            frem til leveringsdatoen du har valgt.</p>
       </div>
 
-      <div class="step fade-in">
+      <div class="step">
         <div class="step-icon" aria-hidden="true">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="1.6"
@@ -648,7 +639,7 @@
 <section class="section bg-cream" id="brev">
   <div class="wrap">
 
-    <div class="section-header fade-in">
+    <div class="section-header">
       <span class="eyebrow" data-i18n="idx_prod_eyebrow">våre brev</span>
       <h2 data-i18n="idx_prod_title">Velg ditt tidsbrev</h2>
       <p data-i18n="idx_prod_lead">Fra et enkelt minnesbrev til en hel livshistorie —
@@ -658,7 +649,7 @@
     <div class="product-grid">
 
       <!-- Digitalt brev -->
-      <div class="product-card fade-in">
+      <div class="product-card">
         <h3 data-i18n="idx_prod_digital_title">Digitalt Brev</h3>
         <span class="product-subtitle" data-i18n="idx_prod_digital_subtitle">Skrives og mottas digitalt</span>
         <span class="product-price">fra 99 <small>NOK</small></span>
@@ -673,7 +664,7 @@
       </div>
 
       <!-- Fysisk brev -->
-      <div class="product-card featured fade-in">
+      <div class="product-card featured">
         <h3 data-i18n="idx_prod_physical_title">Fysisk Brev</h3>
         <span class="product-subtitle" data-i18n="idx_prod_physical_subtitle">Personlig og håndfast brev</span>
         <span class="product-price">fra 249 <small>NOK</small></span>
@@ -688,7 +679,7 @@
       </div>
 
       <!-- Tidskapsell -->
-      <div class="product-card fade-in">
+      <div class="product-card">
         <h3 data-i18n="idx_prod_capsule_title">Tidskapsell</h3>
         <span class="product-subtitle" data-i18n="idx_prod_capsule_subtitle">Bilder og video til fremtiden</span>
         <span class="product-price">fra 149 <small>NOK</small></span>
@@ -715,7 +706,7 @@
 <section class="section bg-forest" id="anledninger">
   <div class="wrap">
 
-    <div class="section-header fade-in">
+    <div class="section-header">
       <span class="eyebrow" data-i18n="idx_occ_eyebrow">for alle øyeblikk</span>
       <h2 data-i18n="idx_occ_title">Hva feirer du?</h2>
       <p data-i18n="idx_occ_lead">Et tidsbrev passer like godt til livets store milepæler som til hverdagens stille øyeblikk.</p>
@@ -723,7 +714,7 @@
 
     <div class="occasion-grid">
 
-      <a href="bestill.html" class="occasion-card fade-in">
+      <a href="bestill.html" class="occasion-card">
         <div class="occasion-icon" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="1.6"
@@ -735,7 +726,7 @@
         <h3 data-i18n="idx_occ_self">Til deg selv</h3>
       </a>
 
-      <a href="bestill.html" class="occasion-card fade-in">
+      <a href="bestill.html" class="occasion-card">
         <div class="occasion-icon" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="1.6"
@@ -749,7 +740,7 @@
         <h3 data-i18n="idx_occ_child">Til barnet ditt</h3>
       </a>
 
-      <a href="bestill.html" class="occasion-card fade-in">
+      <a href="bestill.html" class="occasion-card">
         <div class="occasion-icon" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="1.6"
@@ -760,7 +751,7 @@
         <h3 data-i18n="idx_occ_partner">Til kjæresten</h3>
       </a>
 
-      <a href="bestill.html" class="occasion-card fade-in">
+      <a href="bestill.html" class="occasion-card">
         <div class="occasion-icon" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="1.6"
@@ -771,7 +762,7 @@
         <h3 data-i18n="idx_occ_confirmation">Konfirmasjon</h3>
       </a>
 
-      <a href="bestill.html" class="occasion-card fade-in">
+      <a href="bestill.html" class="occasion-card">
         <div class="occasion-icon" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="1.6"
@@ -782,7 +773,7 @@
         <h3 data-i18n="idx_occ_wedding">Bryllup</h3>
       </a>
 
-      <a href="bestill.html" class="occasion-card fade-in">
+      <a href="bestill.html" class="occasion-card">
         <div class="occasion-icon" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="1.6"
@@ -805,7 +796,7 @@
 <section class="section bg-forest" id="historier">
   <div class="wrap">
 
-    <div class="section-header fade-in">
+    <div class="section-header">
       <span class="eyebrow" data-i18n="idx_quotes_eyebrow">ekte historier</span>
       <h2 data-i18n="idx_quotes_title">Et brev kan forandre et øyeblikk</h2>
       <p data-i18n="idx_quotes_lead">Noen ganger er det mest verdifulle vi kan gi hverandre
@@ -814,28 +805,28 @@
 
     <div class="quotes-grid">
 
-      <div class="quote-card fade-in">
+      <div class="quote-card">
         <span data-i18n="idx_quote1">Da datteren min ble født satte jeg meg ned og skrev. Femten år
         senere kom brevet i posten til konfirmasjonsdagen hennes. Det var
         den mest ektefølte gaven jeg kunne gitt.</span>
         <span class="quote-author" data-i18n="idx_quote1_author">— Ingrid, 39</span>
       </div>
 
-      <div class="quote-card fade-in">
+      <div class="quote-card">
         <span data-i18n="idx_quote2">Da jeg ble 18 skrev jeg et brev til meg selv om mine mål og
         ambisjoner. Jeg gleder meg til å se om jeg har klart det jeg
         drømte om, eller om livet tok meg i en helt annen retning.</span>
         <span class="quote-author" data-i18n="idx_quote2_author">— Marte, 28</span>
       </div>
 
-      <div class="quote-card fade-in">
+      <div class="quote-card">
         <span data-i18n="idx_quote3">På bryllupsdagen skrev jeg et brev til Camilla. Ti år senere
         fikk hun det i posten på jubileet vårt. Hun sa det var den
         fineste gaven hun noen gang hadde fått.</span>
         <span class="quote-author" data-i18n="idx_quote3_author">— Andreas, 41</span>
       </div>
 
-      <div class="quote-card fade-in">
+      <div class="quote-card">
         <span data-i18n="idx_quote4">Jeg var på reisefot i tre måneder og sendte et brev til den
         fremtidige meg. Jeg gleder meg til å la minnene strømme tilbake.
         Det blir som en tidskapsel i postkassen.</span>
@@ -875,23 +866,137 @@
 </footer>
 
 
+<!-- GSAP + ScrollTrigger -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/ScrollTrigger.min.js"></script>
+
 <script src="/js/i18n.js"></script>
 <script>
-  // Init language
   initI18n();
 
-  // Fade-in on scroll
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
+  /* ============================
+     GSAP ANIMATIONS
+     ============================ */
+  gsap.registerPlugin(ScrollTrigger);
 
-  document.querySelectorAll('.fade-in').forEach(function (el) {
-    io.observe(el);
+  // --- Navbar subtle entrance ---
+  gsap.from('.site-nav', { opacity: 0, y: -20, duration: 0.6, ease: 'power2.out' });
+
+  // --- Hero entrance timeline ---
+  var heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  heroTl
+    .from('.hero-eyebrow', { opacity: 0, y: -20, duration: 0.7 })
+    .from('.hero h1', { opacity: 0, y: 40, duration: 0.9 }, '-=0.3')
+    .from('.hero-lead', { opacity: 0, y: 30, duration: 0.7 }, '-=0.5')
+    .from('.hero-cta', { opacity: 0, scale: 0.85, duration: 0.6, ease: 'back.out(1.7)' }, '-=0.3');
+
+  // --- CTA button continuous subtle pulse ---
+  gsap.to('.hero-cta', {
+    boxShadow: '0 16px 42px rgba(107,31,42,.4)',
+    scale: 1.02,
+    duration: 1.2,
+    repeat: -1,
+    yoyo: true,
+    ease: 'sine.inOut',
+    delay: 2
+  });
+
+  // --- Section header reveals ---
+  document.querySelectorAll('.section-header').forEach(function (head) {
+    var tl = gsap.timeline({
+      scrollTrigger: { trigger: head, start: 'top 82%', toggleActions: 'play none none none' }
+    });
+    var eyebrow = head.querySelector('.eyebrow');
+    var h2 = head.querySelector('h2');
+    var p = head.querySelector('p');
+    if (eyebrow) tl.from(eyebrow, { opacity: 0, y: 15, duration: 0.5 });
+    if (h2) tl.from(h2, { opacity: 0, y: 30, duration: 0.7 }, '-=0.2');
+    if (p) tl.from(p, { opacity: 0, y: 20, duration: 0.6 }, '-=0.3');
+  });
+
+  // --- How-it-works steps: staggered with icon spin ---
+  gsap.from('.step', {
+    scrollTrigger: { trigger: '.steps', start: 'top 80%' },
+    opacity: 0, y: 50, duration: 0.7, stagger: 0.2, ease: 'power2.out'
+  });
+  gsap.from('.step-icon', {
+    scrollTrigger: { trigger: '.steps', start: 'top 80%' },
+    scale: 0, rotation: -180, duration: 0.8, stagger: 0.2, ease: 'back.out(1.4)', delay: 0.15
+  });
+
+  // --- Product cards: stagger with slight 3D tilt ---
+  document.querySelectorAll('.product-card').forEach(function (card, i) {
+    gsap.from(card, {
+      scrollTrigger: { trigger: card, start: 'top 85%' },
+      opacity: 0,
+      y: 60,
+      rotateX: 8,
+      duration: 0.8,
+      delay: i * 0.15,
+      ease: 'power3.out'
+    });
+  });
+
+  // --- Card hover scale ---
+  document.querySelectorAll('.product-card').forEach(function (card) {
+    card.addEventListener('mouseenter', function () {
+      gsap.to(card, { scale: 1.03, duration: 0.3, ease: 'power2.out' });
+    });
+    card.addEventListener('mouseleave', function () {
+      gsap.to(card, { scale: 1, duration: 0.3, ease: 'power2.inOut' });
+    });
+  });
+
+  // --- Occasion cards: stagger ---
+  gsap.from('.occasion-card', {
+    scrollTrigger: { trigger: '.occasion-grid', start: 'top 80%' },
+    opacity: 0, y: 30, scale: 0.9, duration: 0.5, stagger: 0.08, ease: 'power2.out'
+  });
+
+  // --- Occasion icon hover ---
+  document.querySelectorAll('.occasion-card').forEach(function (card) {
+    card.addEventListener('mouseenter', function () {
+      gsap.to(card.querySelector('.occasion-icon'), { scale: 1.15, rotation: 8, duration: 0.3, ease: 'back.out(1.7)' });
+    });
+    card.addEventListener('mouseleave', function () {
+      gsap.to(card.querySelector('.occasion-icon'), { scale: 1, rotation: 0, duration: 0.3, ease: 'power2.inOut' });
+    });
+  });
+
+  // --- Quote cards: alternate slide from left/right ---
+  document.querySelectorAll('.quote-card').forEach(function (qc, i) {
+    gsap.from(qc, {
+      scrollTrigger: { trigger: qc, start: 'top 85%' },
+      opacity: 0,
+      x: i % 2 === 0 ? -40 : 40,
+      y: 30,
+      duration: 0.8,
+      ease: 'power2.out'
+    });
+  });
+
+  // --- CTA banner entrance ---
+  gsap.from('.cta-banner h2', {
+    scrollTrigger: { trigger: '.cta-banner', start: 'top 80%' },
+    opacity: 0, y: 30, duration: 0.7, ease: 'power3.out'
+  });
+  gsap.from('.cta-banner p', {
+    scrollTrigger: { trigger: '.cta-banner', start: 'top 80%' },
+    opacity: 0, y: 20, duration: 0.6, delay: 0.15, ease: 'power3.out'
+  });
+  gsap.from('.cta-light', {
+    scrollTrigger: { trigger: '.cta-banner', start: 'top 80%' },
+    opacity: 0, scale: 0.85, duration: 0.6, delay: 0.3, ease: 'back.out(1.7)'
+  });
+  gsap.from('.cta-note', {
+    scrollTrigger: { trigger: '.cta-banner', start: 'top 80%' },
+    opacity: 0, y: 10, duration: 0.5, delay: 0.45, ease: 'power2.out'
+  });
+
+  // --- Footer slide up ---
+  gsap.from('.site-footer > *', {
+    scrollTrigger: { trigger: '.site-footer', start: 'top 90%' },
+    opacity: 0, y: 25, duration: 0.6, stagger: 0.12, ease: 'power2.out'
   });
 </script>
 

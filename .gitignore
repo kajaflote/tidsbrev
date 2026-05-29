@@ -1,0 +1,18 @@
+# Hemmelige nøkler — skal ALDRI på GitHub
+.env
+.env.local
+.env.production
+.env*.local
+
+# Node
+node_modules/
+npm-debug.log*
+
+# System
+.DS_Store
+Thumbs.db
+*.suo
+.vs/
+
+# Netlify
+.netlify/
