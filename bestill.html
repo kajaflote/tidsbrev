@@ -580,6 +580,56 @@
     width: 0%;
   }
 
+  /* ---------- Premium envelope add-on ---------- */
+  .addon-wrap{
+    display:none;
+    margin-bottom:40px;
+    animation:fadeIn .4s ease;
+  }
+  .addon-wrap.visible{display:block}
+  .addon-card{
+    background:var(--cream-2);
+    border:2px solid var(--beige);
+    border-radius:14px;
+    padding:22px 24px;
+    cursor:pointer;
+    display:flex;
+    align-items:flex-start;
+    gap:16px;
+    transition:all .25s ease;
+  }
+  .addon-card:hover{
+    border-color:var(--burgundy);
+    box-shadow:var(--shadow);
+  }
+  .addon-card.checked{
+    border-color:var(--burgundy);
+    background:#fff9ef;
+    box-shadow:0 0 0 4px rgba(107,39,55,.12), var(--shadow);
+  }
+  .addon-checkbox{
+    width:24px;height:24px;flex-shrink:0;margin-top:2px;
+    border:2px solid var(--beige);
+    border-radius:6px;
+    background:var(--cream);
+    display:flex;align-items:center;justify-content:center;
+    transition:all .2s;
+  }
+  .addon-card.checked .addon-checkbox{
+    background:var(--burgundy);
+    border-color:var(--burgundy);
+  }
+  .addon-checkbox svg{display:none}
+  .addon-card.checked .addon-checkbox svg{display:block}
+  .addon-text h4{
+    font-family:'Playfair Display',serif;
+    font-size:1.05rem;font-weight:600;
+    color:var(--ink);margin-bottom:4px;
+  }
+  .addon-text .addon-sub{
+    font-size:.88rem;color:var(--muted);line-height:1.45;
+  }
+
   .lang-switcher{display:flex;align-items:center;gap:4px;margin-left:auto}
   .lang-btn{background:none;border:none;font-family:'Inter',system-ui,sans-serif;font-size:.8rem;font-weight:500;color:var(--muted);cursor:pointer;padding:4px 7px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:.5px}
   .lang-btn:hover{color:var(--burgundy)}
@@ -709,6 +759,19 @@
           <h3 data-i18n="ord_s2_capsule_title">Tidskapsell</h3>
           <p data-i18n="ord_s2_capsule_text">Last opp bilder eller videoer som leveres digitalt på valgt dato.</p>
           <div class="price" id="price-tidskapsell">fra 149 kr</div>
+        </div>
+      </div>
+
+      <!-- Premium envelope add-on (only visible when fysisk is selected) -->
+      <div class="addon-wrap" id="addon-premium-envelope">
+        <div class="addon-card" id="addon-card-envelope">
+          <div class="addon-checkbox">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5F0E8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="addon-text">
+            <h4>Premiumkonvolutt (+79 kr)</h4>
+            <p class="addon-sub">Brevet leveres i en vakker, håndlaget konvolutt med vokssegl</p>
+          </div>
         </div>
       </div>
 
@@ -1025,6 +1088,7 @@ const state = {
   letter_content: '',
   product_type:   null,
   design_theme:   'klassisk',
+  premium_envelope: false,
   uploaded_files: [],
   message_content: ''
 };
@@ -1044,16 +1108,21 @@ function saveState() {
 /* ---------- Pricing ---------- */
 function calcPrice() {
   const type = state.delivery_type || 'digitalt';
+  let pris;
   if (typeof window.getPris === 'function') {
-    return window.getPris(type, state.delivery_date || '');
+    pris = window.getPris(type, state.delivery_date || '');
+  } else {
+    // Fallback hvis config ikke er lastet
+    const aar = state.delivery_date
+      ? Math.max(0, Math.floor((new Date(state.delivery_date) - new Date()) / (1000*60*60*24*365.25)))
+      : 0;
+    if (type === 'fysisk') pris = 249 + aar * 29;
+    else if (type === 'tidskapsell') pris = 149 + aar * 49;
+    else pris = 99 + aar * 19;
   }
-  // Fallback hvis config ikke er lastet
-  const aar = state.delivery_date
-    ? Math.max(0, Math.floor((new Date(state.delivery_date) - new Date()) / (1000*60*60*24*365.25)))
-    : 0;
-  if (type === 'fysisk') return 249 + aar * 29;
-  if (type === 'tidskapsell') return 149 + aar * 49;
-  return 99 + aar * 19;
+  // Premium envelope add-on (fysisk only)
+  if (state.premium_envelope && type === 'fysisk') pris += 79;
+  return pris;
 }
 
 /* ---------- File upload state (declared early for use in validate/summary) ---------- */
@@ -1112,13 +1181,33 @@ document.querySelectorAll('.choice-card').forEach(card => {
     const value = card.dataset.value;
     state[field] = value;
     // product_type spiller samme rolle som delivery_type i ny prismodell
-    if (field === 'delivery_type') state.product_type = value;
+    if (field === 'delivery_type') {
+      state.product_type = value;
+      // Show/hide premium envelope addon
+      const addonWrap = document.getElementById('addon-premium-envelope');
+      if (value === 'fysisk') {
+        addonWrap.classList.add('visible');
+      } else {
+        addonWrap.classList.remove('visible');
+        state.premium_envelope = false;
+        const addonCard = document.getElementById('addon-card-envelope');
+        if (addonCard) addonCard.classList.remove('checked');
+      }
+    }
     saveState();
     // Update UI
     document.querySelectorAll(`.choice-card[data-field="${field}"]`)
       .forEach(c => c.classList.remove('selected'));
     card.classList.add('selected');
   });
+});
+
+/* ---------- Premium envelope addon toggle ---------- */
+document.getElementById('addon-card-envelope').addEventListener('click', () => {
+  state.premium_envelope = !state.premium_envelope;
+  const card = document.getElementById('addon-card-envelope');
+  card.classList.toggle('checked', state.premium_envelope);
+  saveState();
 });
 
 /* ---------- Step 3: dynamic fields ---------- */
@@ -1380,6 +1469,9 @@ function renderSummary() {
 
   if (state.delivery_type === 'fysisk') {
     rows.push([t('ord_sum_address'), `${state.recipient_address}, ${state.recipient_zip} ${state.recipient_city}`]);
+    if (state.premium_envelope) {
+      rows.push(['Premiumkonvolutt', 'Ja (+79 kr)']);
+    }
   }
 
   if (state.delivery_type === 'digitalt' && state.design_theme) {
@@ -1513,6 +1605,7 @@ async function handlePay(method) {
     delivery_date:     state.delivery_date,
     letter_content:    state.delivery_type === 'fysisk' ? '' : state.letter_content,
     design_theme:      state.design_theme || 'klassisk',
+    premium_envelope:  state.premium_envelope || false,
     amount:            price
   };
 
@@ -1579,6 +1672,13 @@ function restoreChoiceCards() {
       if (card) card.classList.add('selected');
     }
   });
+  // Restore premium envelope state
+  if (state.delivery_type === 'fysisk') {
+    document.getElementById('addon-premium-envelope').classList.add('visible');
+    if (state.premium_envelope) {
+      document.getElementById('addon-card-envelope').classList.add('checked');
+    }
+  }
 }
 
 // ── Design theme picker ──────────────────────────────────────

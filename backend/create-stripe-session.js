@@ -1,4 +1,11 @@
 // ================================================================
+// SQL-MIGRERING — kjør manuelt i Supabase SQL Editor:
+//
+//   ALTER TABLE orders ADD COLUMN IF NOT EXISTS premium_envelope boolean DEFAULT false;
+//
+// ================================================================
+
+// ================================================================
 // Tidsbrev.no — Netlify Function: Opprett Stripe Checkout Session
 // ================================================================
 // Denne funksjonen kalles fra frontend når kunden klikker
@@ -138,12 +145,18 @@ exports.handler = async (event) => {
       };
     }
 
-    const prisNok = beregnPris(data.product_type, data.delivery_date);
+    let prisNok = beregnPris(data.product_type, data.delivery_date);
     if (!prisNok) {
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'Ugyldig produkt- eller leveringskombinasjon' })
       };
+    }
+
+    // Premium envelope add-on (+79 kr, only for fysisk)
+    const premiumEnvelope = data.premium_envelope === true && data.product_type === 'fysisk';
+    if (premiumEnvelope) {
+      prisNok += 79;
     }
 
     // ---- 2. Opprett ordre i Supabase ----
@@ -167,6 +180,7 @@ exports.handler = async (event) => {
         delivery_date:     data.delivery_date,
         occasion:          data.occasion          || null,
         product_type:      data.product_type,
+        premium_envelope:  premiumEnvelope,
         amount:            prisNok,
         payment_status:    'pending',
         payment_method:    'stripe'
@@ -249,7 +263,7 @@ exports.handler = async (event) => {
 
     // ---- 3. Opprett Stripe Checkout Session ----
     const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-    const produktTekst = `${PRODUKT_NAVN[data.product_type]} — ${data.delivery_type === 'fysisk' ? 'fysisk levering' : 'digital levering'}`;
+    const produktTekst = `${PRODUKT_NAVN[data.product_type]} — ${data.delivery_type === 'fysisk' ? 'fysisk levering' : 'digital levering'}${premiumEnvelope ? ', inkl. premiumkonvolutt' : ''}`;
     const sideUrl = process.env.SIDE_URL || 'https://tidsbrev.no';
 
     const session = await stripe.checkout.sessions.create({

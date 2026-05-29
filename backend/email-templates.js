@@ -56,7 +56,7 @@ const PRODUKT_NAVN = {
 
 const LEVERING_TEKST = {
   digitalt: 'Digital levering (e-post)',
-  fysisk:   'Fysisk brev i vakker konvolutt'
+  fysisk:   'Fysisk brev'
 };
 
 const ANLEDNING_TEKST = {
@@ -139,6 +139,15 @@ function orderConfirmation(order) {
     ? 'Til deg selv'
     : (order.recipient_name || 'Til en annen');
 
+  const isFysisk = order.delivery_type === 'fysisk';
+
+  // Premium envelope row — only for fysisk orders with premium_envelope
+  const premiumKonvoluttRad = (isFysisk && order.premium_envelope) ? `
+          <tr>
+            <td style="color:#6B5D4C;">Premiumkonvolutt</td>
+            <td style="color:#2A231C;">Ja (+79 kr)</td>
+          </tr>` : '';
+
   const body = `
     <p style="font-family:Georgia,'Caveat',cursive;font-size:20px;color:#6B2737;margin:0 0 6px;font-style:italic;">~ takk skal du ha ~</p>
     <h1 style="font-family:Georgia,serif;font-size:28px;color:#2A231C;margin:0 0 18px;line-height:1.2;">Brevet ditt er trygt hos oss</h1>
@@ -171,7 +180,7 @@ function orderConfirmation(order) {
           <tr>
             <td style="color:#6B5D4C;">Leveringsform</td>
             <td style="color:#2A231C;">${escapeHtml(levering)}</td>
-          </tr>
+          </tr>${premiumKonvoluttRad}
           <tr>
             <td style="color:#6B5D4C;">Mottaker</td>
             <td style="color:#2A231C;">${escapeHtml(mottakerTekst)}</td>
@@ -187,13 +196,49 @@ function orderConfirmation(order) {
         </table>
       </td></tr>
     </table>
+${isFysisk ? `
+    <!-- Send brevet ditt til oss -->
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+      style="background:#F5F0E8;border:1px solid #E8DCC4;border-radius:12px;margin:0 0 24px;">
+      <tr><td style="padding:20px 24px;">
+        <div style="font-family:Georgia,serif;color:#6B2737;font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Send brevet ditt til oss</div>
+        <p style="margin:0 0 14px;color:#2A231C;font-size:14px;line-height:1.6;">
+          For at vi skal kunne ta vare p&aring; brevet ditt, m&aring; du sende det fysisk til oss p&aring; f&oslash;lgende adresse:
+        </p>
+        <div style="background:#fffdf7;border:1px dashed #c9b9a0;border-radius:8px;padding:16px 20px;margin:0 0 14px;font-family:Georgia,serif;font-size:15px;line-height:1.7;color:#2A231C;">
+          Tidsbrev<br/>
+          [POSTADRESSE]<br/>
+          [POSTNR OG STED]<br/>
+          Norge
+        </div>
+        <p style="margin:0 0 6px;color:#2A231C;font-size:14px;line-height:1.6;">
+          Merk konvolutten med ordrenummeret ditt: <strong style="color:#6B2737;">${escapeHtml(order.order_number || '')}</strong>
+        </p>
+        <p style="margin:0;color:#6B5D4C;font-size:13px;font-style:italic;">
+          Vi bekrefter mottak p&aring; e-post s&aring; snart brevet er ankommet.
+        </p>
+      </td></tr>
+    </table>
 
+    <!-- Hva skjer videre? -->
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+      style="background:#F5F0E8;border:1px solid #E8DCC4;border-radius:12px;margin:0 0 24px;">
+      <tr><td style="padding:20px 24px;">
+        <div style="font-family:Georgia,serif;color:#6B2737;font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Hva skjer videre?</div>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size:14px;line-height:1.6;">
+          <tr><td style="color:#2A231C;padding:6px 0;">&#10022; Vi sender deg en bekreftelse n&aring;r brevet er mottatt hos oss</td></tr>
+          <tr><td style="color:#2A231C;padding:6px 0;">&#10022; 30 dager f&oslash;r leveringsdato sender vi deg en e-post hvor du kan oppdatere leveringsadressen om n&oslash;dvendig</td></tr>
+          <tr><td style="color:#2A231C;padding:6px 0;">&#10022; P&aring; leveringsdatoen sender vi brevet til oppgitt adresse</td></tr>
+        </table>
+      </td></tr>
+    </table>
+` : `
     <p style="margin:22px 0 10px;color:#2A231C;font-size:16px;">
       Fra i dag og frem til ${escapeHtml(formatDateNO(order.delivery_date))} holder
-      vi brevet ditt kryptert og trygt i vårt arkiv. Du trenger ikke å gjøre
+      vi brevet ditt kryptert og trygt i v&aring;rt arkiv. Du trenger ikke &aring; gj&oslash;re
       noe — vi tar oss av resten.
     </p>
-
+`}
     <p style="margin:0 0 26px;color:#2A231C;font-size:16px;font-style:italic;font-family:Georgia,serif;">
       Vi gleder oss til å levere dette øyeblikket til fremtiden.
     </p>
