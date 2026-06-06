@@ -1,4 +1,19 @@
 // ================================================================
+// SQL-MIGRERING — kjør manuelt i Supabase SQL Editor (IKKE kjørt automatisk):
+//
+//   ALTER TABLE orders ADD COLUMN IF NOT EXISTS update_token uuid DEFAULT gen_random_uuid();
+//   ALTER TABLE orders ADD COLUMN IF NOT EXISTS reminder_30d_sent boolean DEFAULT false;
+//
+// Merk:
+//   • update_token brukes til den sikre lenken i "bekreft/oppdater leveringsdetaljer"-
+//     e-posten (oppdater.html?order=<order_number>&token=<update_token>).
+//     gen_random_uuid() gir hver eksisterende og fremtidig rad sin egen token.
+//   • reminder_30d_sent sikrer at bekreftelses-e-posten kun sendes én gang per ordre.
+//   • Eldre ordre uten disse kolonnene oppfører seg trygt: oppslag på update_token
+//     returnerer ingenting (= ugyldig lenke) inntil migreringen er kjørt.
+// ================================================================
+
+// ================================================================
 // Tidsbrev.no — Netlify Function: send-email
 // ================================================================
 // Én universell e-postsender som håndterer alle fire maltypene:
@@ -48,7 +63,7 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
     process.env.SUPABASE_SERVICE_ROLE_KEY
   );
   const avsender = process.env.EPOST_AVSENDER || 'Tidsbrev.no <post@tidsbrev.no>';
-  const adminEpost = process.env.ADMIN_EPOST || 'hei@tidsbrev.no';
+  const adminEpost = process.env.ADMIN_EPOST || 'tidsbrev@outlook.com';
 
   switch (type) {
 
@@ -71,7 +86,7 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
         to: order.customer_email,
         subject: mail.subject,
         html: mail.html,
-        reply_to: 'hei@tidsbrev.no'
+        reply_to: 'tidsbrev@outlook.com'
       });
 
       await supabase.from('admin_log').insert({
@@ -190,7 +205,7 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
       const emailPayload = {
         from:    avsender,
         to:      toEmail,
-        subject: `Ditt tidsbrev er ankommet`,
+        subject: 'Et brev venter på deg',
         html:    deliverLetterHtml({
                    recipientName, senderName, deliveryDate,
                    viewerUrl, letterContent: letter.letter_content
@@ -199,7 +214,7 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
                    recipientName, senderName, deliveryDate,
                    viewerUrl, letterContent: letter.letter_content
                  }),
-        reply_to: 'hei@tidsbrev.no'
+        reply_to: 'tidsbrev@outlook.com'
       };
       if (attachments) {
         emailPayload.attachments = attachments;
@@ -309,7 +324,7 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
         to:       toEmail,
         subject:  mail.subject,
         html:     mail.html,
-        reply_to: 'hei@tidsbrev.no'
+        reply_to: 'tidsbrev@outlook.com'
       };
       if (capsulePdf) {
         capsuleEmailPayload.attachments = [{ filename: 'din-tidskapsel.pdf', content: capsulePdf }];
@@ -352,7 +367,7 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
         to:       order.customer_email,
         subject:  mail.subject,
         html:     mail.html,
-        reply_to: 'hei@tidsbrev.no'
+        reply_to: 'tidsbrev@outlook.com'
       });
 
       await supabase.from('admin_log').insert({
@@ -401,6 +416,53 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
       });
 
       return { ok: true, result: res, count: ordrer.length };
+    }
+
+    // ------------------------------------------------
+    // 7. BEKREFT/OPPDATER LEVERINGSDETALJER — 30 DAGER FØR LEVERING
+    // ------------------------------------------------
+    // Sendes ALLTID til kunden (customer_email), uansett mottakertype.
+    // For 'andre' ber vi kunden bekrefte/oppdatere mottakerens detaljer.
+    // Lenken inneholder kun order_number + update_token (ingen persondata).
+    // Setter reminder_30d_sent = true etter vellykket utsending slik at
+    // e-posten aldri sendes to ganger for samme ordre.
+    case 'recipient_confirm': {
+      if (!order_id) throw new Error('Mangler order_id');
+
+      const { data: order, error: orderErr } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', order_id)
+        .single();
+      if (orderErr || !order) throw new Error('Fant ikke ordre: ' + order_id);
+
+      // Krever update_token (fra SQL-migreringen øverst i fila).
+      if (!order.update_token) {
+        throw new Error(`Ordre ${order.order_number} mangler update_token — kjør SQL-migreringen`);
+      }
+
+      const mail = templates.recipientConfirm(order);
+      const res = await resend.emails.send({
+        from:     avsender,
+        to:       order.customer_email,   // alltid kunden
+        subject:  mail.subject,
+        html:     mail.html,
+        reply_to: 'tidsbrev@outlook.com'
+      });
+
+      // Marker som sendt slik at den daglige jobben ikke sender på nytt.
+      await supabase
+        .from('orders')
+        .update({ reminder_30d_sent: true })
+        .eq('id', order.id);
+
+      await supabase.from('admin_log').insert({
+        action: 'recipient_confirm_sent',
+        order_id: order.id,
+        note: `Bekreft/oppdater-e-post sendt til ${order.customer_email} — 30 dager til levering`
+      });
+
+      return { ok: true, result: res };
     }
 
     default:

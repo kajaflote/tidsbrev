@@ -330,7 +330,7 @@ no: {
   err_help_card_title: 'Sjekk betalingskortet',
   err_help_card_text: 'Kontroller at kortet har dekning og at utløpsdatoen er riktig.',
   err_help_contact_title: 'Ta kontakt med oss',
-  err_help_contact_text_html: 'Send oss en e-post på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a> — vi hjelper deg gjerne.',
+  err_help_contact_text_html: 'Send oss en e-post på <a href="mailto:tidsbrev@outlook.com">tidsbrev@outlook.com</a> — vi hjelper deg gjerne.',
   err_btn_retry: 'Prøv igjen',
   err_btn_home: 'Til forsiden',
   err_reassurance: 'Ordene dine fortjener å bli levert. Vi er her for å hjelpe deg dit.',
@@ -350,7 +350,7 @@ no: {
   // ── FAQ ──
   faq_eyebrow: '~ vi har svarene ~',
   faq_title: 'Ofte stilte spørsmål',
-  faq_lead_html: 'Lurer du på noe? Sjansen er stor for at svaret er her. Finner du ikke det du trenger, er vi alltid tilgjengelig på <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a>.',
+  faq_lead_html: 'Lurer du på noe? Sjansen er stor for at svaret er her. Finner du ikke det du trenger, er vi alltid tilgjengelig på <a href="mailto:tidsbrev@outlook.com">tidsbrev@outlook.com</a>.',
   faq_group_service: 'Om tjenesten',
   faq_group_delivery: 'Levering',
   faq_group_privacy: 'Personvern og sikkerhet',
@@ -358,7 +358,7 @@ no: {
   faq_cta_title: 'Klar til å skrive?',
   faq_cta_text: 'Det tar bare noen minutter å sette ord på det du vil si — men ordene varer for alltid.',
   faq_cta_btn: 'Skriv ditt tidsbrev',
-  faq_cta_unsure_html: 'Har du et spørsmål som ikke er besvart her? <a href="mailto:hei@tidsbrev.no">Send oss en e-post</a>.',
+  faq_cta_unsure_html: 'Har du et spørsmål som ikke er besvart her? <a href="mailto:tidsbrev@outlook.com">Send oss en e-post</a>.',
   faq_en_notice: '',
 
   // ── Personvern ──
@@ -714,7 +714,7 @@ en: {
   err_help_card_title: 'Check your payment card',
   err_help_card_text: 'Make sure the card has sufficient funds and the expiry date is correct.',
   err_help_contact_title: 'Contact us',
-  err_help_contact_text_html: 'Send us an email at <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a> — we\'re happy to help.',
+  err_help_contact_text_html: 'Send us an email at <a href="mailto:tidsbrev@outlook.com">tidsbrev@outlook.com</a> — we\'re happy to help.',
   err_btn_retry: 'Try again',
   err_btn_home: 'To front page',
   err_reassurance: 'Your words deserve to be delivered. We are here to help you get there.',
@@ -734,7 +734,7 @@ en: {
   // ── FAQ ──
   faq_eyebrow: '~ we have the answers ~',
   faq_title: 'Frequently asked questions',
-  faq_lead_html: "Wondering about something? Chances are the answer is here. If you can't find what you're looking for, we're always available at <a href=\"mailto:hei@tidsbrev.no\">hei@tidsbrev.no</a>.",
+  faq_lead_html: "Wondering about something? Chances are the answer is here. If you can't find what you're looking for, we're always available at <a href=\"mailto:tidsbrev@outlook.com\">tidsbrev@outlook.com</a>.",
   faq_group_service: 'About the service',
   faq_group_delivery: 'Delivery',
   faq_group_privacy: 'Privacy and security',
@@ -742,7 +742,7 @@ en: {
   faq_cta_title: 'Ready to write?',
   faq_cta_text: 'It only takes a few minutes to put into words what you want to say — but the words last forever.',
   faq_cta_btn: 'Write your time letter',
-  faq_cta_unsure_html: "Have a question that isn't answered here? <a href=\"mailto:hei@tidsbrev.no\">Send us an email</a>.",
+  faq_cta_unsure_html: "Have a question that isn't answered here? <a href=\"mailto:tidsbrev@outlook.com\">Send us an email</a>.",
   faq_en_notice: 'Full English translation of FAQ answers coming soon. Headings are translated; answers remain in Norwegian for now.',
 
   // ── Personvern ──

@@ -115,7 +115,7 @@ function baseLayout({ title, preheader, bodyHtml }) {
             <div>
               <a href="https://tidsbrev.no/personvern.html" style="color:#B08A3E;text-decoration:underline;margin:0 8px;">Personvern</a>
               <a href="https://tidsbrev.no/vilkaar.html" style="color:#B08A3E;text-decoration:underline;margin:0 8px;">Vilkår</a>
-              <a href="mailto:hei@tidsbrev.no" style="color:#B08A3E;text-decoration:underline;margin:0 8px;">Kontakt</a>
+              <a href="mailto:tidsbrev@outlook.com" style="color:#B08A3E;text-decoration:underline;margin:0 8px;">Kontakt</a>
             </div>
           </td>
         </tr>
@@ -421,7 +421,7 @@ function deliverLetter(order, letterContent) {
             <p style="margin:0;">
               <a href="https://tidsbrev.no" style="color:#B08A3E;text-decoration:underline;">tidsbrev.no</a>
               &nbsp;·&nbsp;
-              <a href="mailto:hei@tidsbrev.no" style="color:#B08A3E;text-decoration:underline;">hei@tidsbrev.no</a>
+              <a href="mailto:tidsbrev@outlook.com" style="color:#B08A3E;text-decoration:underline;">tidsbrev@outlook.com</a>
             </p>
           </td>
         </tr>
@@ -493,18 +493,15 @@ function adminReminder(orders) {
 // ================================================================
 // 5) BRANDED HTML EMAIL — digital letter delivery with viewer URL
 // ================================================================
-function deliverLetterHtml({ recipientName, senderName, deliveryDate, viewerUrl, letterContent }) {
-  const previewText = `${escapeHtml(senderName)} har sendt deg et brev fra fortiden — åpne det nå.`;
-  const letterPreview = letterContent.length > 200
-    ? escapeHtml(letterContent.slice(0, 200).replace(/\n/g, ' ')) + '…'
-    : escapeHtml(letterContent);
+function deliverLetterHtml({ recipientName, senderName, deliveryDate, viewerUrl }) {
+  const previewText = 'Et tidskapselbrev har nådd frem. Åpne det når du er klar.';
 
   return `<!DOCTYPE html>
 <html lang="nb">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ditt tidsbrev er ankommet</title>
+  <title>Et brev venter på deg</title>
 </head>
 <body style="margin:0;padding:0;background:#f5f0e8;font-family:Arial,Helvetica,sans-serif;">
   <!-- Preheader (hidden preview text) -->
@@ -531,33 +528,24 @@ function deliverLetterHtml({ recipientName, senderName, deliveryDate, viewerUrl,
 
           <!-- Heading -->
           <h1 style="font-family:Georgia,serif;font-size:1.8rem;color:#2a231c;text-align:center;margin:0 0 12px;line-height:1.25;">
-            Brevet ditt er ankommet
+            Et brev har kommet frem
           </h1>
           <p style="text-align:center;color:#6b5d4c;font-size:1rem;margin:0 0 32px;line-height:1.6;">
-            ${escapeHtml(senderName)} sendte dette til deg — og nå er dagen endelig her.
+            ${escapeHtml(senderName)} skrev et brev til deg — og nå er dagen endelig her. Trykk på knappen under for å lese det.
           </p>
 
           <!-- CTA button -->
           <p style="text-align:center;margin:0 0 36px;">
             <a href="${escapeHtml(viewerUrl)}"
                style="display:inline-block;background:#6b2737;color:#f5f0e8;text-decoration:none;padding:16px 40px;border-radius:50px;font-family:Arial,sans-serif;font-size:1rem;font-weight:600;letter-spacing:.3px;">
-              Åpne brevet ditt &rarr;
+              Åpne brevet &rarr;
             </a>
           </p>
 
-          <!-- Divider -->
-          <hr style="border:none;border-top:1px solid #e8dcc4;margin:0 0 28px;"/>
-
-          <!-- Plain text fallback -->
-          <p style="color:#6b5d4c;font-size:.88rem;margin:0 0 10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">
-            Innholdet i brevet:
+          <!-- Reassurance -->
+          <p style="text-align:center;color:#6b5d4c;font-size:.85rem;margin:0;line-height:1.5;">
+            Lenken er personlig og kun ment for deg.
           </p>
-          <p style="font-family:Georgia,serif;font-style:italic;color:#2a231c;font-size:1rem;line-height:1.75;margin:0 0 8px;background:#f5f0e8;padding:20px 24px;border-left:3px solid #6b2737;border-radius:0 6px 6px 0;">
-            ${letterPreview.replace(/\n/g, '<br/>')}
-          </p>
-          ${letterContent.length > 200 ? `<p style="color:#6b5d4c;font-size:.82rem;margin:8px 0 0;text-align:right;">
-            <a href="${escapeHtml(viewerUrl)}" style="color:#6b2737;">Les hele brevet &rarr;</a>
-          </p>` : ''}
 
         </td></tr>
 
@@ -569,7 +557,7 @@ function deliverLetterHtml({ recipientName, senderName, deliveryDate, viewerUrl,
           <p style="color:#6b5d4c;font-size:.75rem;margin:0;">
             <a href="https://tidsbrev.no/personvern.html" style="color:#6b5d4c;">Personvern</a>
             &nbsp;&middot;&nbsp;
-            <a href="mailto:hei@tidsbrev.no" style="color:#6b5d4c;">Kontakt</a>
+            <a href="mailto:tidsbrev@outlook.com" style="color:#6b5d4c;">Kontakt</a>
           </p>
         </td></tr>
 
@@ -584,19 +572,15 @@ function deliverLetterHtml({ recipientName, senderName, deliveryDate, viewerUrl,
 // ================================================================
 // 6) PLAIN TEXT EMAIL — digital letter delivery fallback
 // ================================================================
-function deliverLetterText({ recipientName, senderName, deliveryDate, viewerUrl, letterContent }) {
+function deliverLetterText({ recipientName, senderName, deliveryDate, viewerUrl }) {
   return `Hei ${recipientName},
 
-Du har mottatt et tidsbrev fra ${senderName}.
+${senderName} skrev et brev til deg — og nå er dagen endelig her.
 
-Åpne brevet ditt her:
+Åpne brevet her:
 ${viewerUrl}
 
----
-
-Innhold i brevet:
-
-${letterContent}
+Lenken er personlig og kun ment for deg.
 
 ---
 
@@ -752,6 +736,135 @@ function senderReminder(order) {
 }
 
 
+// ================================================================
+// 9) BEKREFT/OPPDATER LEVERINGSDETALJER — 30 dager før levering
+// ================================================================
+// Sendes til kunden ~30 dager før leveringsdato. Lar kunden bekrefte
+// eller oppdatere leveringsdetaljene via en sikker lenke som kun
+// inneholder ordrenummer + update_token (ingen persondata i URL-en).
+//
+//   digitalt / tidskapsell → bekreft/oppdater mottakers E-POST
+//   fysisk                 → bekreft/oppdater mottakers POSTADRESSE
+//
+// E-posten går alltid til kunden (customer_email). Er mottakeren en
+// annen ('andre'), ber vi kunden bekrefte mottakerens detaljer.
+function recipientConfirm(order) {
+  const sideUrl = process.env.SIDE_URL || 'https://tidsbrev.no';
+  const produktNavn = PRODUKT_NAVN[order.product_type] || order.product_type;
+  const leveringsDato = formatDateNO(order.delivery_date);
+  const erFysisk = order.product_type === 'fysisk';
+  const tilSegSelv = order.recipient_type === 'meg_selv';
+
+  // Sikker lenke — kun ordrenummer + token, ingen persondata.
+  const oppdaterUrl =
+    `${sideUrl}/oppdater.html?order=${encodeURIComponent(order.order_number || '')}` +
+    `&token=${encodeURIComponent(order.update_token || '')}`;
+
+  // Nåværende leveringsdetaljer som vises i e-posten.
+  let detaljerHtml;
+  if (erFysisk) {
+    const navnLinje = order.recipient_name ? `${escapeHtml(order.recipient_name)}<br/>` : '';
+    const adresseLinje = order.recipient_address ? `${escapeHtml(order.recipient_address)}<br/>` : '';
+    const stedLinje = `${escapeHtml(order.recipient_zip || '')} ${escapeHtml(order.recipient_city || '')}`.trim();
+    detaljerHtml = `
+        <div style="font-family:Georgia,serif;color:#6B2737;font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Nåværende leveringsadresse</div>
+        <div style="background:#fffdf7;border:1px dashed #c9b9a0;border-radius:8px;padding:16px 20px;font-family:Georgia,serif;font-size:15px;line-height:1.7;color:#2A231C;">
+          ${navnLinje}${adresseLinje}${stedLinje || '<span style="color:#6B5D4C;font-style:italic;">(ingen adresse registrert)</span>'}
+        </div>`;
+  } else {
+    const leveringsEpost = tilSegSelv
+      ? (order.customer_email || '')
+      : (order.recipient_email || '');
+    detaljerHtml = `
+        <div style="font-family:Georgia,serif;color:#6B2737;font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Nåværende leverings-e-post</div>
+        <div style="background:#fffdf7;border:1px dashed #c9b9a0;border-radius:8px;padding:16px 20px;font-family:Georgia,serif;font-size:15px;line-height:1.7;color:#2A231C;">
+          ${escapeHtml(leveringsEpost) || '<span style="color:#6B5D4C;font-style:italic;">(ingen e-post registrert)</span>'}
+        </div>`;
+  }
+
+  const mottakerSetning = tilSegSelv
+    ? `leverer vi <strong>${escapeHtml(produktNavn)}</strong> til deg.`
+    : `leverer vi <strong>${escapeHtml(produktNavn)}</strong> til ${escapeHtml(order.recipient_name || 'mottakeren')}.`;
+
+  const oppdaterTekst = erFysisk
+    ? 'Stemmer adressen nedenfor? Da trenger du ikke gjøre noe. Har mottakeren flyttet, eller er noe feil, kan du oppdatere adressen med knappen under.'
+    : 'Stemmer e-postadressen nedenfor? Da trenger du ikke gjøre noe. Er den feil, eller ønsker du å bytte den, kan du oppdatere den med knappen under.';
+
+  const body = `
+    <p style="font-family:Georgia,'Caveat',cursive;font-size:20px;color:#6B2737;margin:0 0 6px;font-style:italic;">~ en liten sjekk før levering ~</p>
+    <h1 style="font-family:Georgia,serif;font-size:26px;color:#2A231C;margin:0 0 18px;line-height:1.2;">Stemmer leveringsdetaljene?</h1>
+
+    <p style="margin:0 0 16px;color:#2A231C;font-size:16px;">
+      Kjære ${escapeHtml(order.customer_name || 'du')},
+    </p>
+
+    <p style="margin:0 0 22px;color:#2A231C;font-size:16px;">
+      Om omtrent 30 dager — den <strong style="color:#6B2737;">${escapeHtml(leveringsDato)}</strong> —
+      ${mottakerSetning}
+      Vi vil bare være helt sikre på at vi sender til rett sted.
+    </p>
+
+    <p style="margin:0 0 18px;color:#2A231C;font-size:16px;">
+      ${oppdaterTekst}
+    </p>
+
+    <!-- Nåværende detaljer -->
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+      style="background:#F5F0E8;border:1px solid #E8DCC4;border-radius:12px;margin:0 0 24px;">
+      <tr><td style="padding:20px 24px;">
+        ${detaljerHtml}
+      </td></tr>
+    </table>
+
+    <!-- CTA -->
+    <p style="text-align:center;margin:0 0 26px;">
+      <a href="${escapeHtml(oppdaterUrl)}"
+         style="display:inline-block;background:#6B2737;color:#F5F0E8;text-decoration:none;padding:16px 40px;border-radius:50px;font-family:'Inter',Arial,sans-serif;font-size:1rem;font-weight:600;letter-spacing:.3px;">
+        Bekreft eller oppdater &rarr;
+      </a>
+    </p>
+
+    <p style="margin:0 0 22px;color:#6B5D4C;font-size:14px;text-align:center;font-style:italic;">
+      Er alt riktig, kan du trygt se bort fra denne e-posten — vi tar oss av resten.
+    </p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+      style="background:#F5F0E8;border:1px solid #E8DCC4;border-radius:12px;margin:0 0 24px;">
+      <tr><td style="padding:18px 22px;">
+        <table role="presentation" width="100%" cellpadding="6" cellspacing="0" border="0" style="font-size:14px;">
+          <tr>
+            <td style="color:#6B5D4C;width:40%;">Ordrenummer</td>
+            <td style="color:#2A231C;font-weight:600;">${escapeHtml(order.order_number || '')}</td>
+          </tr>
+          <tr>
+            <td style="color:#6B5D4C;">Leveringsdato</td>
+            <td style="color:#6B2737;font-weight:700;font-family:Georgia,serif;">${escapeHtml(leveringsDato)}</td>
+          </tr>
+          <tr>
+            <td style="color:#6B5D4C;">Produkt</td>
+            <td style="color:#2A231C;">${escapeHtml(produktNavn)}</td>
+          </tr>
+        </table>
+      </td></tr>
+    </table>
+
+    <p style="margin:0;color:#6B5D4C;font-size:14px;">
+      Varme hilsener,<br/>
+      <span style="font-family:Georgia,'Caveat',cursive;color:#6B2737;font-size:18px;font-style:italic;">Teamet bak Tidsbrev</span>
+    </p>
+  `;
+
+  return {
+    subject: `Stemmer leveringsdetaljene? — ordre ${order.order_number}`,
+    html: baseLayout({
+      title: 'Bekreft leveringsdetaljer',
+      preheader: `Vi leverer ${leveringsDato}. Sjekk at detaljene stemmer.`,
+      bodyHtml: body
+    })
+  };
+}
+
+
 module.exports = {
   orderConfirmation,
   adminNewOrder,
@@ -760,5 +873,6 @@ module.exports = {
   deliverLetterHtml,
   deliverLetterText,
   deliverTidskapsell,
-  senderReminder
+  senderReminder,
+  recipientConfirm
 };

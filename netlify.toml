@@ -100,5 +100,5 @@
 # VIPPS_WEBHOOK_SECRET
 #
 # RESEND_API_KEY              (re_... fra resend.com/api-keys)
-# EPOST_AVSENDER              ("Tidsbrev <hei@tidsbrev.no>" — domenet må være verifisert i Resend)
+# EPOST_AVSENDER              ("Tidsbrev <tidsbrev@outlook.com>" — domenet må være verifisert i Resend)
 # ADMIN_EPOST                 (din private admin-epostadresse for interne varsler)

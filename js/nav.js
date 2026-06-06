@@ -187,7 +187,7 @@
       <h4 data-i18n="footer_info">Info</h4>
       <a href="/personvern.html" data-i18n="footer_privacy">Personvernerklæring</a>
       <a href="/vilkaar.html" data-i18n="footer_terms">Vilkår og betingelser</a>
-      <a href="mailto:hei@tidsbrev.no">hei@tidsbrev.no</a>
+      <a href="mailto:tidsbrev@outlook.com">tidsbrev@outlook.com</a>
     </div>
   </div>
   <div class="footer-bottom">

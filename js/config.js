@@ -70,8 +70,8 @@ const CONFIG = {
   //   2. Opprett en ny API-nøkkel (starter med re_...)
   // Avsender-adresse kan derimot ligge her:
   // ----------------------------------------------------------------
-  EPOST_AVSENDER: "Tidsbrev.no <hei@tidsbrev.no>",
-  EPOST_SVAR_TIL: "hei@tidsbrev.no",
+  EPOST_AVSENDER: "Tidsbrev.no <tidsbrev@outlook.com>",
+  EPOST_SVAR_TIL: "tidsbrev@outlook.com",
 
 
   // ----------------------------------------------------------------
@@ -87,7 +87,7 @@ const CONFIG = {
   // NETTSIDEN — Generelle innstillinger
   // ----------------------------------------------------------------
   SIDE_URL: "https://tidsbrev.no",
-  STOTTE_EPOST: "hei@tidsbrev.no",
+  STOTTE_EPOST: "tidsbrev@outlook.com",
 
   // ----------------------------------------------------------------
   // PRODUKTPRISER — i hele kroner NOK

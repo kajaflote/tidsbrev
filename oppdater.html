@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bekreft leveringsdetaljer — Tidsbrev.no</title>
+  <meta name="robots" content="noindex, nofollow"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cream: #F5F0E8;
+      --cream-2: #FBF6EC;
+      --beige: #E8DCC4;
+      --burgundy: #6B2737;
+      --burgundy-dark: #4E141C;
+      --forest: #2D4A3E;
+      --ink: #2A231C;
+      --muted: #6B5D4C;
+      --gold: #B08A3E;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Loading ──────────────────────────────────── */
+    #loading-state { text-align: center; transition: opacity .4s ease; }
+    #loading-state.hidden { opacity: 0; pointer-events: none; }
+    .loading-seal {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--burgundy);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50%       { transform: scale(1.08); opacity: .8; }
+    }
+    #loading-state p { color: var(--muted); font-size: 1rem; }
+
+    /* ── Error / success states ───────────────────── */
+    #error-state, #success-state { display: none; text-align: center; max-width: 460px; }
+    #error-state.show, #success-state.show { display: block; }
+    .state-icon {
+      width: 72px; height: 72px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .state-icon.error-icon { background: #fff0f1; }
+    .state-icon.success-icon { background: rgba(45,74,62,.12); }
+    #error-state h2, #success-state h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem; margin-bottom: 12px;
+    }
+    #error-state p, #success-state p { color: var(--muted); line-height: 1.7; }
+    .back-link {
+      display: inline-block; margin-top: 28px;
+      color: var(--burgundy); text-decoration: underline; font-size: .9rem;
+    }
+
+    /* ── Form card ────────────────────────────────── */
+    #form-state { display: none; width: 100%; max-width: 540px; }
+    #form-state.show { display: block; }
+
+    .brand {
+      text-align: center; margin-bottom: 28px;
+    }
+    .brand .name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.5rem; font-weight: 700; color: var(--burgundy); letter-spacing: .3px;
+    }
+    .brand .name span { color: var(--forest); }
+    .brand .rule { height: 2px; width: 56px; background: var(--gold); margin: 12px auto 0; }
+
+    .card {
+      background: var(--cream-2);
+      border: 1px solid var(--beige);
+      border-radius: 16px;
+      padding: 40px 40px 36px;
+      box-shadow: 0 20px 60px rgba(42,35,28,.08);
+    }
+    @media (max-width: 520px) { .card { padding: 30px 24px; } }
+
+    .eyebrow {
+      font-family: 'Caveat', cursive;
+      font-size: 1.3rem; color: var(--burgundy); font-style: italic; margin-bottom: 4px;
+    }
+    .card h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; color: var(--ink); margin-bottom: 14px; line-height: 1.2;
+    }
+    .card p.lead { color: var(--ink); font-size: 1rem; line-height: 1.7; margin-bottom: 8px; }
+    .delivery-date { color: var(--burgundy); font-weight: 700; }
+
+    .current-box {
+      background: #fffdf7;
+      border: 1px dashed #c9b9a0;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 20px 0 24px;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1rem; line-height: 1.7; color: var(--ink);
+    }
+    .current-box .label {
+      font-family: 'Inter', sans-serif;
+      font-size: .72rem; text-transform: uppercase; letter-spacing: 1px;
+      color: var(--burgundy); margin-bottom: 8px; font-weight: 600;
+    }
+
+    .hint { color: var(--muted); font-size: .9rem; line-height: 1.6; margin-bottom: 22px; }
+
+    .field { margin-bottom: 16px; }
+    .field label {
+      display: block; font-size: .82rem; font-weight: 600;
+      color: var(--ink); margin-bottom: 6px;
+    }
+    .field input {
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem; color: var(--ink);
+      background: #fff;
+      border: 1.5px solid var(--beige);
+      border-radius: 10px;
+      padding: 12px 14px;
+      transition: border-color .15s;
+    }
+    .field input:focus { outline: none; border-color: var(--burgundy); }
+    .row-2 { display: flex; gap: 12px; }
+    .row-2 .field { flex: 1; }
+    .field.zip { flex: 0 0 38%; }
+
+    .btn-row { display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+    .btn {
+      flex: 1; min-width: 160px;
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 14px 24px; border-radius: 50px;
+      font-family: 'Inter', sans-serif; font-size: .95rem; font-weight: 600;
+      cursor: pointer; border: none; transition: all .2s; text-decoration: none;
+    }
+    .btn-primary { background: var(--burgundy); color: var(--cream); box-shadow: 0 6px 20px rgba(107,39,55,.2); }
+    .btn-primary:hover { background: var(--burgundy-dark); }
+    .btn-primary:disabled { opacity: .6; cursor: default; }
+
+    .form-msg { color: #b13341; font-size: .9rem; margin-top: 14px; min-height: 1em; text-align: center; }
+
+    .reassure { color: var(--muted); font-size: .86rem; font-style: italic; text-align: center; margin-top: 18px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loading-state">
+  <div class="loading-seal">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F5F0E8"
+         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z"/>
+      <polyline points="22,6 12,13 2,6"/>
+    </svg>
+  </div>
+  <p>Henter leveringsdetaljene dine…</p>
+</div>
+
+<!-- Error -->
+<div id="error-state">
+  <div class="state-icon error-icon">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#b13341"
+         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="15" y1="9" x2="9" y2="15"/>
+      <line x1="9" y1="9" x2="15" y2="15"/>
+    </svg>
+  </div>
+  <h2>Lenken er ikke gyldig</h2>
+  <p>Denne lenken er ugyldig eller utløpt. Ta kontakt med <a href="mailto:tidsbrev@outlook.com">tidsbrev@outlook.com</a> om du tror dette er en feil.</p>
+  <a href="https://tidsbrev.no" class="back-link">← Tilbake til Tidsbrev.no</a>
+</div>
+
+<!-- Success -->
+<div id="success-state">
+  <div class="state-icon success-icon">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2D4A3E"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  </div>
+  <h2>Takk — alt er lagret</h2>
+  <p>Vi har oppdatert leveringsdetaljene dine. Du trenger ikke gjøre noe mer — vi tar oss av resten.</p>
+  <a href="https://tidsbrev.no" class="back-link">← Tilbake til Tidsbrev.no</a>
+</div>
+
+<!-- Form -->
+<div id="form-state">
+  <div class="brand">
+    <div class="name">Tidsbrev<span>.no</span></div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="card">
+    <div class="eyebrow">~ en liten sjekk før levering ~</div>
+    <h1>Stemmer leveringsdetaljene?</h1>
+    <p class="lead">
+      Vi leverer <span id="leadDate" class="delivery-date"></span>. Sjekk at detaljene under stemmer.
+    </p>
+
+    <div class="current-box">
+      <div class="label" id="currentLabel">Nåværende detaljer</div>
+      <div id="currentValue"></div>
+    </div>
+
+    <p class="hint" id="hint"></p>
+
+    <form id="updateForm" autocomplete="off" novalidate>
+      <!-- Felter settes inn dynamisk -->
+      <div id="fields"></div>
+
+      <div class="btn-row">
+        <button type="submit" class="btn btn-primary" id="submitBtn">Lagre endringer</button>
+      </div>
+      <div class="form-msg" id="formMsg"></div>
+    </form>
+
+    <p class="reassure">Er alt allerede riktig, kan du trygt lukke denne siden — ingenting endres før du lagrer.</p>
+  </div>
+</div>
+
+<script>
+  // ─── Les ordre + token fra URL ────────────────────────────────
+  const params = new URLSearchParams(window.location.search);
+  const orderNumber = params.get('order');
+  const token = params.get('token');
+
+  const $ = id => document.getElementById(id);
+
+  function show(id) {
+    $('loading-state').classList.add('hidden');
+    setTimeout(() => {
+      $('loading-state').style.display = 'none';
+      $(id).classList.add('show');
+      if (id === 'form-state') $('form-state').style.display = 'block';
+    }, 300);
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '';
+    try {
+      return new Date(iso).toLocaleDateString('nb-NO', { day: 'numeric', month: 'long', year: 'numeric' });
+    } catch { return iso; }
+  }
+
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+
+  let orderInfo = null;
+
+  // ─── Verifiser token og hent nåværende detaljer ───────────────
+  async function init() {
+    if (!orderNumber || !token) { show('error-state'); return; }
+
+    try {
+      const res = await fetch('/api/verify-update-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order: orderNumber, token })
+      });
+
+      if (!res.ok) { show('error-state'); return; }
+      orderInfo = await res.json();
+      if (!orderInfo || !orderInfo.ok) { show('error-state'); return; }
+
+      renderForm();
+      show('form-state');
+    } catch (e) {
+      show('error-state');
+    }
+  }
+
+  // ─── Bygg skjema basert på produkttype ────────────────────────
+  function renderForm() {
+    $('leadDate').textContent = fmtDate(orderInfo.delivery_date);
+
+    const erFysisk = orderInfo.product_type === 'fysisk';
+
+    if (erFysisk) {
+      $('currentLabel').textContent = 'Nåværende leveringsadresse';
+      const sted = `${escapeHtml(orderInfo.recipient_zip || '')} ${escapeHtml(orderInfo.recipient_city || '')}`.trim();
+      $('currentValue').innerHTML =
+        (orderInfo.recipient_name ? escapeHtml(orderInfo.recipient_name) + '<br/>' : '') +
+        (orderInfo.recipient_address ? escapeHtml(orderInfo.recipient_address) + '<br/>' : '') +
+        (sted || '<em style="color:var(--muted)">(ingen adresse registrert)</em>');
+
+      $('hint').textContent = 'Har mottakeren flyttet, eller er noe feil? Oppdater adressen og lagre. Ellers kan du bare lukke siden.';
+
+      $('fields').innerHTML = `
+        <div class="field">
+          <label for="f_name">Mottakerens navn</label>
+          <input type="text" id="f_name" name="recipient_name" />
+        </div>
+        <div class="field">
+          <label for="f_address">Adresse</label>
+          <input type="text" id="f_address" name="recipient_address" />
+        </div>
+        <div class="row-2">
+          <div class="field zip">
+            <label for="f_zip">Postnummer</label>
+            <input type="text" id="f_zip" name="recipient_zip" inputmode="numeric" />
+          </div>
+          <div class="field">
+            <label for="f_city">Poststed</label>
+            <input type="text" id="f_city" name="recipient_city" />
+          </div>
+        </div>
+      `;
+      $('f_name').value    = orderInfo.recipient_name || '';
+      $('f_address').value = orderInfo.recipient_address || '';
+      $('f_zip').value     = orderInfo.recipient_zip || '';
+      $('f_city').value    = orderInfo.recipient_city || '';
+    } else {
+      $('currentLabel').textContent = 'Nåværende leverings-e-post';
+      $('currentValue').innerHTML =
+        escapeHtml(orderInfo.delivery_email || '') ||
+        '<em style="color:var(--muted)">(ingen e-post registrert)</em>';
+
+      $('hint').textContent = 'Er e-postadressen feil, eller ønsker du å bytte den? Oppdater og lagre. Ellers kan du bare lukke siden.';
+
+      $('fields').innerHTML = `
+        <div class="field">
+          <label for="f_email">Leverings-e-post</label>
+          <input type="email" id="f_email" name="delivery_email" />
+        </div>
+      `;
+      $('f_email').value = orderInfo.delivery_email || '';
+    }
+  }
+
+  // ─── Innsending ───────────────────────────────────────────────
+  $('updateForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = $('formMsg');
+    msg.style.color = '#b13341';
+    msg.textContent = '';
+
+    const payload = { order: orderNumber, token };
+    if (orderInfo.product_type === 'fysisk') {
+      payload.recipient_name    = $('f_name').value.trim();
+      payload.recipient_address = $('f_address').value.trim();
+      payload.recipient_zip     = $('f_zip').value.trim();
+      payload.recipient_city    = $('f_city').value.trim();
+      if (!payload.recipient_name || !payload.recipient_address || !payload.recipient_zip || !payload.recipient_city) {
+        msg.textContent = 'Fyll inn navn, adresse, postnummer og poststed.';
+        return;
+      }
+    } else {
+      payload.delivery_email = $('f_email').value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.delivery_email)) {
+        msg.textContent = 'Oppgi en gyldig e-postadresse.';
+        return;
+      }
+    }
+
+    const btn = $('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Lagrer…';
+
+    try {
+      const res = await fetch('/api/update-recipient', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const out = await res.json().catch(() => ({}));
+
+      if (res.ok && out.ok) {
+        $('form-state').classList.remove('show');
+        $('form-state').style.display = 'none';
+        $('success-state').classList.add('show');
+      } else {
+        msg.textContent = out.error || 'Noe gikk galt. Prøv igjen senere.';
+        btn.disabled = false;
+        btn.textContent = 'Lagre endringer';
+      }
+    } catch (err) {
+      msg.textContent = 'Kunne ikke kontakte serveren. Prøv igjen senere.';
+      btn.disabled = false;
+      btn.textContent = 'Lagre endringer';
+    }
+  });
+
+  init();
+</script>
+</body>
+</html>

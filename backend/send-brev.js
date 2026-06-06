@@ -22,6 +22,37 @@
 //   schedule = "0 7 * * *"
 // ================================================================
 
+// ================================================================
+// SQL-MIGRERING + CRON — kjør manuelt i Supabase SQL Editor.
+// (IKKE kjørt automatisk av koden — kun dokumentert her.)
+// ================================================================
+//
+// 1) Kolonner som trengs av bekreft/oppdater-funksjonen:
+//
+//    ALTER TABLE orders ADD COLUMN IF NOT EXISTS update_token uuid DEFAULT gen_random_uuid();
+//    ALTER TABLE orders ADD COLUMN IF NOT EXISTS reminder_30d_sent boolean DEFAULT false;
+//
+// 2) Planlegging:
+//    Den daglige jobben (denne funksjonen) kjører allerede kl 07:00 UTC
+//    via netlify.toml [functions."send-brev"] schedule = "0 7 * * *",
+//    og inkluderer nå utsending av "bekreft/oppdater"-e-posten (seksjon 3b).
+//    Du trenger derfor INGEN ny cron-jobb hvis du bruker Netlify Scheduled
+//    Functions.
+//
+//    Bruker du i stedet Supabase pg_cron (se database/pg-cron.sql), dekker
+//    den eksisterende jobben dette automatisk, siden den bare POSTer til
+//    /api/send-brev. Vil du likevel sette opp en egen daglig trigger
+//    manuelt, kan du kjøre dette i Supabase SQL Editor:
+//
+//    -- Krever pg_cron + pg_net aktivert (Database → Extensions)
+//    SELECT cron.schedule(
+//      'tidsbrev-daglig-brevsending',   -- jobbnavn (samme dekker alt)
+//      '0 7 * * *',                     -- daglig 07:00 UTC (09:00 norsk tid)
+//      $$SELECT public.trigger_daglig_brevsending();$$
+//    );
+//
+// ================================================================
+
 const { schedule } = require('@netlify/functions');
 const { sendEmail } = require('./send-email');
 
@@ -40,6 +71,8 @@ async function dailyLetterJob() {
     digitale_sendt: 0,
     digitale_feilet: 0,
     fysisk_paaminnelse: false,
+    bekreftelse_sendt: 0,
+    bekreftelse_feilet: 0,
     feil: []
   };
 
@@ -203,6 +236,64 @@ async function dailyLetterJob() {
   }
 
   // ================================================================
+  // 3b. BEKREFT/OPPDATER LEVERINGSDETALJER — 30 DAGER FØR LEVERING
+  // ================================================================
+  // Nøyaktig 30 dager før leveringsdato sender vi kunden en e-post der
+  // de kan bekrefte eller oppdatere leveringsdetaljene:
+  //   digitalt / tidskapsell → mottakers e-post
+  //   fysisk                 → mottakers postadresse
+  // Vi velger kun ordre som ennå ikke har fått e-posten
+  // (reminder_30d_sent = false). Selve send-email-funksjonen setter
+  // reminder_30d_sent = true etter vellykket utsending, så hver ordre
+  // får e-posten nøyaktig én gang.
+  try {
+    const om30 = new Date();
+    om30.setDate(om30.getDate() + 30);
+    const om30str = om30.toISOString().split('T')[0];
+
+    const { data: bekreftOrdrer, error: bekreftErr } = await supabase
+      .from('orders')
+      .select('id, order_number')
+      .eq('payment_status', 'paid')
+      .eq('delivery_date', om30str)
+      .eq('reminder_30d_sent', false);
+
+    if (bekreftErr) {
+      // Mangler kolonnen reminder_30d_sent ennå? Da hopper vi trygt over
+      // til SQL-migreringen er kjørt — uten å stoppe resten av jobben.
+      console.error('[send-brev] Kunne ikke hente bekreftelses-ordrer (kjørt SQL-migreringen?):', bekreftErr.message);
+      resultater.feil.push('Henting av bekreftelses-ordrer feilet: ' + bekreftErr.message);
+    } else if (bekreftOrdrer && bekreftOrdrer.length > 0) {
+      console.log(`[send-brev] Fant ${bekreftOrdrer.length} ordre for bekreft/oppdater-e-post`);
+      for (const ordre of bekreftOrdrer) {
+        try {
+          await sendEmail({
+            type:     'recipient_confirm',
+            order_id: ordre.id
+          });
+          resultater.bekreftelse_sendt++;
+          console.log(`[send-brev] ✓ Bekreft/oppdater-e-post sendt for ordre ${ordre.order_number}`);
+        } catch (err) {
+          resultater.bekreftelse_feilet++;
+          resultater.feil.push(`Bekreftelse ${ordre.order_number}: ${err.message}`);
+          console.error(`[send-brev] ✗ Bekreft/oppdater-e-post feilet for ${ordre.order_number}:`, err.message);
+
+          await supabase.from('admin_log').insert({
+            action: 'recipient_confirm_failed',
+            order_id: ordre.id,
+            note: `Automatisk bekreft/oppdater-e-post feilet: ${err.message}`
+          });
+        }
+      }
+    } else {
+      console.log('[send-brev] Ingen ordre treffer 30-dagersmerket for bekreft/oppdater i dag');
+    }
+  } catch (err) {
+    console.error('[send-brev] Uventet feil i bekreft/oppdater-utsending:', err.message);
+    resultater.feil.push('Bekreft/oppdater-utsending krasjet: ' + err.message);
+  }
+
+  // ================================================================
   // 4. PÅMINNELSE TIL ADMIN OM FYSISKE BREV (kun når et brev treffer 30-dagersmerket)
   // ================================================================
   // Vi sender én påminnelse pr. brev, nøyaktig 30 dager før leveringsdato.
@@ -237,7 +328,7 @@ async function dailyLetterJob() {
   // ================================================================
   await supabase.from('admin_log').insert({
     action: 'daily_job_completed',
-    note: `Dato: ${idag} | Sendt: ${resultater.digitale_sendt} | Feilet: ${resultater.digitale_feilet} | Fysisk påminnelse: ${resultater.fysisk_paaminnelse}`
+    note: `Dato: ${idag} | Sendt: ${resultater.digitale_sendt} | Feilet: ${resultater.digitale_feilet} | Fysisk påminnelse: ${resultater.fysisk_paaminnelse} | Bekreftelse sendt: ${resultater.bekreftelse_sendt} | Bekreftelse feilet: ${resultater.bekreftelse_feilet}`
   });
 
   console.log('[send-brev] Daglig jobb fullført:', resultater);

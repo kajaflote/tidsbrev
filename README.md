@@ -165,7 +165,7 @@ Gjør dette en gang i måneden (5–10 minutter):
 
 1. Sjekk `admin_log` for `email_failed_order_confirmation` med kundens `order_id`
 2. Finn e-postadressen i `orders`-tabellen
-3. Send ordrebekreftelse manuelt via hei@tidsbrev.no
+3. Send ordrebekreftelse manuelt via tidsbrev@outlook.com
 
 ### Stripe-webhook stopper å fungere
 
@@ -198,7 +198,7 @@ Alle hemmeligheter settes i **Netlify → Site settings → Environment variable
 | `SUPABASE_URL` | URL til Supabase-prosjektet | Supabase → Settings → API |
 | `SUPABASE_SERVICE_ROLE_KEY` | Service Role-nøkkel (hemmelig!) | Supabase → Settings → API |
 | `RESEND_API_KEY` | API-nøkkel for e-postutsending | Resend → API Keys |
-| `EPOST_AVSENDER` | Avsendernavn og -adresse | `"Tidsbrev <hei@tidsbrev.no>"` |
+| `EPOST_AVSENDER` | Avsendernavn og -adresse | `"Tidsbrev <tidsbrev@outlook.com>"` |
 | `ADMIN_EPOST` | Din e-post for admin-varsler | din@epost.no |
 | `SIDE_URL` | Full URL til nettsiden | `https://tidsbrev.no` |
 | `VIPPS_CLIENT_ID` | Vipps klient-ID | Vipps-portal → Utvikler |
@@ -274,4 +274,4 @@ Web page/
 
 ---
 
-*Spørsmål? Noe som ikke stemmer? Alt er skrevet av et menneske (med litt hjelp av AI), og ingenting er perfekt. Ta kontakt med hei@tidsbrev.no om du trenger hjelp.*
+*Spørsmål? Noe som ikke stemmer? Alt er skrevet av et menneske (med litt hjelp av AI), og ingenting er perfekt. Ta kontakt med tidsbrev@outlook.com om du trenger hjelp.*

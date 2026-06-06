@@ -306,6 +306,19 @@ CREATE POLICY "Anon can read token by value"
   ON public.letter_tokens FOR SELECT
   USING (true);
 
+-- Allow anonymous users to read letters via a valid token join.
+-- This is safe because the token is a 64-char random hex string
+-- that only the intended recipient receives via email.
+CREATE POLICY "Anon can read letter via token"
+  ON public.letters
+  FOR SELECT
+  TO anon
+  USING (
+    id IN (
+      SELECT letter_id FROM public.letter_tokens
+    )
+  );
+
 -- tidskapsell_files: only backend can write, anon cannot read
 ALTER TABLE public.tidskapsell_files ENABLE ROW LEVEL SECURITY;
 
