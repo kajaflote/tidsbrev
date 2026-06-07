@@ -265,6 +265,18 @@
   .char-counter.warn{color:#c27b1a}
   .char-counter.max{color:var(--error);font-weight:600}
 
+  .save-indicator{
+    display:none;
+    align-items:center;
+    gap:6px;
+    margin-top:10px;
+    font-size:.82rem;
+    font-style:italic;
+    color:var(--muted);
+  }
+  .save-indicator.visible{display:flex}
+  .save-indicator svg{flex-shrink:0;color:var(--forest)}
+
   .inspiration{
     display:grid;
     grid-template-columns:1fr;
@@ -707,6 +719,32 @@
     font-size:.88rem;color:var(--muted);line-height:1.45;
   }
 
+  /* ---------- Live price (step 3) ---------- */
+  .live-price{
+    display:none;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    background:var(--cream-2);
+    border:1px solid var(--beige);
+    border-radius:14px;
+    padding:18px 22px;
+    margin-bottom:28px;
+  }
+  .live-price.visible{display:flex}
+  .live-price .lp-label{
+    font-family:'Playfair Display',serif;
+    font-size:1.05rem;color:var(--ink);
+  }
+  .live-price .lp-sub{
+    display:block;font-size:.82rem;color:var(--muted);margin-top:2px;
+  }
+  .live-price .lp-amount{
+    font-family:'Playfair Display',serif;
+    font-size:1.6rem;font-weight:700;color:var(--burgundy);
+    white-space:nowrap;
+  }
+
   .lang-switcher{display:flex;align-items:center;gap:4px;margin-left:auto}
   .lang-btn{background:none;border:none;font-family:'Inter',system-ui,sans-serif;font-size:.8rem;font-weight:500;color:var(--muted);cursor:pointer;padding:4px 7px;border-radius:4px;transition:color .15s,background .15s;letter-spacing:.5px}
   .lang-btn:hover{color:var(--burgundy)}
@@ -942,6 +980,15 @@
         </div>
       </div>
 
+      <!-- Live total price -->
+      <div class="live-price" id="livePrice">
+        <span>
+          <span class="lp-label" data-i18n="ord_s3_price_label">Pris</span>
+          <span class="lp-sub" id="livePriceSub"></span>
+        </span>
+        <span class="lp-amount" id="livePriceAmount">—</span>
+      </div>
+
       <div class="nav-btns">
         <button class="btn btn-secondary" data-prev="3" data-i18n="ord_back">← Tilbake</button>
         <button class="btn btn-primary" data-next="3" data-i18n="ord_next">Neste →</button>
@@ -1102,6 +1149,10 @@
             <span id="char-remaining">3000 igjen</span>
           </div>
           <div class="err-msg" data-i18n="ord_s4_err_letter">Brevet må inneholde minst 20 tegn.</div>
+          <div class="save-indicator" id="saveIndicator">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="saveIndicatorText"></span>
+          </div>
         </div>
 
         <div class="inspiration">
@@ -1230,6 +1281,32 @@ function calcPrice() {
   return pris;
 }
 
+/* ---------- Live price (step 3) ---------- */
+function updateLivePrice() {
+  const box = document.getElementById('livePrice');
+  if (!box) return;
+  const type = state.delivery_type || 'digitalt';
+  const dateInput = document.getElementById('delivery_date');
+  const dateVal = (dateInput && dateInput.value) || state.delivery_date || '';
+
+  const detaljer = (typeof window.getPrisDetaljer === 'function')
+    ? window.getPrisDetaljer(type, dateVal)
+    : { total: calcPrice(), tekst: '' };
+
+  let total = detaljer.total;
+  const subParts = [];
+  if (dateVal && detaljer.tekst) subParts.push(detaljer.tekst);
+  if (state.premium_envelope && type === 'fysisk') {
+    total += 79;
+    subParts.push(t('ord_s3_price_envelope'));
+  }
+
+  document.getElementById('livePriceAmount').textContent = 'NOK ' + total;
+  document.getElementById('livePriceSub').textContent =
+    dateVal ? subParts.join(' · ') : t('ord_s3_price_pickdate');
+  box.classList.add('visible');
+}
+
 /* ---------- File upload state (declared early for use in validate/summary) ---------- */
 const MAX_TOTAL_BYTES = 1024 * 1024 * 1024; // 1 GB
 const MAX_FILES = 10;
@@ -1307,7 +1384,17 @@ document.getElementById('addon-card-envelope').addEventListener('click', () => {
   const card = document.getElementById('addon-card-envelope');
   card.classList.toggle('checked', state.premium_envelope);
   saveState();
+  updateLivePrice();
 });
+
+/* ---------- Live price: react to delivery date changes ---------- */
+(function () {
+  const dateEl = document.getElementById('delivery_date');
+  if (dateEl) {
+    dateEl.addEventListener('input', updateLivePrice);
+    dateEl.addEventListener('change', updateLivePrice);
+  }
+})();
 
 /* ---------- Step 3: dynamic fields ---------- */
 function renderStep3() {
@@ -1376,6 +1463,8 @@ function renderStep3() {
     state.premium_envelope = false;
     addonCard.classList.remove('checked');
   }
+
+  updateLivePrice();
 }
 
 function validateStep3() {
@@ -1486,6 +1575,13 @@ function renderStep4() {
     if (state.letter_content) ta.value = state.letter_content;
     updateCharCounter();
 
+    // Vis lagret-indikator hvis det allerede finnes et utkast
+    const saveBox = document.getElementById('saveIndicator');
+    if (saveBox) {
+      if (state.letter_content) showSaveIndicator();
+      else saveBox.classList.remove('visible');
+    }
+
     document.querySelectorAll('.design-card').forEach(c => {
       c.classList.toggle('selected', c.dataset.theme === (state.design_theme || 'klassisk'));
     });
@@ -1505,11 +1601,39 @@ function updateCharCounter() {
   else if (current >= max * 0.9) counter.classList.add('warn');
 }
 
+/* ---------- Auto-save indicator (oppgave 6 / B) ---------- */
+let _lastAutosaved = null;
+
+function showSaveIndicator() {
+  const box = document.getElementById('saveIndicator');
+  const txt = document.getElementById('saveIndicatorText');
+  if (!box || !txt) return;
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  txt.textContent = t('ord_s4_saved_at').replace('{time}', hh + ':' + mm);
+  box.classList.add('visible');
+  _lastAutosaved = state.letter_content;
+}
+
 document.getElementById('letter_content').addEventListener('input', (e) => {
   state.letter_content = e.target.value;
   updateCharCounter();
   saveState();
+  showSaveIndicator();
 });
+
+// Periodisk auto-lagring hvert 10. sekund (kun når brevet skrives)
+setInterval(() => {
+  if (state.step === 4 &&
+      state.delivery_type !== 'fysisk' &&
+      state.delivery_type !== 'tidskapsell' &&
+      state.letter_content &&
+      state.letter_content !== _lastAutosaved) {
+    saveState();
+    showSaveIndicator();
+  }
+}, 10000);
 
 // Inspiration cards
 document.querySelectorAll('.insp-card').forEach(card => {
@@ -2044,6 +2168,19 @@ async function uploadAllFiles(orderId) {
 
 loadState();
 initI18n();
+
+// Re-lokaliser dynamisk tekst (live-pris + lagret-indikator) ved språkbytte
+if (typeof window.setLang === 'function') {
+  const _origSetLang = window.setLang;
+  window.setLang = function (lang) {
+    _origSetLang(lang);
+    if (state.step === 3) updateLivePrice();
+    if (state.step === 4 && state.letter_content && document.getElementById('saveIndicator')) {
+      showSaveIndicator();
+    }
+  };
+}
+
 restoreChoiceCards();
 initPaymentButtons();
 showStep(state.step || 1);

@@ -113,6 +113,16 @@ no: {
   idx_quote4: 'Jeg var på reisefot i tre måneder og sendte et brev til den fremtidige meg. Jeg gleder meg til å la minnene strømme tilbake. Det blir som en tidskapsel i postkassen.',
   idx_quote4_author: '— Sofie, 26',
 
+  // ── Index — tillit (trust strip) ──
+  idx_trust_norway_title: 'Norsk drift',
+  idx_trust_norway_text: 'Registrert og drevet i Norge',
+  idx_trust_payment_title: 'Sikker betaling',
+  idx_trust_payment_text: 'Kort via Stripe og Vipps',
+  idx_trust_refund_title: 'Full refusjon',
+  idx_trust_refund_text: 'Angrerett innen 24 timer',
+  idx_trust_storage_title: 'Kryptert lagring',
+  idx_trust_storage_text: 'Brevene dine er trygge hos oss',
+
   // ── Index — CTA banner ──
   idx_cta_title: 'Klar til å skrive?',
   idx_cta_text: 'Det tar under ti minutter. Ordene du skriver i dag kan bety alt om ti år.',
@@ -192,6 +202,9 @@ no: {
   ord_s3_err_city: 'Vennligst fyll inn poststed.',
   ord_s3_err_date: 'Leveringsdatoen må være minst i morgen.',
   ord_s3_err_form: 'Vennligst rett opp feltene som er markert med rødt.',
+  ord_s3_price_label: 'Pris',
+  ord_s3_price_pickdate: 'Velg leveringsdato for endelig pris',
+  ord_s3_price_envelope: '+ 79 kr premiumkonvolutt',
   ord_placeholder_name: 'Fornavn Etternavn',
   ord_placeholder_email: 'din@epost.no',
   ord_placeholder_recipient_email: 'mottaker@epost.no',
@@ -228,6 +241,7 @@ no: {
   ord_s4_audio_maxlen: 'Maks lengde på 5 minutter er nådd. Opptaket er stoppet.',
   ord_s4_audio_empty: 'Opptaket ble tomt. Prøv igjen.',
   ord_s4_err_letter: 'Brevet må inneholde minst 20 tegn.',
+  ord_s4_saved_at: 'Utkast lagret kl. {time}',
   ord_s4_err_upload: 'Du må laste opp minst én fil.',
   ord_s4_err_filetype: 'Noen filer ble avvist. Tillatte formater: JPG, PNG, GIF, WebP, MP4, MOV, AVI, M4A, MP3.',
   ord_s4_err_maxfiles: 'Maks 10 filer tillatt.',
@@ -505,6 +519,16 @@ en: {
   idx_quote4: "I was travelling for three months and sent a letter to my future self. I look forward to letting the memories flow back. It's like a time capsule in the mailbox.",
   idx_quote4_author: '— Sofie, 26',
 
+  // ── Index — trust strip ──
+  idx_trust_norway_title: 'Norwegian operations',
+  idx_trust_norway_text: 'Registered and run in Norway',
+  idx_trust_payment_title: 'Secure payment',
+  idx_trust_payment_text: 'Cards via Stripe and Vipps',
+  idx_trust_refund_title: 'Full refund',
+  idx_trust_refund_text: 'Right to cancel within 24 hours',
+  idx_trust_storage_title: 'Encrypted storage',
+  idx_trust_storage_text: 'Your letters are safe with us',
+
   // ── Index — CTA ──
   idx_cta_title: 'Ready to write?',
   idx_cta_text: 'It takes less than ten minutes. The words you write today can mean everything in ten years.',
@@ -584,6 +608,9 @@ en: {
   ord_s3_err_city: 'Please enter a city.',
   ord_s3_err_date: 'Delivery date must be at least tomorrow.',
   ord_s3_err_form: 'Please correct the fields marked in red.',
+  ord_s3_price_label: 'Price',
+  ord_s3_price_pickdate: 'Pick a delivery date for the final price',
+  ord_s3_price_envelope: '+ 79 NOK premium envelope',
   ord_placeholder_name: 'Full Name',
   ord_placeholder_email: 'your@email.com',
   ord_placeholder_recipient_email: 'recipient@email.com',
@@ -620,6 +647,7 @@ en: {
   ord_s4_audio_maxlen: 'The 5-minute limit was reached. Recording stopped.',
   ord_s4_audio_empty: 'The recording was empty. Please try again.',
   ord_s4_err_letter: 'The letter must contain at least 20 characters.',
+  ord_s4_saved_at: 'Draft saved at {time}',
   ord_s4_err_upload: 'You must upload at least one file.',
   ord_s4_err_filetype: 'Some files were rejected. Accepted formats: JPG, PNG, GIF, WebP, MP4, MOV, AVI, M4A, MP3.',
   ord_s4_err_maxfiles: 'Maximum 10 files allowed.',
