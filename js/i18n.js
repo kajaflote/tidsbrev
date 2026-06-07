@@ -38,13 +38,13 @@ no: {
   // ── Index — hero ──
   idx_hero_eyebrow: '~ slik føles det å åpne ~',
   idx_hero_title_html: 'Et øyeblikk som <em>venter</em> på riktig dag.',
-  idx_hero_lead: 'Du velger formen og dagen. Vi tar vare på det til riktig øyeblikk — om ett, ti eller tretti år.',
+  idx_hero_lead: 'Du velger formen og dagen. Vi tar vare på det — om ett, ti eller tretti år.',
   idx_hero_media_text_label: 'Tekst',
-  idx_hero_media_text_note: 'Ordene dine, slik du skrev dem.',
+  idx_hero_media_text_note: 'Et brev til deg eller din kjære.',
   idx_hero_media_photo_label: 'Bilder',
-  idx_hero_media_photo_note: 'Et øyeblikk, slik det så ut.',
+  idx_hero_media_photo_note: 'Ta vare på de fine øyeblikkene.',
   idx_hero_media_video_label: 'Film',
-  idx_hero_media_video_note: 'Bevegelse og lyd, slik det skjedde.',
+  idx_hero_media_video_note: 'Vis framtiden hvordan livet ser ut.',
   idx_hero_media_voice_label: 'Taleopptak',
   idx_hero_media_voice_note: 'Stemmen din, slik den klinger nå.',
   idx_hero_cta: 'Skriv ditt første tidsbrev',
@@ -128,7 +128,7 @@ no: {
   idx_trust_payment_title: 'Sikker betaling',
   idx_trust_payment_text: 'Kort via Stripe og Vipps',
   idx_trust_refund_title: 'Full refusjon',
-  idx_trust_refund_text: 'Angrerett innen 24 timer',
+  idx_trust_refund_text: 'Innen 24 timer fra kjøp',
   idx_trust_storage_title: 'Kryptert lagring',
   idx_trust_storage_text: 'Brevene dine er trygge hos oss',
 
@@ -289,6 +289,7 @@ no: {
   ord_s5_trust_secure: 'Sikker betaling',
   ord_s5_trust_gdpr: 'GDPR-trygt',
   ord_s5_trust_norway: 'Norsk drift',
+  ord_s5_withdrawal_html: 'Tidsbrev er et personliggjort produkt. 14-dagers angrerett gjelder derfor ikke (angrerettloven § 22 e), men du har full refusjon innen 24 timer. <a href="/vilkaar.html" target="_blank" rel="noopener">Se vilkår</a>.',
 
   // ── Bestill — summary labels ──
   ord_sum_recipient: 'Mottaker',
@@ -453,13 +454,13 @@ en: {
   // ── Index — hero ──
   idx_hero_eyebrow: '~ how it feels to open ~',
   idx_hero_title_html: 'A moment that <em>waits</em> for the right day.',
-  idx_hero_lead: 'You choose the form and the day. We keep it safe until the right moment — in one, ten, or thirty years.',
+  idx_hero_lead: 'You choose the form and the day. We keep it safe — in one, ten, or thirty years.',
   idx_hero_media_text_label: 'Text',
-  idx_hero_media_text_note: 'Your words, just as you wrote them.',
+  idx_hero_media_text_note: 'A letter for you or someone you love.',
   idx_hero_media_photo_label: 'Photos',
-  idx_hero_media_photo_note: 'A moment, just as it looked.',
+  idx_hero_media_photo_note: 'Hold on to the moments that matter.',
   idx_hero_media_video_label: 'Film',
-  idx_hero_media_video_note: 'Motion and sound, just as it happened.',
+  idx_hero_media_video_note: 'Show the future what life looks like.',
   idx_hero_media_voice_label: 'Voice',
   idx_hero_media_voice_note: 'Your voice, just as it sounds now.',
   idx_hero_cta: 'Write your first time letter',
@@ -543,7 +544,7 @@ en: {
   idx_trust_payment_title: 'Secure payment',
   idx_trust_payment_text: 'Cards via Stripe and Vipps',
   idx_trust_refund_title: 'Full refund',
-  idx_trust_refund_text: 'Right to cancel within 24 hours',
+  idx_trust_refund_text: 'Within 24 hours of purchase',
   idx_trust_storage_title: 'Encrypted storage',
   idx_trust_storage_text: 'Your letters are safe with us',
 
@@ -704,6 +705,7 @@ en: {
   ord_s5_trust_secure: 'Secure payment',
   ord_s5_trust_gdpr: 'GDPR safe',
   ord_s5_trust_norway: 'Norwegian operations',
+  ord_s5_withdrawal_html: 'Tidsbrev is a personalised product. The statutory 14-day right of withdrawal therefore does not apply (Norwegian Cancellation Act § 22 e), but you have a full refund within 24 hours. <a href="/vilkaar.html" target="_blank" rel="noopener">See terms</a>.',
 
   // ── Bestill — summary labels ──
   ord_sum_recipient: 'Recipient',
