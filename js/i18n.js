@@ -38,7 +38,7 @@ no: {
   // ── Index — hero ──
   idx_hero_eyebrow: '~ slik føles det å åpne ~',
   idx_hero_title_html: 'Et øyeblikk som <em>venter</em> på riktig dag.',
-  idx_hero_lead: 'Du velger formen og dagen. Vi tar vare på det — om ett, ti eller tretti år.',
+  idx_hero_lead: 'Du velger formen og dagen. Vi tar vare på det til riktig øyeblikk — om ett, ti eller tretti år.',
   idx_hero_media_text_label: 'Tekst',
   idx_hero_media_text_note: 'Et brev til deg eller din kjære.',
   idx_hero_media_photo_label: 'Bilder',
@@ -454,7 +454,7 @@ en: {
   // ── Index — hero ──
   idx_hero_eyebrow: '~ how it feels to open ~',
   idx_hero_title_html: 'A moment that <em>waits</em> for the right day.',
-  idx_hero_lead: 'You choose the form and the day. We keep it safe — in one, ten, or thirty years.',
+  idx_hero_lead: 'You choose the form and the day. We keep it safe until the right moment — in one, ten, or thirty years.',
   idx_hero_media_text_label: 'Text',
   idx_hero_media_text_note: 'A letter for you or someone you love.',
   idx_hero_media_photo_label: 'Photos',
