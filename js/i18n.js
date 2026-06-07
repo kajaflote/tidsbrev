@@ -36,10 +36,19 @@ no: {
   footer_eu: 'Lagret sikkert i EU  ·  GDPR-trygt',
 
   // ── Index — hero ──
-  idx_hero_eyebrow: '~ et brev til fremtiden ~',
-  idx_hero_title_html: 'Skriv ordene i dag.<br><em>La tiden levere dem.</em>',
-  idx_hero_lead: 'Tidsbrev lar deg skrive et brev som leveres på nøyaktig riktig dato — om ett, ti eller tretti år. Til deg selv, til barnet ditt, eller til noen du er glad i.',
-  idx_hero_cta: 'Skriv ditt første brev',
+  idx_hero_eyebrow: '~ slik føles det å åpne ~',
+  idx_hero_title_html: 'Et øyeblikk som <em>venter</em> på riktig dag.',
+  idx_hero_lead: 'Du velger formen og dagen. Vi tar vare på det til riktig øyeblikk — om ett, ti eller tretti år.',
+  idx_hero_media_text_label: 'Tekst',
+  idx_hero_media_text_note: 'Ordene dine, slik du skrev dem.',
+  idx_hero_media_photo_label: 'Bilder',
+  idx_hero_media_photo_note: 'Et øyeblikk, slik det så ut.',
+  idx_hero_media_video_label: 'Film',
+  idx_hero_media_video_note: 'Bevegelse og lyd, slik det skjedde.',
+  idx_hero_media_voice_label: 'Taleopptak',
+  idx_hero_media_voice_note: 'Stemmen din, slik den klinger nå.',
+  idx_hero_cta: 'Skriv ditt første tidsbrev',
+  idx_hero_trust_html: 'Norsk drift &middot; Sikker EU-lagring &middot; Garantert levering',
 
   // ── Index — nav (custom) ──
   idx_nav_how: 'Hvordan det fungerer',
@@ -442,10 +451,19 @@ en: {
   footer_eu: 'Stored securely in the EU  ·  GDPR compliant',
 
   // ── Index — hero ──
-  idx_hero_eyebrow: '~ a letter to the future ~',
-  idx_hero_title_html: 'Write the words today.<br><em>Let time deliver them.</em>',
-  idx_hero_lead: 'Tidsbrev lets you write a letter that is delivered on exactly the right date — in one, ten, or thirty years. To yourself, to your child, or to someone you love.',
-  idx_hero_cta: 'Write your first letter',
+  idx_hero_eyebrow: '~ how it feels to open ~',
+  idx_hero_title_html: 'A moment that <em>waits</em> for the right day.',
+  idx_hero_lead: 'You choose the form and the day. We keep it safe until the right moment — in one, ten, or thirty years.',
+  idx_hero_media_text_label: 'Text',
+  idx_hero_media_text_note: 'Your words, just as you wrote them.',
+  idx_hero_media_photo_label: 'Photos',
+  idx_hero_media_photo_note: 'A moment, just as it looked.',
+  idx_hero_media_video_label: 'Film',
+  idx_hero_media_video_note: 'Motion and sound, just as it happened.',
+  idx_hero_media_voice_label: 'Voice',
+  idx_hero_media_voice_note: 'Your voice, just as it sounds now.',
+  idx_hero_cta: 'Write your first time letter',
+  idx_hero_trust_html: 'Norwegian operations &middot; Secure EU storage &middot; Guaranteed delivery',
 
   // ── Index — nav ──
   idx_nav_how: 'How it works',
