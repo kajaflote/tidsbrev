@@ -433,7 +433,7 @@
         <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
         <rect x="6" y="14" width="12" height="8"/>
       </svg>
-      Last ned / skriv ut
+      <span id="printLabel">Last ned / skriv ut</span>
     </button>
     <button class="action-btn btn-share" id="shareBtn" style="display:none">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -442,7 +442,7 @@
         <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
         <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
       </svg>
-      Del brevet
+      <span id="shareLabel">Del brevet</span>
     </button>
   </div>
 </div>
@@ -463,6 +463,43 @@ const sbClient = window.supabase.createClient(
 
 // ─── Token from URL ────────────────────────────────────────────
 const token = new URLSearchParams(window.location.search).get('token');
+
+// ─── Viewer strings (localized once the order language is known) ─
+// Loading/error/already-opened states stay Norwegian — they show
+// before any order (and thus language) is known.
+const VIEWER_STRINGS = {
+  no: {
+    docTitle: 'Ditt tidsbrev er ankommet — Tidsbrev.no',
+    tapPrompt: 'Trykk for å åpne brevet ✦',
+    from: 'Fra:',
+    written: 'Skrevet:',
+    dear: n => `Kjære ${n}`,
+    dearYou: 'Kjære deg',
+    brand: 'Levert av <a href="https://tidsbrev.no">Tidsbrev.no</a> — et brev fra fortiden',
+    brandRomantic: 'Levert av <a href="https://tidsbrev.no">Tidsbrev.no</a>',
+    print: 'Last ned / skriv ut',
+    share: 'Del brevet',
+    shareTitle: 'Mitt tidsbrev',
+    shareText: 'Jeg fikk et brev fra fortiden — levert av Tidsbrev.no',
+    locale: 'nb-NO'
+  },
+  en: {
+    docTitle: 'Your letter has arrived — Tidsbrev.no',
+    tapPrompt: 'Tap to open the letter ✦',
+    from: 'From:',
+    written: 'Written:',
+    dear: n => `Dear ${n}`,
+    dearYou: 'Dear you',
+    brand: 'Delivered by <a href="https://tidsbrev.no">Tidsbrev.no</a> — a letter from the past',
+    brandRomantic: 'Delivered by <a href="https://tidsbrev.no">Tidsbrev.no</a>',
+    print: 'Download / print',
+    share: 'Share the letter',
+    shareTitle: 'My letter',
+    shareText: 'I received a letter from the past — delivered by Tidsbrev.no',
+    locale: 'en-GB'
+  }
+};
+let S = VIEWER_STRINGS.no;
 
 // ─── State ────────────────────────────────────────────────────
 let letterData = null;
@@ -499,7 +536,7 @@ async function loadLetter() {
         letters (
           id, letter_content, design_theme, created_at,
           orders (
-            customer_name, recipient_name, recipient_type, delivery_date
+            customer_name, recipient_name, recipient_type, delivery_date, language
           )
         )
       `)
@@ -530,12 +567,23 @@ async function loadLetter() {
     }
 
     letterData = tokenRow.letters;
+    applyLanguage();
     showEnvelope();
 
   } catch (e) {
     console.error('[brev-viewer]', e);
     showError();
   }
+}
+
+// ─── Apply order language to the viewer chrome ─────────────────
+function applyLanguage() {
+  const order = (letterData && letterData.orders) || {};
+  const lang = order.language === 'en' ? 'en' : 'no';
+  S = VIEWER_STRINGS[lang];
+  document.documentElement.lang = lang === 'en' ? 'en' : 'nb';
+  document.title = S.docTitle;
+  document.getElementById('tapPrompt').textContent = S.tapPrompt;
 }
 
 // ─── Show envelope stage ───────────────────────────────────────
@@ -629,7 +677,7 @@ document.getElementById('envelopeWrap').addEventListener('keydown', e => {
 // ─── Populate letter content (no animation — just DOM) ────────
 function formatDate(isoString) {
   if (!isoString) return '';
-  return new Date(isoString).toLocaleDateString('nb-NO', {
+  return new Date(isoString).toLocaleDateString(S.locale, {
     day: 'numeric', month: 'long', year: 'numeric'
   });
 }
@@ -649,8 +697,8 @@ function populateLetterContent() {
   paper.classList.add(`theme-${theme}`);
 
   // Header
-  document.getElementById('letterFrom').textContent = `Fra: ${senderName}`;
-  document.getElementById('letterDateWritten').textContent = createdAt ? `Skrevet: ${formatDate(createdAt)}` : '';
+  document.getElementById('letterFrom').textContent = `${S.from} ${senderName}`;
+  document.getElementById('letterDateWritten').textContent = createdAt ? `${S.written} ${formatDate(createdAt)}` : '';
 
   // Theme-specific header adjustments
   if (theme === 'romantisk') {
@@ -659,7 +707,7 @@ function populateLetterContent() {
     h2.style.fontSize = '1.6rem';
     h2.style.color = 'var(--burgundy)';
     h2.style.marginBottom = '4px';
-    h2.textContent = recipientName ? `Kjære ${recipientName.split(' ')[0]}` : 'Kjære deg';
+    h2.textContent = recipientName ? S.dear(recipientName.split(' ')[0]) : S.dearYou;
     document.getElementById('letterHeader').prepend(h2);
   }
   if (theme === 'moderne') {
@@ -671,11 +719,16 @@ function populateLetterContent() {
   // Body
   document.getElementById('letterBody').textContent = content;
 
-  // Footer
+  // Action button labels
+  document.getElementById('printLabel').textContent = S.print;
+  document.getElementById('shareLabel').textContent = S.share;
+
+  // Footer — default brand line is localized; romantic theme keeps the flourish
+  document.querySelector('#letterFooter .letter-brand').innerHTML = S.brand;
   if (theme === 'romantisk') {
     document.getElementById('letterFooter').innerHTML =
       '<div style="color:var(--gold);font-size:1.3rem;margin-bottom:8px">✦</div>' +
-      '<div class="letter-brand">Levert av <a href="https://tidsbrev.no">Tidsbrev.no</a></div>';
+      `<div class="letter-brand">${S.brandRomantic}</div>`;
   }
 
   // Share button (Web Share API)
@@ -684,8 +737,8 @@ function populateLetterContent() {
     shareBtn.style.display = 'flex';
     shareBtn.addEventListener('click', () => {
       navigator.share({
-        title: 'Mitt tidsbrev',
-        text: 'Jeg fikk et brev fra fortiden — levert av Tidsbrev.no',
+        title: S.shareTitle,
+        text: S.shareText,
         url: window.location.href
       }).catch(() => {});
     });
@@ -707,9 +760,13 @@ function populateLetterContent() {
       customer_name: 'Ola Nordmann',
       recipient_name: 'Fremtidens meg',
       recipient_type: params.get('recipient') || 'meg_selv',
-      delivery_date: '2026-06-06'
+      delivery_date: '2026-06-06',
+      language: params.get('lang') === 'en' ? 'en' : 'no'
     }
   };
+
+  // Apply language (testable via ?preview=true&lang=en)
+  applyLanguage();
 
   // Skip Supabase loading — go straight to envelope
   document.getElementById('loading-state').classList.add('hidden');

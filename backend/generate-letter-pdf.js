@@ -46,6 +46,7 @@ function fileIcon(mimeType) {
   if (!mimeType) return '📄';
   if (mimeType.startsWith('image/')) return '📷';
   if (mimeType.startsWith('video/')) return '🎬';
+  if (mimeType.startsWith('audio/')) return '🎙️';
   return '📄';
 }
 

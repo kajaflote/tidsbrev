@@ -48,6 +48,8 @@ CREATE TABLE IF NOT EXISTS public.orders (
   delivery_date     DATE NOT NULL,
   occasion          TEXT,
   product_type      TEXT NOT NULL CHECK (product_type IN ('digitalt','fysisk','tidskapsell')),
+  language          TEXT NOT NULL DEFAULT 'no'         -- språk for mottaker-rettet komm. (e-post + viewer)
+                    CHECK (language IN ('no','en')),
   amount            INTEGER NOT NULL,                  -- i hele kroner
   payment_status    TEXT NOT NULL DEFAULT 'pending'
                     CHECK (payment_status IN ('pending','paid','failed')),

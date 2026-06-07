@@ -2,7 +2,12 @@
 // SQL-MIGRERING — kjør manuelt i Supabase SQL Editor:
 //
 //   ALTER TABLE orders ADD COLUMN IF NOT EXISTS premium_envelope boolean DEFAULT false;
+//   ALTER TABLE orders ADD COLUMN IF NOT EXISTS language text NOT NULL DEFAULT 'no' CHECK (language IN ('no','en'));
 //
+// Merk:
+//   • language styrer språket i ALL mottaker-rettet kommunikasjon (e-post + viewer).
+//     Eksisterende rader fylles automatisk med 'no' av DEFAULT — ingen backfill nødvendig.
+//     Admin-varsler til egen Gmail forblir alltid på norsk.
 // ================================================================
 
 // ================================================================
@@ -159,6 +164,9 @@ exports.handler = async (event) => {
       prisNok += 79;
     }
 
+    // Språk for mottaker-rettet kommunikasjon ('no' | 'en'), default 'no'
+    const language = data.language === 'en' ? 'en' : 'no';
+
     // ---- 2. Opprett ordre i Supabase ----
     const supabase = createClient(
       process.env.SUPABASE_URL,
@@ -181,6 +189,7 @@ exports.handler = async (event) => {
         occasion:          data.occasion          || null,
         product_type:      data.product_type,
         premium_envelope:  premiumEnvelope,
+        language:          language,
         amount:            prisNok,
         payment_status:    'pending',
         payment_method:    'stripe'
@@ -269,7 +278,7 @@ exports.handler = async (event) => {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card'],
-      locale: 'nb',
+      locale: language === 'en' ? 'en' : 'nb',
       customer_email: data.customer_email,
       line_items: [{
         price_data: {

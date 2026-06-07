@@ -1,4 +1,13 @@
 // ================================================================
+// SQL-MIGRERING — kjør manuelt i Supabase SQL Editor:
+//
+//   ALTER TABLE orders ADD COLUMN IF NOT EXISTS language text NOT NULL DEFAULT 'no' CHECK (language IN ('no','en'));
+//
+// language styrer språket i ALL mottaker-rettet kommunikasjon (e-post + viewer).
+// Admin-varsler forblir alltid på norsk. Eksisterende rader → 'no' via DEFAULT.
+// ================================================================
+
+// ================================================================
 // Tidsbrev.no — Netlify Function: Opprett Vipps ePayment
 // ================================================================
 // SLIK AKTIVERER DU VIPPS:
@@ -143,6 +152,9 @@ exports.handler = async (event) => {
       };
     }
 
+    // Språk for mottaker-rettet kommunikasjon ('no' | 'en'), default 'no'
+    const language = data.language === 'en' ? 'en' : 'no';
+
     // ---- 2. Lagre ordre i Supabase ----
     const supabase = createClient(
       process.env.SUPABASE_URL,
@@ -164,6 +176,7 @@ exports.handler = async (event) => {
         delivery_date:     data.delivery_date,
         occasion:          data.occasion          || null,
         product_type:      data.product_type,
+        language:          language,
         amount:            prisNok,
         payment_status:    'pending',
         payment_method:    'vipps'

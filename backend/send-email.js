@@ -80,7 +80,7 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
         .single();
       if (error || !order) throw new Error('Fant ikke ordre: ' + order_id);
 
-      const mail = templates.orderConfirmation(order);
+      const mail = templates.orderConfirmation(order, order.language || 'no');
       const res = await resend.emails.send({
         from: avsender,
         to: order.customer_email,
@@ -180,14 +180,16 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
       // 4. Build viewer URL
       const viewerUrl = `${sideUrl}/brev-viewer.html?token=${token}`;
 
-      // 5. Format names and date
+      // 5. Format names and date (language-aware)
+      const lang = order.language === 'en' ? 'en' : 'no';
       const recipientName = order.recipient_type === 'andre'
-        ? (order.recipient_name || 'deg').split(' ')[0]
+        ? (order.recipient_name || (lang === 'en' ? 'you' : 'deg')).split(' ')[0]
         : order.customer_name.split(' ')[0];
       const senderName    = order.customer_name;
-      const deliveryDate  = new Date(order.delivery_date).toLocaleDateString('nb-NO', {
-        day: 'numeric', month: 'long', year: 'numeric'
-      });
+      const deliveryDate  = new Date(order.delivery_date).toLocaleDateString(
+        lang === 'en' ? 'en-GB' : 'nb-NO',
+        { day: 'numeric', month: 'long', year: 'numeric' }
+      );
 
       // 6. Generate PDF attachment (non-blocking — email sends even if this fails)
       const { generateLetterPdf } = require('./generate-letter-pdf');
@@ -205,14 +207,14 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
       const emailPayload = {
         from:    avsender,
         to:      toEmail,
-        subject: 'Et brev venter på deg',
+        subject: lang === 'en' ? 'A letter is waiting for you' : 'Et brev venter på deg',
         html:    deliverLetterHtml({
                    recipientName, senderName, deliveryDate,
-                   viewerUrl, letterContent: letter.letter_content
+                   viewerUrl, letterContent: letter.letter_content, lang
                  }),
         text:    deliverLetterText({
                    recipientName, senderName, deliveryDate,
-                   viewerUrl, letterContent: letter.letter_content
+                   viewerUrl, letterContent: letter.letter_content, lang
                  }),
         reply_to: 'tidsbrev@outlook.com'
       };
@@ -307,7 +309,8 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
       const mail = templates.deliverTidskapsell({
         order,
         files: fileLinks,
-        personalMessage
+        personalMessage,
+        lang: order.language || 'no'
       });
 
       // Generate PDF attachment (non-blocking — email sends even if this fails)
@@ -361,7 +364,7 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
         .single();
       if (orderErr || !order) throw new Error('Fant ikke ordre: ' + order_id);
 
-      const mail = templates.senderReminder(order);
+      const mail = templates.senderReminder(order, order.language || 'no');
       const res = await resend.emails.send({
         from:     avsender,
         to:       order.customer_email,
@@ -441,7 +444,7 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
         throw new Error(`Ordre ${order.order_number} mangler update_token — kjør SQL-migreringen`);
       }
 
-      const mail = templates.recipientConfirm(order);
+      const mail = templates.recipientConfirm(order, order.language || 'no');
       const res = await resend.emails.send({
         from:     avsender,
         to:       order.customer_email,   // alltid kunden

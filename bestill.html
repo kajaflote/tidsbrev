@@ -580,6 +580,83 @@
     width: 0%;
   }
 
+  /* ---------- Taleopptak (voice recording) ---------- */
+  .audio-record {
+    margin: 18px 0 4px;
+    padding: 18px 20px;
+    background: var(--cream-2);
+    border: 1px solid var(--beige);
+    border-radius: 14px;
+  }
+  .audio-record-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .audio-record-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    color: var(--burgundy);
+    font-size: 1.02rem;
+    font-weight: 600;
+  }
+  .audio-record-hint { color: var(--muted); font-size: .8rem; }
+  .audio-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border-radius: 999px;
+    border: 1px solid var(--burgundy);
+    background: var(--burgundy);
+    color: var(--cream);
+    font-family: inherit;
+    font-size: .92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s, opacity .2s;
+  }
+  .audio-btn:hover { background: var(--burgundy-dark); border-color: var(--burgundy-dark); }
+  .audio-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .audio-btn-stop { background: var(--forest); border-color: var(--forest); }
+  .audio-btn-stop:hover { background: var(--forest-dark); border-color: var(--forest-dark); }
+  .audio-recording { display: flex; align-items: center; gap: 14px; }
+  .audio-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--burgundy);
+    animation: audioPulse 1.1s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes audioPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .35; transform: scale(.7); }
+  }
+  .audio-timer {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-variant-numeric: tabular-nums;
+    color: var(--forest);
+    font-size: 1.15rem;
+    font-weight: 600;
+    min-width: 56px;
+  }
+  .audio-preview { display: block; }
+  .audio-player { width: 100%; margin-bottom: 12px; }
+  .audio-preview-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .audio-link-btn {
+    background: none; border: none; padding: 0;
+    color: var(--muted);
+    font-family: inherit; font-size: .9rem;
+    text-decoration: underline; cursor: pointer;
+  }
+  .audio-link-btn:hover { color: var(--burgundy); }
+  .audio-btn-keep { background: var(--forest); border-color: var(--forest); }
+  .audio-btn-keep:hover { background: var(--forest-dark); border-color: var(--forest-dark); }
+  .file-thumb-audio {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+  }
+
   /* ---------- Premium envelope add-on ---------- */
   .addon-wrap{
     display:none;
@@ -919,8 +996,35 @@
               <line x1="12" y1="3" x2="12" y2="15"/>
             </svg>
             <p><span data-i18n="ord_s4_upload_drop">Dra og slipp filer her, eller</span> <label for="fileInput" class="upload-link" data-i18n="ord_s4_upload_browse">velg filer</label></p>
-            <p class="upload-hint" data-i18n="ord_s4_upload_hint">JPG, PNG, GIF, WebP, MP4, MOV, AVI · maks 1 GB totalt · maks 10 filer</p>
-            <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi" style="display:none"/>
+            <p class="upload-hint" data-i18n="ord_s4_upload_hint">JPG, PNG, GIF, WebP, MP4, MOV, AVI, M4A, MP3 · maks 1 GB totalt · maks 10 filer</p>
+            <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.m4a,.mp3,.webm,.ogg" style="display:none"/>
+          </div>
+
+          <div class="audio-record" id="audioRecord">
+            <div class="audio-record-head">
+              <span class="audio-record-title" data-i18n="ord_s4_audio_title">Eller spill inn en hilsen</span>
+              <span class="audio-record-hint" data-i18n="ord_s4_audio_hint">Maks 5 minutter</span>
+            </div>
+
+            <button type="button" class="audio-btn" id="audioStartBtn">
+              <span aria-hidden="true">&#127897;</span> <span data-i18n="ord_s4_audio_start">Spill inn tale</span>
+            </button>
+
+            <div class="audio-recording" id="audioRecording" style="display:none;">
+              <span class="audio-dot" aria-hidden="true"></span>
+              <span class="audio-timer" id="audioTimer">00:00</span>
+              <button type="button" class="audio-btn audio-btn-stop" id="audioStopBtn" data-i18n="ord_s4_audio_stop">Stopp opptak</button>
+            </div>
+
+            <div class="audio-preview" id="audioPreview" style="display:none;">
+              <audio controls preload="metadata" id="audioPlayback" class="audio-player"></audio>
+              <div class="audio-preview-actions">
+                <button type="button" class="audio-link-btn" id="audioRetryBtn" data-i18n="ord_s4_audio_retry">Spill inn på nytt</button>
+                <button type="button" class="audio-btn audio-btn-keep" id="audioKeepBtn" data-i18n="ord_s4_audio_keep">Behold opptak</button>
+              </div>
+            </div>
+
+            <div class="form-error" id="audio-error" style="margin-top:12px;"></div>
           </div>
 
           <div id="fileList" class="file-list"></div>
@@ -1063,6 +1167,7 @@
 <script src="/js/supabase.js"></script>
 <script src="/js/i18n.js"></script>
 <script src="/js/nav.js"></script>
+<script src="/js/audio-recorder.js"></script>
 <script>
 /* ============================================================
    Tidsbrev.no — Bestillingsskjema
@@ -1128,8 +1233,8 @@ function calcPrice() {
 /* ---------- File upload state (declared early for use in validate/summary) ---------- */
 const MAX_TOTAL_BYTES = 1024 * 1024 * 1024; // 1 GB
 const MAX_FILES = 10;
-const ACCEPTED_TYPES = ['image/jpeg','image/png','image/gif','image/webp','video/mp4','video/quicktime','video/x-msvideo'];
-const ACCEPTED_EXT = ['.jpg','.jpeg','.png','.gif','.webp','.mp4','.mov','.avi'];
+const ACCEPTED_TYPES = ['image/jpeg','image/png','image/gif','image/webp','video/mp4','video/quicktime','video/x-msvideo','audio/webm','audio/mp4','audio/ogg','audio/mpeg','audio/aac','audio/x-m4a'];
+const ACCEPTED_EXT = ['.jpg','.jpeg','.png','.gif','.webp','.mp4','.mov','.avi','.webm','.m4a','.mp3','.ogg','.aac'];
 let pendingFiles = [];
 
 function formatBytes(bytes) {
@@ -1612,7 +1717,8 @@ async function handlePay(method) {
     letter_content:    state.delivery_type === 'fysisk' ? '' : state.letter_content,
     design_theme:      state.design_theme || 'klassisk',
     premium_envelope:  state.premium_envelope || false,
-    amount:            price
+    amount:            price,
+    language:          (window.getCurrentLang ? getCurrentLang() : 'no')
   };
 
   if (state.delivery_type === 'tidskapsell') {
@@ -1695,11 +1801,14 @@ function renderFileList() {
   const list = document.getElementById('fileList');
   list.innerHTML = pendingFiles.map(f => {
     const isVideo = f.file.type.startsWith('video/');
+    const isAudio = f.file.type.startsWith('audio/');
     const thumb = f.preview
       ? `<img src="${f.preview}" class="file-thumb" alt="">`
       : isVideo
         ? `<span class="file-thumb file-thumb-video"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>`
-        : '';
+        : isAudio
+          ? `<span class="file-thumb file-thumb-audio" aria-hidden="true">&#127897;</span>`
+          : '';
     return `<div class="file-item ${f.status}" id="fi-${f.id}">
       ${thumb}
       <span class="file-name">${escapeHtml(f.file.name)}</span>
@@ -1716,6 +1825,8 @@ function renderFileList() {
       renderFileList();
     });
   });
+
+  if (window._updateAudioBtnState) window._updateAudioBtnState();
 }
 
 function addFiles(newFiles) {
@@ -1767,6 +1878,105 @@ uploadZone.addEventListener('drop', e => {
 });
 uploadZone.addEventListener('click', () => document.getElementById('fileInput').click());
 document.getElementById('fileInput').addEventListener('change', e => addFiles(e.target.files));
+
+// ── Voice recording (Tidskapsell) ────────────────────────────
+(function initAudioRecording() {
+  const root = document.getElementById('audioRecord');
+  if (!root || !window.AudioRecorder) return;
+
+  // Skjul hele opptaks-elementet hvis nettleseren ikke støtter opptak.
+  // Opplasting av ferdige lydfiler fungerer fortsatt via filvelgeren.
+  if (!window.AudioRecorder.isSupported()) { root.style.display = 'none'; return; }
+
+  const startBtn     = document.getElementById('audioStartBtn');
+  const stopBtn      = document.getElementById('audioStopBtn');
+  const retryBtn     = document.getElementById('audioRetryBtn');
+  const keepBtn      = document.getElementById('audioKeepBtn');
+  const recordingBox = document.getElementById('audioRecording');
+  const previewBox   = document.getElementById('audioPreview');
+  const timerEl      = document.getElementById('audioTimer');
+  const playback     = document.getElementById('audioPlayback');
+  const errorEl      = document.getElementById('audio-error');
+
+  let recorder = null;
+  let currentBlob = null;
+  let currentUrl = null;
+
+  function showError(msg) { errorEl.textContent = msg; errorEl.classList.add('show'); }
+  function clearError()   { errorEl.textContent = ''; errorEl.classList.remove('show'); }
+  function resetUrl()     { if (currentUrl) { URL.revokeObjectURL(currentUrl); currentUrl = null; } }
+
+  function showIdle()      { startBtn.style.display = ''; recordingBox.style.display = 'none'; previewBox.style.display = 'none'; }
+  function showRecording() { startBtn.style.display = 'none'; recordingBox.style.display = 'flex'; previewBox.style.display = 'none'; }
+  function showPreview()   { startBtn.style.display = 'none'; recordingBox.style.display = 'none'; previewBox.style.display = 'block'; }
+
+  function finishRecording(blob) {
+    if (!blob || blob.size === 0) {
+      showError(t('ord_s4_audio_empty'));
+      showIdle();
+      return;
+    }
+    currentBlob = blob;
+    resetUrl();
+    currentUrl = URL.createObjectURL(blob);
+    playback.src = currentUrl;
+    showPreview();
+  }
+
+  startBtn.addEventListener('click', () => {
+    clearError();
+    if (pendingFiles.length >= MAX_FILES) { showError(t('ord_s4_err_maxfiles')); return; }
+    recorder = window.AudioRecorder.create({
+      onTick:     (label) => { timerEl.textContent = label; },
+      onAutoStop: ()      => { showError(t('ord_s4_audio_maxlen')); },
+      onStop:     (blob)  => { finishRecording(blob); }
+    });
+    recorder.start()
+      .then(() => { showRecording(); })
+      .catch((err) => {
+        recorder = null;
+        if (err && (err.message === 'UNSUPPORTED' || err.name === 'UnsupportedError')) {
+          root.style.display = 'none';
+          return;
+        }
+        showError(window.AudioRecorder.friendlyError(err));
+        showIdle();
+      });
+  });
+
+  stopBtn.addEventListener('click', () => { if (recorder) recorder.stop(); });
+
+  retryBtn.addEventListener('click', () => {
+    clearError();
+    currentBlob = null;
+    resetUrl();
+    playback.removeAttribute('src');
+    recorder = null;
+    showIdle();
+  });
+
+  keepBtn.addEventListener('click', () => {
+    if (!currentBlob) return;
+    const ext = recorder ? recorder.getExtension() : window.AudioRecorder.extForMime(currentBlob.type);
+    const ts  = new Date().toISOString().replace(/[:.]/g, '-');
+    const file = new File([currentBlob], `tale-${ts}.${ext}`, { type: currentBlob.type });
+    addFiles([file]);
+    clearError();
+    currentBlob = null;
+    resetUrl();
+    playback.removeAttribute('src');
+    recorder = null;
+    showIdle();
+  });
+
+  // Kalt fra renderFileList(): deaktiver opptaksknappen når kvoten er full.
+  window._updateAudioBtnState = function () {
+    const full = pendingFiles.length >= MAX_FILES;
+    startBtn.disabled = full;
+    startBtn.title = full ? t('ord_s4_err_maxfiles') : '';
+  };
+  window._updateAudioBtnState();
+})();
 
 document.getElementById('message_content').addEventListener('input', e => {
   state.message_content = e.target.value;
