@@ -281,6 +281,17 @@
       color: var(--ink);
     }
     .product-card.featured h3 { color: var(--cream); }
+    .product-art {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 14px;
+      color: var(--burgundy);
+    }
+    .product-card.featured .product-art { color: var(--gold); }
+    .product-art svg { width: 100%; height: 100%; display: block; }
+    @media (prefers-reduced-motion: reduce) {
+      .product-art svg * { animation: none !important; transition: none !important; }
+    }
     .product-subtitle {
       font-family: 'Caveat', cursive;
       font-size: 1.1rem;
@@ -634,8 +645,9 @@
   <div class="wrap">
     <h1 data-i18n-html="idx_hero_title_html">Et øyeblikk som <em>venter</em> på riktig dag.</h1>
     <p class="hero-lead" data-i18n="idx_hero_lead">
-      Du velger formen og dagen. Vi tar vare på det til det rette øyeblikket —
-      om ett, ti eller tretti år.
+      Du velger formen og dagen. Vi tar vare på det til riktig øyeblikk —
+      om ett, ti eller tretti år. Til deg selv, til barnet ditt, eller
+      til noen du er glad i.
     </p>
 
     <div class="hero-media">
@@ -733,8 +745,7 @@
 
     </div>
 
-    <a href="bestill.html" class="hero-cta" data-i18n="idx_hero_cta">Skriv ditt første tidsbrev</a>
-    <span class="hero-trust" data-i18n-html="idx_hero_trust_html">Norsk drift &middot; Sikker EU-lagring &middot; Garantert levering</span>
+    <a href="bestill.html" class="hero-cta" data-i18n="idx_hero_cta">Lag et tidsbrev</a>
   </div>
 </header>
 
@@ -762,9 +773,9 @@
             <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
           </svg>
         </div>
-        <h3 data-i18n="idx_step1_title">1. Skriv brevet</h3>
-        <p data-i18n="idx_step1_text">Ta deg tid. Skriv fra hjertet. Velg hvem det skal til og
-           når det skal leveres — om 1 til 30 år.</p>
+        <h3 data-i18n="idx_step1_title">1. Lag ditt tidsbrev</h3>
+        <p data-i18n="idx_step1_text">Skriv et brev, last opp bilder og film, eller spill inn
+           stemmen din. Velg hvem det skal til og når.</p>
       </div>
 
       <div class="step">
@@ -777,7 +788,7 @@
           </svg>
         </div>
         <h3 data-i18n="idx_step2_title">2. Vi tar vare på det</h3>
-        <p data-i18n="idx_step2_text">Brevet krypteres og lagres sikkert i vårt norske arkiv
+        <p data-i18n="idx_step2_text">Alt krypteres og lagres sikkert i vårt norske arkiv
            frem til leveringsdatoen du har valgt.</p>
       </div>
 
@@ -790,9 +801,9 @@
             <polyline points="22,6 12,13 2,6"/>
           </svg>
         </div>
-        <h3 data-i18n="idx_step3_title">3. Det ankommer</h3>
-        <p data-i18n="idx_step3_text">På valgt dato leveres brevet — digitalt på e-post eller
-           som et ekte brev i en vakker konvolutt i posten.</p>
+        <h3 data-i18n="idx_step3_title">3. Det åpnes på riktig dag</h3>
+        <p data-i18n="idx_step3_text">På valgt dato leveres tidsbrevet — digitalt på e-post,
+           eller som et ekte brev i en vakker konvolutt i posten.</p>
       </div>
 
     </div>
@@ -817,6 +828,25 @@
 
       <!-- Digitalt brev -->
       <div class="product-card">
+        <div class="product-art" aria-hidden="true">
+          <svg viewBox="0 0 100 88" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="iPad med et tidsbrev på skjermen">
+            <ellipse cx="50" cy="84" rx="32" ry="2" fill="#2a231c" opacity="0.1"/>
+            <g transform="rotate(-4 50 44)">
+              <rect x="22" y="6" width="56" height="74" rx="3" fill="#2a231c" stroke="#6B2737" stroke-width="0.6"/>
+              <rect x="25" y="9" width="50" height="65" rx="1" fill="#F5F0E8"/>
+              <text x="31" y="17" font-family="Playfair Display, serif" font-size="5" fill="#2a231c" font-weight="500">Tidsbrev</text>
+              <line x1="31" y1="19.5" x2="48" y2="19.5" stroke="#6B2737" stroke-width="0.3" opacity="0.4"/>
+              <text x="31" y="25" font-family="Caveat, cursive" font-size="3.8" fill="#6B2737" opacity="0.75">fra deg, 2042</text>
+              <line x1="29" y1="33" x2="71" y2="33" stroke="#6B2737" stroke-width="0.6" opacity="0.55"/>
+              <line x1="29" y1="39" x2="69" y2="39" stroke="#6B2737" stroke-width="0.6" opacity="0.5"/>
+              <line x1="29" y1="45" x2="64" y2="45" stroke="#6B2737" stroke-width="0.6" opacity="0.5"/>
+              <line x1="29" y1="51" x2="70" y2="51" stroke="#6B2737" stroke-width="0.6" opacity="0.45"/>
+              <line x1="29" y1="57" x2="55" y2="57" stroke="#6B2737" stroke-width="0.6" opacity="0.45"/>
+              <path d="M 50 65 Q 54 63, 58 65 T 66 65" stroke="#6B2737" stroke-width="0.7" fill="none" opacity="0.6"/>
+              <rect x="46" y="76" width="8" height="0.7" rx="0.35" fill="#b08a3e" opacity="0.55"/>
+            </g>
+          </svg>
+        </div>
         <h3 data-i18n="idx_prod_digital_title">Digitalt Brev</h3>
         <span class="product-subtitle" data-i18n="idx_prod_digital_subtitle">Skrives og mottas digitalt</span>
         <span class="product-price">fra 99 <small>NOK</small></span>
@@ -832,6 +862,24 @@
 
       <!-- Fysisk brev -->
       <div class="product-card featured">
+        <div class="product-art" aria-hidden="true">
+          <svg viewBox="0 0 100 88" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Stemplet konvolutt med adresselinjer og poststempel">
+            <ellipse cx="50" cy="82" rx="34" ry="2" fill="#2a231c" opacity="0.1"/>
+            <rect x="12" y="20" width="76" height="50" rx="1" fill="#F5F0E8" stroke="#b08a3e" stroke-width="0.6"/>
+            <path d="M 12 20 L 50 45 L 88 20" fill="none" stroke="#b08a3e" stroke-width="0.6"/>
+            <rect x="68" y="25" width="14" height="14" rx="0.5" fill="#6B2737" stroke="#F5F0E8" stroke-width="0.6"/>
+            <rect x="70" y="27" width="10" height="10" fill="none" stroke="#b08a3e" stroke-width="0.4" stroke-dasharray="0.8,0.4"/>
+            <text x="75" y="35.5" text-anchor="middle" font-family="Playfair Display, serif" font-size="6.5" fill="#b08a3e" font-style="italic">T</text>
+            <g opacity="0.42">
+              <circle cx="75" cy="32" r="7.5" fill="none" stroke="#2a231c" stroke-width="0.5"/>
+              <circle cx="75" cy="32" r="5" fill="none" stroke="#2a231c" stroke-width="0.4"/>
+              <text x="75" y="33.5" text-anchor="middle" font-family="Inter, sans-serif" font-size="2.4" fill="#2a231c" letter-spacing="0.4">2042</text>
+            </g>
+            <line x1="20" y1="55" x2="48" y2="55" stroke="#6B2737" stroke-width="0.7" opacity="0.6"/>
+            <line x1="20" y1="60" x2="52" y2="60" stroke="#6B2737" stroke-width="0.7" opacity="0.55"/>
+            <line x1="20" y1="65" x2="44" y2="65" stroke="#6B2737" stroke-width="0.7" opacity="0.5"/>
+          </svg>
+        </div>
         <h3 data-i18n="idx_prod_physical_title">Fysisk Brev</h3>
         <span class="product-subtitle" data-i18n="idx_prod_physical_subtitle">Personlig og håndfast brev</span>
         <span class="product-price">fra 249 <small>NOK</small></span>
@@ -847,6 +895,32 @@
 
       <!-- Tidskapsell -->
       <div class="product-card">
+        <div class="product-art" aria-hidden="true">
+          <svg viewBox="0 0 100 88" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vintagekamera flankert av lydbølge-streker">
+            <ellipse cx="50" cy="82" rx="34" ry="2" fill="#2a231c" opacity="0.1"/>
+            <g fill="#6B2737">
+              <rect x="4" y="46" width="2.4" height="10" rx="1.2"/>
+              <rect x="9" y="40" width="2.4" height="22" rx="1.2"/>
+              <rect x="14" y="44" width="2.4" height="14" rx="1.2"/>
+              <rect x="19" y="38" width="2.4" height="26" rx="1.2"/>
+            </g>
+            <rect x="26" y="34" width="48" height="38" rx="3" fill="#2a231c" stroke="#6B2737" stroke-width="0.5"/>
+            <rect x="42" y="26" width="16" height="8" rx="1" fill="#2a231c" stroke="#6B2737" stroke-width="0.5"/>
+            <rect x="46.5" y="28" width="3.5" height="3" rx="0.3" fill="#6B2737"/>
+            <line x1="32" y1="40" x2="40" y2="40" stroke="#b08a3e" stroke-width="0.5" opacity="0.7"/>
+            <circle cx="50" cy="53" r="12" fill="#1A0F12" stroke="#b08a3e" stroke-width="0.8"/>
+            <circle cx="50" cy="53" r="8" fill="none" stroke="#b08a3e" stroke-width="0.4"/>
+            <circle cx="50" cy="53" r="4.5" fill="#2a231c"/>
+            <circle cx="47.5" cy="50.5" r="1.3" fill="#b08a3e" opacity="0.6"/>
+            <circle cx="68" cy="30" r="1.6" fill="#b08a3e"/>
+            <g fill="#6B2737">
+              <rect x="78" y="38" width="2.4" height="26" rx="1.2"/>
+              <rect x="83" y="44" width="2.4" height="14" rx="1.2"/>
+              <rect x="88" y="40" width="2.4" height="22" rx="1.2"/>
+              <rect x="93" y="46" width="2.4" height="10" rx="1.2"/>
+            </g>
+          </svg>
+        </div>
         <h3 data-i18n="idx_prod_capsule_title">Tidskapsell</h3>
         <span class="product-subtitle" data-i18n="idx_prod_capsule_subtitle">Bilder og video til fremtiden</span>
         <span class="product-price">fra 149 <small>NOK</small></span>

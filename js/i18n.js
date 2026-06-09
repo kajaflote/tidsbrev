@@ -38,7 +38,7 @@ no: {
   // ── Index — hero ──
   idx_hero_eyebrow: '~ slik føles det å åpne ~',
   idx_hero_title_html: 'Et øyeblikk som <em>venter</em> på riktig dag.',
-  idx_hero_lead: 'Du velger formen og dagen. Vi tar vare på det til riktig øyeblikk — om ett, ti eller tretti år.',
+  idx_hero_lead: 'Du velger formen og dagen. Vi tar vare på det til riktig øyeblikk — om ett, ti eller tretti år. Til deg selv, til barnet ditt, eller til noen du er glad i.',
   idx_hero_media_text_label: 'Tekst',
   idx_hero_media_text_note: 'Et brev til deg eller din kjære.',
   idx_hero_media_photo_label: 'Bilder',
@@ -47,7 +47,7 @@ no: {
   idx_hero_media_video_note: 'Vis framtiden hvordan livet ser ut.',
   idx_hero_media_voice_label: 'Taleopptak',
   idx_hero_media_voice_note: 'Stemmen din, slik den klinger nå.',
-  idx_hero_cta: 'Skriv ditt første tidsbrev',
+  idx_hero_cta: 'Lag et tidsbrev',
   idx_hero_trust_html: 'Norsk drift &middot; Sikker EU-lagring &middot; Garantert levering',
 
   // ── Index — nav (custom) ──
@@ -59,12 +59,12 @@ no: {
   idx_how_eyebrow: 'så enkelt er det',
   idx_how_title: 'Tre steg til et tidsbrev',
   idx_how_lead: 'Vi tar vare på ordene dine helt til det rette øyeblikket.',
-  idx_step1_title: '1. Skriv brevet',
-  idx_step1_text: 'Ta deg tid. Skriv fra hjertet. Velg hvem det skal til og når det skal leveres — om 1 til 30 år.',
+  idx_step1_title: '1. Lag ditt tidsbrev',
+  idx_step1_text: 'Skriv et brev, last opp bilder og film, eller spill inn stemmen din. Velg hvem det skal til og når.',
   idx_step2_title: '2. Vi tar vare på det',
-  idx_step2_text: 'Brevet krypteres og lagres sikkert i vårt norske arkiv frem til leveringsdatoen du har valgt.',
-  idx_step3_title: '3. Det ankommer',
-  idx_step3_text: 'På valgt dato leveres brevet — digitalt på e-post eller som et ekte brev i en vakker konvolutt i posten.',
+  idx_step2_text: 'Alt krypteres og lagres sikkert i vårt norske arkiv frem til leveringsdatoen du har valgt.',
+  idx_step3_title: '3. Det åpnes på riktig dag',
+  idx_step3_text: 'På valgt dato leveres tidsbrevet — digitalt på e-post, eller som et ekte brev i en vakker konvolutt i posten.',
 
   // ── Index — products ──
   idx_prod_eyebrow: 'våre brev',
@@ -454,7 +454,7 @@ en: {
   // ── Index — hero ──
   idx_hero_eyebrow: '~ how it feels to open ~',
   idx_hero_title_html: 'A moment that <em>waits</em> for the right day.',
-  idx_hero_lead: 'You choose the form and the day. We keep it safe until the right moment — in one, ten, or thirty years.',
+  idx_hero_lead: 'You choose the form and the day. We keep it safe until the right moment — in one, ten, or thirty years. To yourself, to your child, or to someone you love.',
   idx_hero_media_text_label: 'Text',
   idx_hero_media_text_note: 'A letter for you or someone you love.',
   idx_hero_media_photo_label: 'Photos',
@@ -463,7 +463,7 @@ en: {
   idx_hero_media_video_note: 'Show the future what life looks like.',
   idx_hero_media_voice_label: 'Voice',
   idx_hero_media_voice_note: 'Your voice, just as it sounds now.',
-  idx_hero_cta: 'Write your first time letter',
+  idx_hero_cta: 'Create a time letter',
   idx_hero_trust_html: 'Norwegian operations &middot; Secure EU storage &middot; Guaranteed delivery',
 
   // ── Index — nav ──
@@ -475,12 +475,12 @@ en: {
   idx_how_eyebrow: "it's that simple",
   idx_how_title: 'Three steps to a time letter',
   idx_how_lead: 'We keep your words safe until exactly the right moment.',
-  idx_step1_title: '1. Write the letter',
-  idx_step1_text: 'Take your time. Write from the heart. Choose who it goes to and when it should be delivered — from 1 to 30 years.',
+  idx_step1_title: '1. Create your time letter',
+  idx_step1_text: "Write a letter, upload photos and video, or record your voice. Choose who it's for and when.",
   idx_step2_title: '2. We keep it safe',
-  idx_step2_text: 'The letter is encrypted and stored securely in our Norwegian archive until your chosen delivery date.',
-  idx_step3_title: '3. It arrives',
-  idx_step3_text: 'On the chosen date, the letter is delivered — digitally by email or as a real letter in a beautiful envelope by post.',
+  idx_step2_text: 'Everything is encrypted and stored securely in our Norwegian archive until your chosen delivery date.',
+  idx_step3_title: '3. It opens on the right day',
+  idx_step3_text: 'On the chosen date, your time letter is delivered — digitally by email, or as a real letter in a beautiful envelope by post.',
 
   // ── Index — products ──
   idx_prod_eyebrow: 'our letters',
