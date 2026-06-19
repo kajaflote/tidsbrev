@@ -168,6 +168,11 @@
     background:#fff9ef;
     box-shadow:0 0 0 4px rgba(107,39,55,.12), var(--shadow);
   }
+  .choice-card:focus-visible{
+    outline:none;
+    border-color:var(--burgundy);
+    box-shadow:0 0 0 3px rgba(107,39,55,.3);
+  }
   .choice-card .icon{
     width:72px;height:72px;
     border-radius:50%;
@@ -248,7 +253,7 @@
   .field-row{display:grid;grid-template-columns:1fr;gap:18px}
   @media(min-width:560px){.field-row.two{grid-template-columns:1fr 2fr}}
 
-  /* ---------- Step 4: letter editor ---------- */
+  /* ---------- Step 3: letter editor ---------- */
   .letter-editor textarea{
     min-height:320px;
     font-family:'Playfair Display',Georgia,serif;
@@ -724,7 +729,7 @@
     font-size:.88rem;color:var(--muted);line-height:1.45;
   }
 
-  /* ---------- Live price (step 3) ---------- */
+  /* ---------- Live price (step 4) ---------- */
   .live-price{
     display:none;
     justify-content:space-between;
@@ -788,11 +793,11 @@
         </div>
         <div class="progress-step" data-step="3">
           <div class="progress-circle">3</div>
-          <div class="progress-label" data-i18n="ord_progress_3">Informasjon</div>
+          <div class="progress-label" data-i18n="ord_progress_4">Skriv brev</div>
         </div>
         <div class="progress-step" data-step="4">
           <div class="progress-circle">4</div>
-          <div class="progress-label" data-i18n="ord_progress_4">Skriv brev</div>
+          <div class="progress-label" data-i18n="ord_progress_3">Informasjon</div>
         </div>
         <div class="progress-step" data-step="5">
           <div class="progress-circle">5</div>
@@ -810,7 +815,7 @@
       </div>
 
       <div class="choice-grid">
-        <div class="choice-card" data-value="meg_selv" data-field="recipient_type">
+        <div class="choice-card" data-value="meg_selv" data-field="recipient_type" role="button" tabindex="0" aria-pressed="false">
           <div class="icon">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
@@ -820,7 +825,7 @@
           <p data-i18n="ord_s1_self_text">Et brev fra deg i dag til deg i fremtiden.</p>
         </div>
 
-        <div class="choice-card" data-value="andre" data-field="recipient_type">
+        <div class="choice-card" data-value="andre" data-field="recipient_type" role="button" tabindex="0" aria-pressed="false">
           <div class="icon">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/>
@@ -831,10 +836,6 @@
         </div>
       </div>
 
-      <div class="nav-btns">
-        <span></span>
-        <button class="btn btn-primary" data-next="1" data-i18n="ord_next">Neste →</button>
-      </div>
     </section>
 
     <!-- ================ STEG 2 — Levering ================ -->
@@ -846,7 +847,7 @@
       </div>
 
       <div class="choice-grid">
-        <div class="choice-card" data-value="digitalt" data-field="delivery_type">
+        <div class="choice-card" data-value="digitalt" data-field="delivery_type" role="button" tabindex="0" aria-pressed="false">
           <div class="icon">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z"/><polyline points="22,6 12,13 2,6"/>
@@ -857,7 +858,7 @@
           <div class="price" id="price-digitalt">fra 99 kr</div>
         </div>
 
-        <div class="choice-card" data-value="fysisk" data-field="delivery_type">
+        <div class="choice-card" data-value="fysisk" data-field="delivery_type" role="button" tabindex="0" aria-pressed="false">
           <div class="icon">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/>
@@ -868,7 +869,7 @@
           <div class="price" id="price-fysisk">fra 249 kr</div>
         </div>
 
-        <div class="choice-card" data-value="tidskapsell" data-field="delivery_type">
+        <div class="choice-card" data-value="tidskapsell" data-field="delivery_type" role="button" tabindex="0" aria-pressed="false">
           <div class="icon">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -884,124 +885,11 @@
 
       <div class="nav-btns">
         <button class="btn btn-secondary" data-prev="2" data-i18n="ord_back">← Tilbake</button>
-        <button class="btn btn-primary" data-next="2" data-i18n="ord_next">Neste →</button>
       </div>
     </section>
 
-    <!-- ================ STEG 3 — Informasjon ================ -->
+    <!-- ================ STEG 3 — Skriv brevet ================ -->
     <section class="step-panel" id="step-3">
-      <div class="step-head">
-        <span class="eyebrow" data-i18n="ord_s3_eyebrow">~ det praktiske ~</span>
-        <h2 data-i18n="ord_s3_title">Informasjon</h2>
-        <p id="step3-intro" data-i18n="ord_s3_intro">Fortell oss hvem som skal motta brevet og når.</p>
-      </div>
-
-      <div class="form-card">
-        <div class="form-error" id="form-error-3"></div>
-
-        <!-- Avsender — vises alltid, label endres dynamisk -->
-        <div class="field">
-          <label id="lbl-sender-name" data-i18n="ord_s3_your_name">Ditt navn</label>
-          <input type="text" id="customer_name" placeholder="Fornavn Etternavn" data-i18n-placeholder="ord_placeholder_name" autocomplete="name"/>
-          <div class="err-msg" data-i18n="ord_s3_err_name">Vennligst fyll inn navnet ditt.</div>
-        </div>
-
-        <div class="field">
-          <label id="lbl-sender-email" data-i18n="ord_s3_your_email">Din e-post</label>
-          <input type="email" id="customer_email" placeholder="din@epost.no" data-i18n-placeholder="ord_placeholder_email" autocomplete="email"/>
-          <div class="err-msg" data-i18n="ord_s3_err_email">Vennligst fyll inn en gyldig e-postadresse.</div>
-        </div>
-
-        <!-- Mottaker — vises kun ved "til andre" -->
-        <div id="recipient-fields" style="display:none">
-          <div class="field">
-            <label id="lbl-recipient-name" data-i18n="ord_s3_recipient_name">Mottakers fulle navn</label>
-            <input type="text" id="recipient_name" placeholder="Fornavn Etternavn" data-i18n-placeholder="ord_placeholder_name"/>
-            <div class="err-msg" data-i18n="ord_s3_err_recipient_name">Vennligst fyll inn mottakerens navn.</div>
-          </div>
-
-          <div class="field" id="field-recipient-email">
-            <label data-i18n="ord_s3_recipient_email">Mottakers e-post</label>
-            <input type="email" id="recipient_email" placeholder="mottaker@epost.no" data-i18n-placeholder="ord_placeholder_recipient_email"/>
-            <div class="err-msg" data-i18n="ord_s3_err_recipient_email">Vennligst fyll inn en gyldig e-postadresse.</div>
-          </div>
-
-          <div class="field">
-            <label data-i18n="ord_s3_occasion">Anledning</label>
-            <select id="occasion">
-              <option value="" data-i18n="ord_s3_occasion_select">Velg anledning…</option>
-              <option value="meg_selv" data-i18n="ord_s3_occasion_self">Til meg selv</option>
-              <option value="konfirmasjon" data-i18n="ord_s3_occasion_confirmation">Konfirmasjon</option>
-              <option value="bursdag" data-i18n="ord_s3_occasion_birthday">Bursdag</option>
-              <option value="bryllup" data-i18n="ord_s3_occasion_wedding">Bryllup</option>
-              <option value="nyfodt" data-i18n="ord_s3_occasion_newborn">Nyfødt barn</option>
-              <option value="jubileum" data-i18n="ord_s3_occasion_anniversary">Jubileum</option>
-              <option value="bare_fordi" data-i18n="ord_s3_occasion_justbecause">Bare fordi</option>
-            </select>
-            <div class="err-msg" data-i18n="ord_s3_err_occasion">Vennligst velg en anledning.</div>
-          </div>
-        </div>
-
-        <!-- Fysisk adresse — vises ved fysisk levering -->
-        <div id="address-fields" style="display:none">
-          <div class="field">
-            <label data-i18n="ord_s3_address">Gateadresse</label>
-            <input type="text" id="recipient_address" placeholder="Eksempelveien 12" data-i18n-placeholder="ord_placeholder_address" autocomplete="street-address"/>
-            <div class="err-msg" data-i18n="ord_s3_err_address">Vennligst fyll inn gateadresse.</div>
-          </div>
-
-          <div class="field-row two">
-            <div class="field">
-              <label data-i18n="ord_s3_zip">Postnummer</label>
-              <input type="text" id="recipient_zip" placeholder="0123" data-i18n-placeholder="ord_placeholder_zip" maxlength="4" inputmode="numeric" autocomplete="postal-code"/>
-              <div class="err-msg" data-i18n="ord_s3_err_zip">Ugyldig postnummer.</div>
-            </div>
-            <div class="field">
-              <label data-i18n="ord_s3_city">Poststed</label>
-              <input type="text" id="recipient_city" placeholder="Oslo" data-i18n-placeholder="ord_placeholder_city" autocomplete="address-level2"/>
-              <div class="err-msg" data-i18n="ord_s3_err_city">Vennligst fyll inn poststed.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Leveringsdato — vises alltid -->
-        <div class="field">
-          <label data-i18n="ord_s3_date">Leveringsdato</label>
-          <input type="date" id="delivery_date"/>
-          <div class="err-msg" data-i18n="ord_s3_err_date">Leveringsdatoen må være minst i morgen.</div>
-        </div>
-      </div>
-
-      <!-- Premium envelope add-on (only visible when delivery_type === fysisk) -->
-      <div class="addon-wrap" id="addon-premium-envelope">
-        <div class="addon-card" id="addon-card-envelope">
-          <div class="addon-checkbox">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5F0E8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <div class="addon-text">
-            <h4>Premiumkonvolutt (+79 kr)</h4>
-            <p class="addon-sub">Brevet leveres i en vakker konvolutt med vokssegl</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Live total price -->
-      <div class="live-price" id="livePrice">
-        <span>
-          <span class="lp-label" data-i18n="ord_s3_price_label">Pris</span>
-          <span class="lp-sub" id="livePriceSub"></span>
-        </span>
-        <span class="lp-amount" id="livePriceAmount">—</span>
-      </div>
-
-      <div class="nav-btns">
-        <button class="btn btn-secondary" data-prev="3" data-i18n="ord_back">← Tilbake</button>
-        <button class="btn btn-primary" data-next="3" data-i18n="ord_next">Neste →</button>
-      </div>
-    </section>
-
-    <!-- ================ STEG 4 — Skriv brevet ================ -->
-    <section class="step-panel" id="step-4">
       <div class="step-head">
         <span class="eyebrow" data-i18n="ord_s4_eyebrow">~ ordene dine ~</span>
         <h2 data-i18n="ord_s4_title">Skriv brevet</h2>
@@ -1168,6 +1056,118 @@
       </div>
 
       <div class="nav-btns">
+        <button class="btn btn-secondary" data-prev="3" data-i18n="ord_back">← Tilbake</button>
+        <button class="btn btn-primary" data-next="3" data-i18n="ord_next">Neste →</button>
+      </div>
+    </section>
+
+    <!-- ================ STEG 4 — Informasjon ================ -->
+    <section class="step-panel" id="step-4">
+      <div class="step-head">
+        <span class="eyebrow" data-i18n="ord_s3_eyebrow">~ det praktiske ~</span>
+        <h2 data-i18n="ord_s3_title">Informasjon</h2>
+        <p id="step3-intro" data-i18n="ord_s3_intro">Fortell oss hvem som skal motta brevet og når.</p>
+      </div>
+
+      <div class="form-card">
+        <div class="form-error" id="form-error-3"></div>
+
+        <!-- Avsender — vises alltid, label endres dynamisk -->
+        <div class="field">
+          <label id="lbl-sender-name" data-i18n="ord_s3_your_name">Ditt navn</label>
+          <input type="text" id="customer_name" placeholder="Fornavn Etternavn" data-i18n-placeholder="ord_placeholder_name" autocomplete="name"/>
+          <div class="err-msg" data-i18n="ord_s3_err_name">Vennligst fyll inn navnet ditt.</div>
+        </div>
+
+        <div class="field">
+          <label id="lbl-sender-email" data-i18n="ord_s3_your_email">Din e-post</label>
+          <input type="email" id="customer_email" placeholder="din@epost.no" data-i18n-placeholder="ord_placeholder_email" autocomplete="email"/>
+          <div class="err-msg" data-i18n="ord_s3_err_email">Vennligst fyll inn en gyldig e-postadresse.</div>
+        </div>
+
+        <!-- Mottaker — vises kun ved "til andre" -->
+        <div id="recipient-fields" style="display:none">
+          <div class="field">
+            <label id="lbl-recipient-name" data-i18n="ord_s3_recipient_name">Mottakers fulle navn</label>
+            <input type="text" id="recipient_name" placeholder="Fornavn Etternavn" data-i18n-placeholder="ord_placeholder_name"/>
+            <div class="err-msg" data-i18n="ord_s3_err_recipient_name">Vennligst fyll inn mottakerens navn.</div>
+          </div>
+
+          <div class="field" id="field-recipient-email">
+            <label data-i18n="ord_s3_recipient_email">Mottakers e-post</label>
+            <input type="email" id="recipient_email" placeholder="mottaker@epost.no" data-i18n-placeholder="ord_placeholder_recipient_email"/>
+            <div class="err-msg" data-i18n="ord_s3_err_recipient_email">Vennligst fyll inn en gyldig e-postadresse.</div>
+          </div>
+
+          <div class="field">
+            <label data-i18n="ord_s3_occasion">Anledning</label>
+            <select id="occasion">
+              <option value="" data-i18n="ord_s3_occasion_select">Velg anledning…</option>
+              <option value="meg_selv" data-i18n="ord_s3_occasion_self">Til meg selv</option>
+              <option value="konfirmasjon" data-i18n="ord_s3_occasion_confirmation">Konfirmasjon</option>
+              <option value="bursdag" data-i18n="ord_s3_occasion_birthday">Bursdag</option>
+              <option value="bryllup" data-i18n="ord_s3_occasion_wedding">Bryllup</option>
+              <option value="nyfodt" data-i18n="ord_s3_occasion_newborn">Nyfødt barn</option>
+              <option value="jubileum" data-i18n="ord_s3_occasion_anniversary">Jubileum</option>
+              <option value="bare_fordi" data-i18n="ord_s3_occasion_justbecause">Bare fordi</option>
+            </select>
+            <div class="err-msg" data-i18n="ord_s3_err_occasion">Vennligst velg en anledning.</div>
+          </div>
+        </div>
+
+        <!-- Fysisk adresse — vises ved fysisk levering -->
+        <div id="address-fields" style="display:none">
+          <div class="field">
+            <label data-i18n="ord_s3_address">Gateadresse</label>
+            <input type="text" id="recipient_address" placeholder="Eksempelveien 12" data-i18n-placeholder="ord_placeholder_address" autocomplete="street-address"/>
+            <div class="err-msg" data-i18n="ord_s3_err_address">Vennligst fyll inn gateadresse.</div>
+          </div>
+
+          <div class="field-row two">
+            <div class="field">
+              <label data-i18n="ord_s3_zip">Postnummer</label>
+              <input type="text" id="recipient_zip" placeholder="0123" data-i18n-placeholder="ord_placeholder_zip" maxlength="4" inputmode="numeric" autocomplete="postal-code"/>
+              <div class="err-msg" data-i18n="ord_s3_err_zip">Ugyldig postnummer.</div>
+            </div>
+            <div class="field">
+              <label data-i18n="ord_s3_city">Poststed</label>
+              <input type="text" id="recipient_city" placeholder="Oslo" data-i18n-placeholder="ord_placeholder_city" autocomplete="address-level2"/>
+              <div class="err-msg" data-i18n="ord_s3_err_city">Vennligst fyll inn poststed.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leveringsdato — vises alltid -->
+        <div class="field">
+          <label data-i18n="ord_s3_date">Leveringsdato</label>
+          <input type="date" id="delivery_date"/>
+          <div class="err-msg" data-i18n="ord_s3_err_date">Leveringsdatoen må være minst i morgen.</div>
+        </div>
+      </div>
+
+      <!-- Premium envelope add-on (only visible when delivery_type === fysisk) -->
+      <div class="addon-wrap" id="addon-premium-envelope">
+        <div class="addon-card" id="addon-card-envelope">
+          <div class="addon-checkbox">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5F0E8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="addon-text">
+            <h4>Premiumkonvolutt (+79 kr)</h4>
+            <p class="addon-sub">Brevet leveres i en vakker konvolutt med vokssegl</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live total price -->
+      <div class="live-price" id="livePrice">
+        <span>
+          <span class="lp-label" data-i18n="ord_s3_price_label">Pris</span>
+          <span class="lp-sub" id="livePriceSub"></span>
+        </span>
+        <span class="lp-amount" id="livePriceAmount">—</span>
+      </div>
+
+      <div class="nav-btns">
         <button class="btn btn-secondary" data-prev="4" data-i18n="ord_back">← Tilbake</button>
         <button class="btn btn-primary" data-next="4" data-i18n="ord_next">Neste →</button>
       </div>
@@ -1288,7 +1288,7 @@ function calcPrice() {
   return pris;
 }
 
-/* ---------- Live price (step 3) ---------- */
+/* ---------- Live price (step 4 — Informasjon) ---------- */
 function updateLivePrice() {
   const box = document.getElementById('livePrice');
   if (!box) return;
@@ -1346,8 +1346,8 @@ function showStep(n) {
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  if (n === 3) renderStep3();
-  if (n === 4) renderStep4();
+  if (n === 3) renderLetter();
+  if (n === 4) renderInfo();
   if (n === 5) renderSummary();
 }
 
@@ -1363,25 +1363,53 @@ function clearErr(fieldEl) { fieldEl.classList.remove('error'); }
 function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((v||'').trim()); }
 function isValidZip(v) { return /^\d{4}$/.test((v||'').trim()); }
 
-/* ---------- Step 1 & 2: choice cards ---------- */
-document.querySelectorAll('.choice-card').forEach(card => {
-  card.addEventListener('click', () => {
-    const field = card.dataset.field;
-    const value = card.dataset.value;
-    state[field] = value;
-    // product_type spiller samme rolle som delivery_type i ny prismodell
-    if (field === 'delivery_type') {
-      state.product_type = value;
-      // Reset premium envelope when switching away from fysisk
-      if (value !== 'fysisk') {
-        state.premium_envelope = false;
-      }
+/* ---------- Step 1 & 2: choice cards (auto-advance) ---------- */
+// Felles timer sørger for at raske/dobbelte aktiveringer (touchstart+click,
+// eller bytte av kort i vinduet) bare resulterer i ÉN navigering — det sist
+// valgte kortet vinner.
+let _advanceTimer = null;
+const ADVANCE_DELAY = 220; // ms visuell bekreftelse før neste steg
+
+function selectChoiceCard(card) {
+  const field = card.dataset.field;
+  const value = card.dataset.value;
+  state[field] = value;
+  // product_type spiller samme rolle som delivery_type i ny prismodell
+  if (field === 'delivery_type') {
+    state.product_type = value;
+    // Reset premium envelope when switching away from fysisk
+    if (value !== 'fysisk') {
+      state.premium_envelope = false;
     }
-    saveState();
-    // Update UI
-    document.querySelectorAll(`.choice-card[data-field="${field}"]`)
-      .forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
+  }
+  saveState();
+  // Update UI — vis valgt-tilstand umiddelbart
+  document.querySelectorAll(`.choice-card[data-field="${field}"]`).forEach(c => {
+    c.classList.remove('selected');
+    c.setAttribute('aria-pressed', 'false');
+  });
+  card.classList.add('selected');
+  card.setAttribute('aria-pressed', 'true');
+
+  // Auto-advance til neste steg etter en kort visuell bekreftelse
+  const panel = card.closest('.step-panel');
+  const cur = panel ? parseInt(panel.id.split('-')[1], 10) : NaN;
+  if (cur === 1 || cur === 2) {
+    if (_advanceTimer) clearTimeout(_advanceTimer);
+    _advanceTimer = setTimeout(() => {
+      _advanceTimer = null;
+      if (validateStep(cur)) showStep(cur + 1);
+    }, ADVANCE_DELAY);
+  }
+}
+
+document.querySelectorAll('.choice-card').forEach(card => {
+  card.addEventListener('click', () => selectChoiceCard(card));
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault(); // hindre at mellomrom scroller siden
+      selectChoiceCard(card);
+    }
   });
 });
 
@@ -1403,8 +1431,8 @@ document.getElementById('addon-card-envelope').addEventListener('click', () => {
   }
 })();
 
-/* ---------- Step 3: dynamic fields ---------- */
-function renderStep3() {
+/* ---------- Step 4 (Informasjon): dynamic fields ---------- */
+function renderInfo() {
   const intro = document.getElementById('step3-intro');
   const recipientFields = document.getElementById('recipient-fields');
   const addressFields = document.getElementById('address-fields');
@@ -1474,11 +1502,11 @@ function renderStep3() {
   updateLivePrice();
 }
 
-function validateStep3() {
+function validateInfo() {
   let ok = true;
   const formError = document.getElementById('form-error-3');
   formError.classList.remove('show');
-  document.querySelectorAll('#step-3 .field').forEach(clearErr);
+  document.querySelectorAll('#step-4 .field').forEach(clearErr);
 
   const toSelf = state.recipient_type === 'meg_selv';
   const physical = state.delivery_type === 'fysisk';
@@ -1540,8 +1568,8 @@ function validateStep3() {
   return ok;
 }
 
-/* ---------- Step 4: letter editor / upload ---------- */
-function renderStep4() {
+/* ---------- Step 3 (Skriv brevet): letter editor / upload ---------- */
+function renderLetter() {
   const isDigital     = state.delivery_type === 'digitalt';
   const isTidskapsell = state.delivery_type === 'tidskapsell';
   const isFysisk      = state.delivery_type === 'fysisk';
@@ -1553,9 +1581,9 @@ function renderStep4() {
   const letterEditor = document.querySelector('.letter-editor');
   if (letterEditor) letterEditor.style.display = (isDigital) ? 'block' : 'none';
 
-  const stepHead = document.querySelector('#step-4 .step-head h2');
-  const stepLead = document.querySelector('#step-4 .step-head p');
-  const stepEye  = document.querySelector('#step-4 .step-head .eyebrow');
+  const stepHead = document.querySelector('#step-3 .step-head h2');
+  const stepLead = document.querySelector('#step-3 .step-head p');
+  const stepEye  = document.querySelector('#step-3 .step-head .eyebrow');
   if (isTidskapsell) {
     stepHead.textContent = t('ord_s4_title_upload');
     stepLead.textContent = t('ord_s4_text_upload');
@@ -1632,7 +1660,7 @@ document.getElementById('letter_content').addEventListener('input', (e) => {
 
 // Periodisk auto-lagring hvert 10. sekund (kun når brevet skrives)
 setInterval(() => {
-  if (state.step === 4 &&
+  if (state.step === 3 &&
       state.delivery_type !== 'fysisk' &&
       state.delivery_type !== 'tidskapsell' &&
       state.letter_content &&
@@ -1657,7 +1685,7 @@ document.querySelectorAll('.insp-card').forEach(card => {
   });
 });
 
-function validateStep4() {
+function validateLetter() {
   if (state.delivery_type === 'fysisk') return true;
   if (state.delivery_type === 'tidskapsell') {
     const errorEl = document.getElementById('form-error-upload');
@@ -1775,8 +1803,8 @@ function validateStep(n) {
     }
     return true;
   }
-  if (n === 3) return validateStep3();
-  if (n === 4) return validateStep4();
+  if (n === 3) return validateLetter();
+  if (n === 4) return validateInfo();
   return true;
 }
 
@@ -1912,7 +1940,7 @@ function restoreChoiceCards() {
   ['recipient_type','delivery_type'].forEach(field => {
     if (state[field]) {
       const card = document.querySelector(`.choice-card[data-field="${field}"][data-value="${state[field]}"]`);
-      if (card) card.classList.add('selected');
+      if (card) { card.classList.add('selected'); card.setAttribute('aria-pressed', 'true'); }
     }
   });
 }
@@ -2181,8 +2209,8 @@ if (typeof window.setLang === 'function') {
   const _origSetLang = window.setLang;
   window.setLang = function (lang) {
     _origSetLang(lang);
-    if (state.step === 3) updateLivePrice();
-    if (state.step === 4 && state.letter_content && document.getElementById('saveIndicator')) {
+    if (state.step === 4) updateLivePrice();
+    if (state.step === 3 && state.letter_content && document.getElementById('saveIndicator')) {
       showSaveIndicator();
     }
   };
