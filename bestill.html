@@ -936,8 +936,8 @@
               <line x1="12" y1="3" x2="12" y2="15"/>
             </svg>
             <p><span data-i18n="ord_s4_upload_drop">Dra og slipp filer her, eller</span> <label for="fileInput" class="upload-link" data-i18n="ord_s4_upload_browse">velg filer</label></p>
-            <p class="upload-hint" data-i18n="ord_s4_upload_hint">JPG, PNG, GIF, WebP, MP4, MOV, AVI, M4A, MP3 · maks 1 GB totalt · maks 10 filer</p>
-            <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.m4a,.mp3,.webm,.ogg" style="display:none"/>
+            <p class="upload-hint" data-i18n="ord_s4_upload_hint">JPG, PNG, GIF, WebP, MP4, MOV, AVI, M4A, MP3, WAV, AAC · maks 1 GB totalt · maks 10 filer</p>
+            <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.m4a,.mp3,.webm,.ogg,.aac,.wav" style="display:none"/>
           </div>
 
           <div class="audio-record" id="audioRecord">
@@ -1317,8 +1317,8 @@ function updateLivePrice() {
 /* ---------- File upload state (declared early for use in validate/summary) ---------- */
 const MAX_TOTAL_BYTES = 1024 * 1024 * 1024; // 1 GB
 const MAX_FILES = 10;
-const ACCEPTED_TYPES = ['image/jpeg','image/png','image/gif','image/webp','video/mp4','video/quicktime','video/x-msvideo','audio/webm','audio/mp4','audio/ogg','audio/mpeg','audio/aac','audio/x-m4a'];
-const ACCEPTED_EXT = ['.jpg','.jpeg','.png','.gif','.webp','.mp4','.mov','.avi','.webm','.m4a','.mp3','.ogg','.aac'];
+const ACCEPTED_TYPES = ['image/jpeg','image/png','image/gif','image/webp','video/mp4','video/quicktime','video/x-msvideo','audio/webm','audio/mp4','audio/ogg','audio/mpeg','audio/aac','audio/x-m4a','audio/wav','audio/x-wav'];
+const ACCEPTED_EXT = ['.jpg','.jpeg','.png','.gif','.webp','.mp4','.mov','.avi','.webm','.m4a','.mp3','.ogg','.aac','.wav'];
 let pendingFiles = [];
 
 function formatBytes(bytes) {
