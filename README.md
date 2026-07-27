@@ -176,7 +176,7 @@ Gjør dette en gang i måneden (5–10 minutter):
 
 ### Kunden vil ha refusjon
 
-- **Innen 24 timer:** Gå til Stripe-dashboard → Payments → finn betalingen → klikk "Refund"
+- **Innen 14 dager (angrerett):** Gå til Stripe-dashboard → Payments → finn betalingen → klikk "Refund"
 - Slett deretter ordren i Supabase (eller sett `payment_status = 'refunded'`)
 
 ### Netlify-bygget feiler

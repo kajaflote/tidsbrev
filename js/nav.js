@@ -146,6 +146,12 @@
       display:flex;justify-content:space-between;align-items:center;
       font-size:.8rem;color:rgba(246,239,227,.4);flex-wrap:wrap;gap:8px;
     }
+    .footer-operator{
+      max-width:960px;margin:14px auto 0;
+      font-size:.72rem;color:rgba(246,239,227,.32);
+      text-align:center;line-height:1.5;
+    }
+    .footer-operator a{color:inherit;text-decoration:underline}
   `;
 
   // ---- NAV HTML ----
@@ -194,6 +200,7 @@
     <span>&copy; ${year} Tidsbrev.no — <span data-i18n="footer_copy">Norsk drift</span></span>
     <span data-i18n="footer_eu">Lagret sikkert i EU &nbsp;·&nbsp; GDPR-trygt</span>
   </div>
+  <div class="footer-operator">Drevet av Tidsbrev.no · [POSTADRESSE], [POSTNR OG STED] · <a href="mailto:tidsbrev@outlook.com">tidsbrev@outlook.com</a></div>
 </footer>`;
   }
 

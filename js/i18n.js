@@ -128,7 +128,7 @@ no: {
   idx_trust_payment_title: 'Sikker betaling',
   idx_trust_payment_text: 'Kort via Stripe og Vipps',
   idx_trust_refund_title: 'Full refusjon',
-  idx_trust_refund_text: 'Innen 24 timer fra kjøp',
+  idx_trust_refund_text: '14 dagers angrerett',
   idx_trust_storage_title: 'Kryptert lagring',
   idx_trust_storage_text: 'Brevene dine er trygge hos oss',
 
@@ -289,7 +289,7 @@ no: {
   ord_s5_trust_secure: 'Sikker betaling',
   ord_s5_trust_gdpr: 'GDPR-trygt',
   ord_s5_trust_norway: 'Norsk drift',
-  ord_s5_withdrawal_html: 'Tidsbrev er et personliggjort produkt. 14-dagers angrerett gjelder derfor ikke (angrerettloven § 22 e), men du har full refusjon innen 24 timer. <a href="/vilkaar.html" target="_blank" rel="noopener">Se vilkår</a>.',
+  ord_s5_withdrawal_html: 'Du har 14 dagers angrerett fra kjøpstidspunktet, med full refusjon dersom du ombestemmer deg. <a href="/vilkaar.html" target="_blank" rel="noopener">Se vilkår</a>.',
 
   // ── Bestill — summary labels ──
   ord_sum_recipient: 'Mottaker',
@@ -544,7 +544,7 @@ en: {
   idx_trust_payment_title: 'Secure payment',
   idx_trust_payment_text: 'Cards via Stripe and Vipps',
   idx_trust_refund_title: 'Full refund',
-  idx_trust_refund_text: 'Within 24 hours of purchase',
+  idx_trust_refund_text: '14-day right of withdrawal',
   idx_trust_storage_title: 'Encrypted storage',
   idx_trust_storage_text: 'Your letters are safe with us',
 
@@ -705,7 +705,7 @@ en: {
   ord_s5_trust_secure: 'Secure payment',
   ord_s5_trust_gdpr: 'GDPR safe',
   ord_s5_trust_norway: 'Norwegian operations',
-  ord_s5_withdrawal_html: 'Tidsbrev is a personalised product. The statutory 14-day right of withdrawal therefore does not apply (Norwegian Cancellation Act § 22 e), but you have a full refund within 24 hours. <a href="/vilkaar.html" target="_blank" rel="noopener">See terms</a>.',
+  ord_s5_withdrawal_html: 'You have a 14-day right of withdrawal from the time of purchase, with a full refund if you change your mind. <a href="/vilkaar.html" target="_blank" rel="noopener">See terms</a>.',
 
   // ── Bestill — summary labels ──
   ord_sum_recipient: 'Recipient',
