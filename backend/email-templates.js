@@ -245,8 +245,8 @@ ${isFysisk ? `
         </p>
         <div style="background:#fffdf7;border:1px dashed #c9b9a0;border-radius:8px;padding:16px 20px;margin:0 0 14px;font-family:Georgia,serif;font-size:15px;line-height:1.7;color:#2A231C;">
           Tidsbrev<br/>
-          [POSTADRESSE]<br/>
-          [POSTNR OG STED]<br/>
+          Fr&oslash;yasvei 19a<br/>
+          1412 Sofiemyr<br/>
           Norway
         </div>
         <p style="margin:0 0 6px;color:#2A231C;font-size:14px;line-height:1.6;">
@@ -375,8 +375,8 @@ ${isFysisk ? `
         </p>
         <div style="background:#fffdf7;border:1px dashed #c9b9a0;border-radius:8px;padding:16px 20px;margin:0 0 14px;font-family:Georgia,serif;font-size:15px;line-height:1.7;color:#2A231C;">
           Tidsbrev<br/>
-          [POSTADRESSE]<br/>
-          [POSTNR OG STED]<br/>
+          Fr&oslash;yasvei 19a<br/>
+          1412 Sofiemyr<br/>
           Norge
         </div>
         <p style="margin:0 0 6px;color:#2A231C;font-size:14px;line-height:1.6;">

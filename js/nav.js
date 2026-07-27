@@ -200,7 +200,7 @@
     <span>&copy; ${year} Tidsbrev.no — <span data-i18n="footer_copy">Norsk drift</span></span>
     <span data-i18n="footer_eu">Lagret sikkert i EU &nbsp;·&nbsp; GDPR-trygt</span>
   </div>
-  <div class="footer-operator">Drevet av Tidsbrev.no · [POSTADRESSE], [POSTNR OG STED] · <a href="mailto:tidsbrev@outlook.com">tidsbrev@outlook.com</a></div>
+  <div class="footer-operator">Tidsbrev.no · <a href="mailto:tidsbrev@outlook.com">tidsbrev@outlook.com</a></div>
 </footer>`;
   }
 
