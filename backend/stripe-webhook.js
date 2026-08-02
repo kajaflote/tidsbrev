@@ -27,11 +27,46 @@
 //   - checkout.session.completed
 //   - checkout.session.async_payment_succeeded
 //   - checkout.session.async_payment_failed
+//   - checkout.session.expired
+//   Årlig nedbetaling (Subscription):
+//   - invoice.paid
+//   - invoice.payment_failed
+//   - customer.subscription.deleted
 // ================================================================
 
 const Stripe = require('stripe');
 const { createClient } = require('@supabase/supabase-js');
 const { sendEmail } = require('./send-email');
+
+// ----------------------------------------------------------------
+// Finn ordren som hører til et abonnement.
+// Prøver først lagret stripe_subscription_id på ordren; faller tilbake til
+// subscription-metadata (order_id) dersom en faktura-hendelse kommer før
+// checkout.session.completed rakk å lagre abonnements-id-en på ordren.
+// ----------------------------------------------------------------
+async function finnOrdreForAbonnement(supabase, stripe, subscriptionId) {
+  const { data: order } = await supabase
+    .from('orders')
+    .select('id, delivery_date')
+    .eq('stripe_subscription_id', subscriptionId)
+    .maybeSingle();
+  if (order) return order;
+
+  try {
+    const sub = await stripe.subscriptions.retrieve(subscriptionId);
+    const orderId = sub.metadata && sub.metadata.order_id;
+    if (!orderId) return null;
+    const { data: byId } = await supabase
+      .from('orders')
+      .select('id, delivery_date')
+      .eq('id', orderId)
+      .maybeSingle();
+    return byId || null;
+  } catch (e) {
+    console.error('[stripe-webhook] Kunne ikke hente abonnement:', e.message);
+    return null;
+  }
+}
 
 exports.handler = async (event) => {
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
@@ -81,12 +116,43 @@ exports.handler = async (event) => {
         }
 
         // Oppdater ordren til 'paid'
+        const orderUpdate = {
+          payment_status:    'paid',
+          stripe_session_id: session.id
+        };
+
+        // Årlig nedbetaling (B): lagre abonnements-id + status, og sett abonnementet
+        // til å avsluttes automatisk på leveringsdato (cancel_at).
+        if (session.mode === 'subscription' && session.subscription) {
+          orderUpdate.stripe_subscription_id = session.subscription;
+          orderUpdate.subscription_status    = 'active';
+
+          try {
+            const { data: ord } = await supabase
+              .from('orders')
+              .select('delivery_date')
+              .eq('id', orderId)
+              .single();
+            if (ord && ord.delivery_date) {
+              const cancelAt = Math.floor(new Date(ord.delivery_date).getTime() / 1000);
+              // Kun frem i tid — Stripe avviser cancel_at i fortiden.
+              if (cancelAt > Math.floor(Date.now() / 1000)) {
+                await stripe.subscriptions.update(session.subscription, { cancel_at: cancelAt });
+              }
+            }
+          } catch (subErr) {
+            console.error('[stripe-webhook] Kunne ikke sette cancel_at på abonnement:', subErr.message);
+            await supabase.from('admin_log').insert({
+              action: 'subscription_cancel_at_failed',
+              order_id: orderId,
+              note: `Abonnement ${session.subscription}: ${subErr.message}`
+            });
+          }
+        }
+
         const { error } = await supabase
           .from('orders')
-          .update({
-            payment_status:    'paid',
-            stripe_session_id: session.id
-          })
+          .update(orderUpdate)
           .eq('id', orderId);
 
         if (error) {
@@ -162,6 +228,91 @@ exports.handler = async (event) => {
           action: 'payment_failed',
           order_id: orderId,
           note: `Stripe-betaling feilet eller utløp. Event: ${stripeEvent.type}`
+        });
+        break;
+      }
+
+      // ------------------------------------------------
+      // ÅRLIG NEDBETALING (Subscription) — B
+      // ------------------------------------------------
+
+      // Årlig trekk gjennomført (også første faktura ved oppstart).
+      case 'invoice.paid': {
+        const invoice = stripeEvent.data.object;
+        const subId = invoice.subscription;
+        if (!subId) break; // ikke en abonnements-faktura
+
+        const order = await finnOrdreForAbonnement(supabase, stripe, subId);
+        if (!order) {
+          console.warn(`[stripe-webhook] invoice.paid: fant ingen ordre for abonnement ${subId}`);
+          break;
+        }
+
+        await supabase
+          .from('orders')
+          .update({ payment_status: 'paid', subscription_status: 'active' })
+          .eq('id', order.id);
+
+        await supabase.from('admin_log').insert({
+          action: 'subscription_invoice_paid',
+          order_id: order.id,
+          note: `Årlig trekk OK. Faktura ${invoice.id}, beløp ${(invoice.amount_paid || 0) / 100} ${(invoice.currency || 'nok').toUpperCase()}`
+        });
+        break;
+      }
+
+      // Årlig trekk feilet — marker forfalt og varsle kunde + admin.
+      case 'invoice.payment_failed': {
+        const invoice = stripeEvent.data.object;
+        const subId = invoice.subscription;
+        if (!subId) break;
+
+        const order = await finnOrdreForAbonnement(supabase, stripe, subId);
+        if (!order) {
+          console.warn(`[stripe-webhook] invoice.payment_failed: fant ingen ordre for abonnement ${subId}`);
+          break;
+        }
+
+        await supabase
+          .from('orders')
+          .update({ subscription_status: 'past_due' })
+          .eq('id', order.id);
+
+        await supabase.from('admin_log').insert({
+          action: 'subscription_payment_failed',
+          order_id: order.id,
+          note: `Årlig trekk feilet. Faktura ${invoice.id}. Stripe forsøker automatisk på nytt.`
+        });
+
+        // Varsle kunde + admin. E-postfeil skal ikke velte webhook-responsen.
+        try {
+          await sendEmail({ type: 'subscription_payment_failed', order_id: order.id });
+        } catch (e) {
+          console.error('[stripe-webhook] Kunne ikke varsle kunde (past_due):', e.message);
+        }
+        try {
+          await sendEmail({ type: 'admin_subscription_failed', order_id: order.id });
+        } catch (e) {
+          console.error('[stripe-webhook] Kunne ikke varsle admin (past_due):', e.message);
+        }
+        break;
+      }
+
+      // Abonnement avsluttet (nådd cancel_at på leveringsdato, eller kansellert).
+      case 'customer.subscription.deleted': {
+        const sub = stripeEvent.data.object;
+        const order = await finnOrdreForAbonnement(supabase, stripe, sub.id);
+        if (!order) break;
+
+        await supabase
+          .from('orders')
+          .update({ subscription_status: 'canceled' })
+          .eq('id', order.id);
+
+        await supabase.from('admin_log').insert({
+          action: 'subscription_deleted',
+          order_id: order.id,
+          note: `Abonnement ${sub.id} avsluttet${sub.cancellation_details && sub.cancellation_details.reason ? ' (' + sub.cancellation_details.reason + ')' : ''}.`
         });
         break;
       }

@@ -4,10 +4,18 @@
 //   ALTER TABLE orders ADD COLUMN IF NOT EXISTS premium_envelope boolean DEFAULT false;
 //   ALTER TABLE orders ADD COLUMN IF NOT EXISTS language text NOT NULL DEFAULT 'no' CHECK (language IN ('no','en'));
 //
+//   -- Betalingsplan (A engang / B årlig nedbetaling):
+//   ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_plan text NOT NULL DEFAULT 'full' CHECK (payment_plan IN ('full','yearly'));
+//   ALTER TABLE orders ADD COLUMN IF NOT EXISTS stripe_subscription_id text;
+//   ALTER TABLE orders ADD COLUMN IF NOT EXISTS subscription_status text CHECK (subscription_status IN ('active','past_due','canceled'));
+//
 // Merk:
 //   • language styrer språket i ALL mottaker-rettet kommunikasjon (e-post + viewer).
 //     Eksisterende rader fylles automatisk med 'no' av DEFAULT — ingen backfill nødvendig.
 //     Admin-varsler til egen Gmail forblir alltid på norsk.
+//   • payment_plan = 'full' (betal alt nå) eller 'yearly' (årlig nedbetaling).
+//     Eksisterende rader får 'full' av DEFAULT. subscription_status er NULL for
+//     engangsordre og settes av stripe-webhook.js for årlige abonnement.
 // ================================================================
 
 // ================================================================
@@ -35,22 +43,9 @@
 
 const Stripe = require('stripe');
 const { createClient } = require('@supabase/supabase-js');
-
-// --- Prismodell (må matche js/config.js) ---
-// Modell: startpris + (år - 1) × årsavgift
-const PRIS_DIGITALT_BASE      = 99;
-const PRIS_DIGITALT_PER_AAR   = 19;
-const PRIS_FYSISK_BASE        = 249;
-const PRIS_FYSISK_PER_AAR     = 29;
-const PRIS_TIDSKAPSELL_BASE   = 149;
-const PRIS_TIDSKAPSELL_PER_AAR = 49;
-
-// Legacy-tabell for bakoverkompatibilitet
-const PRISER_LEGACY = {
-  standard_digitalt: 349, standard_fysisk: 449,
-  premium_digitalt:  599, premium_fysisk:  699,
-  legacy_digitalt:  1299, legacy_fysisk:  1499
-};
+// Sentral beløpslogikk — ÉN kilde for både engang (A) og årlig (B).
+// (js/config.js eksporterer også som Node-modul.)
+const { getBetalingsplan } = require('../js/config.js');
 
 const PRODUKT_NAVN = {
   digitalt:    'Digitalt Brev',
@@ -60,38 +55,6 @@ const PRODUKT_NAVN = {
   premium:     'Premium Brev',
   legacy:      'Legacy Pakke'
 };
-
-/**
- * Beregn antall ekstra lagringsår fra i dag til leveringsdato.
- * Returnerer 0 for datoer under 1 år frem.
- */
-function antallAar(leveringsdato) {
-  if (!leveringsdato) return 0;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const levering = new Date(leveringsdato);
-  const aar = Math.floor((levering - today) / (1000 * 60 * 60 * 24 * 365.25));
-  return Math.max(0, aar);
-}
-
-/**
- * Beregn korrekt pris ut fra produkttype og dato.
- * Støtter ny modell (digitalt/fysisk/tidskapsell) og legacy (standard/premium/legacy).
- */
-function beregnPris(produkttype, leveringsdato) {
-  const aar = antallAar(leveringsdato);
-
-  switch (produkttype) {
-    case 'fysisk':
-      return PRIS_FYSISK_BASE + aar * PRIS_FYSISK_PER_AAR;
-    case 'tidskapsell':
-      return PRIS_TIDSKAPSELL_BASE + aar * PRIS_TIDSKAPSELL_PER_AAR;
-    case 'digitalt':
-      return PRIS_DIGITALT_BASE + aar * PRIS_DIGITALT_PER_AAR;
-    default:
-      return null;
-  }
-}
 
 exports.handler = async (event) => {
   // Kun POST tillatt
@@ -150,19 +113,16 @@ exports.handler = async (event) => {
       };
     }
 
-    let prisNok = beregnPris(data.product_type, data.delivery_date);
-    if (!prisNok) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: 'Ugyldig produkt- eller leveringskombinasjon' })
-      };
-    }
-
-    // Premium envelope add-on (+79 kr, only for fysisk)
+    // Premium envelope add-on (kun fysisk)
     const premiumEnvelope = data.premium_envelope === true && data.product_type === 'fysisk';
-    if (premiumEnvelope) {
-      prisNok += 79;
-    }
+
+    // Betalingsplan (A engang / B årlig) — samme beløpslogikk som frontend.
+    const plan = getBetalingsplan(data.product_type, data.delivery_date, premiumEnvelope);
+    const prisNok = plan.engang; // total ordreverdi (= det A trekker på én gang)
+
+    // Årlig nedbetaling (B) tilbys kun når det finnes minst ett lagringsår å spre.
+    // Sendes 'yearly' uten lagringsår, faller vi trygt tilbake til engang.
+    const paymentPlan = (data.payment_plan === 'yearly' && plan.kanAarlig) ? 'yearly' : 'full';
 
     // Språk for mottaker-rettet kommunikasjon ('no' | 'en'), default 'no'
     const language = data.language === 'en' ? 'en' : 'no';
@@ -189,6 +149,7 @@ exports.handler = async (event) => {
         occasion:          data.occasion          || null,
         product_type:      data.product_type,
         premium_envelope:  premiumEnvelope,
+        payment_plan:      paymentPlan,
         language:          language,
         amount:            prisNok,
         payment_status:    'pending',
@@ -275,12 +236,68 @@ exports.handler = async (event) => {
     const produktTekst = `${PRODUKT_NAVN[data.product_type]} — ${data.delivery_type === 'fysisk' ? 'fysisk levering' : 'digital levering'}${premiumEnvelope ? ', inkl. premiumkonvolutt' : ''}`;
     const sideUrl = process.env.SIDE_URL || 'https://tidsbrev.no';
 
-    const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
+    // Felles metadata + URL-er for begge betalingsplaner
+    const metadata = {
+      order_id:      order.id,
+      order_number:  order.order_number || '',
+      product_type:  data.product_type,
+      delivery_type: data.delivery_type,
+      payment_plan:  paymentPlan
+    };
+    const sessionConfig = {
       payment_method_types: ['card'],
       locale: language === 'en' ? 'en' : 'nb',
       customer_email: data.customer_email,
-      line_items: [{
+      metadata,
+      success_url: `${sideUrl}/takk.html?order=${order.order_number}&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url:  `${sideUrl}/feil.html?reason=cancelled`
+    };
+
+    if (paymentPlan === 'yearly') {
+      // ---- B) Årlig nedbetaling — Stripe Subscription (interval: year) ----
+      // Første faktura = startpris (+ evt. konvolutt) som engangslinje + første
+      // årssats. Deretter trekkes årssatsen automatisk hvert år. Abonnementet
+      // avsluttes automatisk på leveringsdato (cancel_at settes i
+      // stripe-webhook.js når abonnementet opprettes). Sum = plan.engang.
+      sessionConfig.mode = 'subscription';
+      sessionConfig.line_items = [
+        {
+          price_data: {
+            currency: 'nok',
+            unit_amount: plan.aarlig * 100,
+            recurring: { interval: 'year' },
+            product_data: {
+              name: `${produktTekst} — årlig lagring`,
+              description: `Årlig trekk frem til levering ${data.delivery_date}`
+            }
+          },
+          quantity: 1
+        },
+        {
+          price_data: {
+            currency: 'nok',
+            unit_amount: (plan.base + plan.konvolutt) * 100,
+            product_data: {
+              name: `${produktTekst} — startpris`,
+              description: 'Engangsbeløp lagt på første trekk'
+            }
+          },
+          quantity: 1
+        }
+      ];
+      // order_id + leveringsdato følger abonnementet slik at webhooken kan
+      // koble faktura-hendelser til riktig ordre og sette cancel_at.
+      sessionConfig.subscription_data = {
+        metadata: {
+          order_id:      order.id,
+          order_number:  order.order_number || '',
+          delivery_date: data.delivery_date
+        }
+      };
+    } else {
+      // ---- A) Betal alt på én gang — engangsbetaling (uendret) ----
+      sessionConfig.mode = 'payment';
+      sessionConfig.line_items = [{
         price_data: {
           currency: 'nok',
           unit_amount: prisNok * 100, // Stripe bruker øre
@@ -290,16 +307,10 @@ exports.handler = async (event) => {
           }
         },
         quantity: 1
-      }],
-      metadata: {
-        order_id:     order.id,
-        order_number: order.order_number || '',
-        product_type: data.product_type,
-        delivery_type: data.delivery_type
-      },
-      success_url: `${sideUrl}/takk.html?order=${order.order_number}&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url:  `${sideUrl}/feil.html?reason=cancelled`
-    });
+      }];
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionConfig);
 
     // Lagre session_id på ordren så webhooken kan matche på den
     await supabase

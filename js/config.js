@@ -203,6 +203,53 @@ function getPrisDetaljer(produkttype, leveringsdato) {
 }
 
 /**
+ * Beregn betalingsplan (A: engang / B: årlig nedbetaling) for en bestilling.
+ * ÉN kilde for begge betalingsvalg — brukes av frontend (bestill.html) og
+ * backend (create-stripe-session.js). Ingen nye beløp: alt utledes fra de
+ * eksisterende CONFIG.PRIS_*-verdiene.
+ *
+ * Modell (samme som dagens pris): startpris (base) + årssats (perAar) × lagringsår.
+ *   A) engang  — hele summen betales på én gang (= dagens pris).
+ *   B) årlig   — startpris (+ evt. konvolutt) på første trekk, deretter årssatsen
+ *                automatisk hvert år frem til leveringsdato. Sum = nøyaktig som A.
+ *
+ * @param {string}  produkttype     'digitalt' | 'fysisk' | 'tidskapsell'
+ * @param {string}  leveringsdato   ISO-dato
+ * @param {boolean} premiumEnvelope premiumkonvolutt-tillegg (kun fysisk)
+ * @returns {{aar:number, base:number, perAar:number, konvolutt:number,
+ *            engang:number, foersteTrekk:number, aarlig:number,
+ *            antallTrekk:number, kanAarlig:boolean}}
+ */
+function getBetalingsplan(produkttype, leveringsdato, premiumEnvelope) {
+  const aar = antallAar(leveringsdato);
+  let base, perAar;
+  switch (produkttype) {
+    case 'fysisk':
+      base = CONFIG.PRIS_FYSISK_BASE;      perAar = CONFIG.PRIS_FYSISK_PER_AAR; break;
+    case 'tidskapsell':
+      base = CONFIG.PRIS_TIDSKAPSELL_BASE; perAar = CONFIG.PRIS_TIDSKAPSELL_PER_AAR; break;
+    case 'digitalt':
+    default:
+      base = CONFIG.PRIS_DIGITALT_BASE;    perAar = CONFIG.PRIS_DIGITALT_PER_AAR;
+  }
+  const konvolutt = (premiumEnvelope && produkttype === 'fysisk') ? CONFIG.PRIS_KONVOLUTT : 0;
+
+  const engang = base + aar * perAar + konvolutt;
+
+  return {
+    aar,
+    base,
+    perAar,
+    konvolutt,
+    engang,                                    // A: hele summen på én gang
+    foersteTrekk: base + konvolutt + perAar,   // B: første faktura (kun relevant når aar > 0)
+    aarlig:       perAar,                       // B: løpende årlig trekk
+    antallTrekk:  aar,                          // B: antall årlige trekk (= lagringsår)
+    kanAarlig:    aar > 0                        // B tilbys kun ved minst ett lagringsår
+  };
+}
+
+/**
  * Bakoverkompatibel oppslag for legacy produkt-/leveringskombo.
  * Brukes kun for å vise gamle ordre korrekt i admin.
  */
@@ -218,9 +265,10 @@ if (typeof window !== "undefined") {
   window.VIPPS_ACTIVE = VIPPS_ACTIVE;
   window.getPris = getPris;
   window.getPrisDetaljer = getPrisDetaljer;
+  window.getBetalingsplan = getBetalingsplan;
   window.antallAar = antallAar;
   window.getLegacyPris = getLegacyPris;
 }
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { CONFIG, VIPPS_ACTIVE, getPris, getPrisDetaljer, antallAar, getLegacyPris };
+  module.exports = { CONFIG, VIPPS_ACTIVE, getPris, getPrisDetaljer, getBetalingsplan, antallAar, getLegacyPris };
 }

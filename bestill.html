@@ -205,6 +205,25 @@
     white-space:nowrap;
   }
 
+  /* ---------- Betalingsplan (A/B) ---------- */
+  .plan-title{font-family:'Playfair Display',serif;font-size:1.05rem;margin:0 0 12px;color:var(--ink)}
+  .plan-opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px}
+  @media (max-width:520px){ .plan-opts{grid-template-columns:1fr} }
+  .plan-opt{
+    position:relative;text-align:left;cursor:pointer;
+    background:var(--cream-2);border:1.5px solid var(--beige);border-radius:14px;
+    padding:16px 18px;transition:border-color .15s,box-shadow .15s,background .15s;
+  }
+  .plan-opt:hover{border-color:var(--gold)}
+  .plan-opt:focus-visible{outline:2px solid var(--burgundy);outline-offset:2px}
+  .plan-opt.selected{border-color:var(--burgundy);background:#fff;box-shadow:var(--shadow)}
+  .plan-opt.disabled{opacity:.5;cursor:not-allowed;pointer-events:none}
+  .plan-opt h4{font-size:1rem;margin:0 0 4px;color:var(--ink)}
+  .plan-opt .plan-desc{color:var(--muted);font-size:.82rem;margin:0 0 8px;line-height:1.4}
+  .plan-opt .plan-amount{font-family:'Playfair Display',serif;color:var(--burgundy);font-weight:600;font-size:.95rem}
+  .plan-opt .plan-sub{display:block;color:var(--muted);font-size:.74rem;font-weight:400;margin-top:2px}
+  .plan-note{font-size:.78rem;color:var(--muted);margin:-10px 0 20px}
+
   /* ---------- Form fields ---------- */
   .form-card{
     background:var(--cream-2);
@@ -1187,6 +1206,22 @@
 
       <p class="checkout-withdrawal" data-i18n-html="ord_s5_withdrawal_html">Du har 14 dagers angrerett fra kjøpstidspunktet, med full refusjon dersom du ombestemmer deg. <a href="/vilkaar.html" target="_blank" rel="noopener">Se vilkår</a>.</p>
 
+      <!-- Betalingsplan: A) betal alt nå  /  B) årlig nedbetaling -->
+      <h3 class="plan-title" data-i18n="ord_s5_plan_title">Hvordan vil du betale?</h3>
+      <div class="plan-opts" id="plan-opts">
+        <div class="plan-opt selected" id="plan-full" data-plan="full" role="button" tabindex="0" aria-pressed="true">
+          <h4 data-i18n="ord_s5_plan_full_title">Betal alt nå</h4>
+          <p class="plan-desc" data-i18n="ord_s5_plan_full_desc">Én betaling – ferdig med det.</p>
+          <span class="plan-amount" id="plan-full-amount"></span>
+        </div>
+        <div class="plan-opt" id="plan-yearly" data-plan="yearly" role="button" tabindex="0" aria-pressed="false">
+          <h4 data-i18n="ord_s5_plan_yearly_title">Årlig nedbetaling</h4>
+          <p class="plan-desc" data-i18n="ord_s5_plan_yearly_desc">Startpris nå, så en liten sum automatisk hvert år til brevet leveres.</p>
+          <span class="plan-amount" id="plan-yearly-amount"></span>
+        </div>
+      </div>
+      <p class="plan-note" id="plan-yearly-note" style="display:none" data-i18n="ord_s5_plan_yearly_unavailable">Årlig nedbetaling er kun mulig når brevet skal leveres om minst ett år.</p>
+
       <div style="margin-bottom:18px">
         <button class="pay-btn pay-vipps" id="pay-vipps">
           <span class="vipps-logo">vipps</span> <span id="vipps-btn-label" data-i18n="ord_s5_vipps">Betal med Vipps</span>
@@ -1252,6 +1287,7 @@ const state = {
   product_type:   null,
   design_theme:   'klassisk',
   premium_envelope: false,
+  payment_plan: 'full',   // 'full' = betal alt nå (A) | 'yearly' = årlig nedbetaling (B)
   uploaded_files: [],
   message_content: ''
 };
@@ -1781,7 +1817,75 @@ function renderSummary() {
       </div>
     </div>`;
   document.getElementById('summary').innerHTML = html;
+
+  renderPaymentPlan();
 }
+
+/* ---------- Betalingsplan (A: engang / B: årlig) ---------- */
+function renderPaymentPlan() {
+  const optsWrap = document.getElementById('plan-opts');
+  if (!optsWrap || typeof window.getBetalingsplan !== 'function') return;
+
+  const plan = window.getBetalingsplan(
+    state.delivery_type || 'digitalt',
+    state.delivery_date,
+    state.premium_envelope
+  );
+
+  const fullEl   = document.getElementById('plan-full');
+  const yearlyEl = document.getElementById('plan-yearly');
+  const note     = document.getElementById('plan-yearly-note');
+  const nowTxt   = t('ord_s5_plan_now');
+  const perYear  = t('ord_s5_plan_year_suffix');
+  const totalTxt = t('ord_s5_plan_total');
+
+  // A – betal alt nå
+  document.getElementById('plan-full-amount').textContent = `NOK ${plan.engang}`;
+
+  // B – årlig nedbetaling
+  if (plan.kanAarlig) {
+    yearlyEl.classList.remove('disabled');
+    yearlyEl.removeAttribute('aria-disabled');
+    note.style.display = 'none';
+    const rest = plan.antallTrekk > 1
+      ? ` · +NOK ${plan.aarlig}${perYear} × ${plan.antallTrekk - 1}`
+      : '';
+    document.getElementById('plan-yearly-amount').innerHTML =
+      `NOK ${plan.foersteTrekk} ${nowTxt}${rest}` +
+      `<span class="plan-sub">${totalTxt} NOK ${plan.engang}</span>`;
+  } else {
+    // Ingen lagringsår å spre → kun engangsvalg
+    yearlyEl.classList.add('disabled');
+    yearlyEl.setAttribute('aria-disabled', 'true');
+    document.getElementById('plan-yearly-amount').textContent = '';
+    note.style.display = '';
+    if (state.payment_plan === 'yearly') selectPaymentPlan('full');
+  }
+
+  // Reflekter valgt plan i UI
+  const valgt = (state.payment_plan === 'yearly' && plan.kanAarlig) ? 'yearly' : 'full';
+  [fullEl, yearlyEl].forEach(el => {
+    const on = el.dataset.plan === valgt;
+    el.classList.toggle('selected', on);
+    el.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+}
+
+function selectPaymentPlan(plan) {
+  const yearlyEl = document.getElementById('plan-yearly');
+  if (plan === 'yearly' && yearlyEl && yearlyEl.classList.contains('disabled')) return;
+  state.payment_plan = plan;
+  saveState();
+  renderPaymentPlan();
+}
+
+// Klikk / tastatur på plan-kortene
+document.querySelectorAll('.plan-opt').forEach(el => {
+  el.addEventListener('click', () => selectPaymentPlan(el.dataset.plan));
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectPaymentPlan(el.dataset.plan); }
+  });
+});
 
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1876,6 +1980,7 @@ async function handlePay(method) {
     letter_content:    state.delivery_type === 'fysisk' ? '' : state.letter_content,
     design_theme:      state.design_theme || 'klassisk',
     premium_envelope:  state.premium_envelope || false,
+    payment_plan:      state.payment_plan === 'yearly' ? 'yearly' : 'full',
     amount:            price,
     language:          (window.getCurrentLang ? getCurrentLang() : 'no')
   };

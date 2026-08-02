@@ -54,7 +54,12 @@ CREATE TABLE IF NOT EXISTS public.orders (
   payment_status    TEXT NOT NULL DEFAULT 'pending'
                     CHECK (payment_status IN ('pending','paid','failed')),
   payment_method    TEXT CHECK (payment_method IN ('stripe','vipps')),
+  payment_plan      TEXT NOT NULL DEFAULT 'full'      -- 'full' = betal alt nå | 'yearly' = årlig nedbetaling
+                    CHECK (payment_plan IN ('full','yearly')),
   stripe_session_id TEXT,
+  stripe_subscription_id TEXT,                         -- Stripe-abonnement ved årlig nedbetaling
+  subscription_status TEXT                             -- NULL for engangsordre
+                    CHECK (subscription_status IN ('active','past_due','canceled')),
   vipps_order_id    TEXT
 );
 

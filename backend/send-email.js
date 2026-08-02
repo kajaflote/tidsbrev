@@ -468,6 +468,61 @@ async function sendEmail({ type, order_id, letter_id, orders }) {
       return { ok: true, result: res };
     }
 
+    // ------------------------------------------------
+    // 8. ÅRLIG NEDBETALING FEILET — VARSEL TIL KUNDEN
+    // ------------------------------------------------
+    case 'subscription_payment_failed': {
+      if (!order_id) throw new Error('Mangler order_id');
+
+      const { data: order, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', order_id)
+        .single();
+      if (error || !order) throw new Error('Fant ikke ordre: ' + order_id);
+
+      const mail = templates.subscriptionPaymentFailed(order, order.language || 'no');
+      const res = await resend.emails.send({
+        from:     avsender,
+        to:       order.customer_email,
+        subject:  mail.subject,
+        html:     mail.html,
+        reply_to: 'tidsbrev@outlook.com'
+      });
+
+      await supabase.from('admin_log').insert({
+        action: 'email_sent_subscription_failed',
+        order_id: order.id,
+        note: `Varsel om mislykket årlig trekk sendt til ${order.customer_email}`
+      });
+
+      return { ok: true, result: res };
+    }
+
+    // ------------------------------------------------
+    // 9. ÅRLIG NEDBETALING FEILET — INTERNT ADMIN-VARSEL
+    // ------------------------------------------------
+    case 'admin_subscription_failed': {
+      if (!order_id) throw new Error('Mangler order_id');
+
+      const { data: order, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', order_id)
+        .single();
+      if (error || !order) throw new Error('Fant ikke ordre: ' + order_id);
+
+      const mail = templates.adminSubscriptionFailed(order);
+      const res = await resend.emails.send({
+        from:    avsender,
+        to:      adminEpost,
+        subject: mail.subject,
+        html:    mail.html
+      });
+
+      return { ok: true, result: res };
+    }
+
     default:
       throw new Error('Ukjent e-posttype: ' + type);
   }

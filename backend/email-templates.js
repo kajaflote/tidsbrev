@@ -1414,6 +1414,86 @@ function recipientConfirm(order, lang = 'no') {
 }
 
 
+// ================================================================
+// ÅRLIG NEDBETALING — VARSEL TIL KUNDE OM MISLYKKET ÅRLIG TREKK
+// ================================================================
+function subscriptionPaymentFailed(order, lang = 'no') {
+  const isEn = lang === 'en';
+  const navn = String(order.customer_name || (isEn ? 'there' : 'du')).split(' ')[0];
+  const dato = formatDate(order.delivery_date, lang);
+  const produkt = produktNavn(order.product_type, lang);
+
+  const body = isEn ? `
+    <p style="font-family:Georgia,serif;font-size:20px;color:#6B2737;margin:0 0 6px;font-style:italic;">~ a small hiccup ~</p>
+    <h1 style="font-family:Georgia,serif;font-size:26px;color:#2A231C;margin:0 0 18px;line-height:1.25;">We couldn't process this year's payment</h1>
+    <p style="margin:0 0 16px;color:#6B5D4C;font-size:16px;">Dear ${escapeHtml(navn)},</p>
+    <p style="margin:0 0 18px;color:#2A231C;font-size:16px;">
+      Your letter (order <strong>${escapeHtml(order.order_number || '')}</strong>, ${escapeHtml(produkt)}) is on a yearly
+      payment plan, and this year's automatic charge didn't go through. Don't worry —
+      <strong>your letter is still safe with us</strong> and will be delivered on ${escapeHtml(dato)}.
+    </p>
+    <p style="margin:0 0 18px;color:#2A231C;font-size:16px;">
+      We'll automatically try the charge again over the next few days. If your card has expired or changed,
+      just reply to this email and we'll help you update it.
+    </p>
+    <p style="margin:0;color:#6B5D4C;font-size:14px;">Warm regards,<br/>Tidsbrev.no</p>
+  ` : `
+    <p style="font-family:Georgia,serif;font-size:20px;color:#6B2737;margin:0 0 6px;font-style:italic;">~ en liten forsinkelse ~</p>
+    <h1 style="font-family:Georgia,serif;font-size:26px;color:#2A231C;margin:0 0 18px;line-height:1.25;">Vi fikk ikke gjennomført årets trekk</h1>
+    <p style="margin:0 0 16px;color:#6B5D4C;font-size:16px;">Hei ${escapeHtml(navn)},</p>
+    <p style="margin:0 0 18px;color:#2A231C;font-size:16px;">
+      Brevet ditt (ordre <strong>${escapeHtml(order.order_number || '')}</strong>, ${escapeHtml(produkt)}) betales
+      med årlig nedbetaling, og årets automatiske trekk gikk dessverre ikke gjennom.
+      Ingen grunn til bekymring — <strong>brevet ditt ligger fortsatt trygt hos oss</strong> og leveres ${escapeHtml(dato)}.
+    </p>
+    <p style="margin:0 0 18px;color:#2A231C;font-size:16px;">
+      Vi prøver trekket automatisk igjen i løpet av de nærmeste dagene. Har kortet gått ut eller blitt endret,
+      er det bare å svare på denne e-posten, så hjelper vi deg med å oppdatere det.
+    </p>
+    <p style="margin:0;color:#6B5D4C;font-size:14px;">Vennlig hilsen,<br/>Tidsbrev.no</p>
+  `;
+
+  return {
+    subject: isEn
+      ? 'Action needed — your yearly payment didn\'t go through'
+      : 'Handling nødvendig — årets trekk gikk ikke gjennom',
+    html: baseLayout({
+      title: isEn ? 'Yearly payment failed' : 'Årlig trekk feilet',
+      preheader: isEn
+        ? 'Your letter is still safe — we\'ll retry the charge automatically.'
+        : 'Brevet ditt er trygt — vi prøver trekket automatisk igjen.',
+      bodyHtml: body,
+      lang
+    })
+  };
+}
+
+// ================================================================
+// ÅRLIG NEDBETALING — INTERNT ADMIN-VARSEL OM MISLYKKET TREKK
+// ================================================================
+// Admin-varsler er alltid på norsk (jf. resten av admin-kommunikasjonen).
+function adminSubscriptionFailed(order) {
+  const body = `
+    <h1 style="font-family:Georgia,serif;font-size:22px;color:#6B2737;margin:0 0 16px;">Mislykket årlig trekk</h1>
+    <p style="margin:0 0 18px;color:#2A231C;font-size:15px;">
+      Det årlige trekket for en ordre med årlig nedbetaling feilet. Ordren er markert
+      <strong>past_due</strong>. Stripe forsøker automatisk på nytt de neste dagene.
+    </p>
+    <table role="presentation" width="100%" cellpadding="6" cellspacing="0" border="0" style="font-size:14px;">
+      <tr><td style="color:#6B5D4C;width:40%;">Ordrenummer</td><td style="color:#2A231C;font-weight:600;">${escapeHtml(order.order_number || '')}</td></tr>
+      <tr><td style="color:#6B5D4C;">Kunde</td><td style="color:#2A231C;">${escapeHtml(order.customer_name || '')} (${escapeHtml(order.customer_email || '')})</td></tr>
+      <tr><td style="color:#6B5D4C;">Produkt</td><td style="color:#2A231C;">${escapeHtml(produktNavn(order.product_type, 'no'))}</td></tr>
+      <tr><td style="color:#6B5D4C;">Leveringsdato</td><td style="color:#2A231C;">${escapeHtml(formatDateNO(order.delivery_date))}</td></tr>
+      <tr><td style="color:#6B5D4C;">Ordreverdi</td><td style="color:#2A231C;">${escapeHtml(formatNOK(order.amount))}</td></tr>
+      <tr><td style="color:#6B5D4C;">Abonnement</td><td style="color:#2A231C;">${escapeHtml(order.stripe_subscription_id || '')}</td></tr>
+    </table>`;
+
+  return {
+    subject: `⚠️ Mislykket årlig trekk — ordre ${order.order_number || ''}`,
+    html: baseLayout({ title: 'Mislykket årlig trekk', preheader: 'En årlig nedbetaling feilet.', bodyHtml: body, lang: 'no' })
+  };
+}
+
 module.exports = {
   orderConfirmation,
   adminNewOrder,
@@ -1423,5 +1503,7 @@ module.exports = {
   deliverLetterText,
   deliverTidskapsell,
   senderReminder,
-  recipientConfirm
+  recipientConfirm,
+  subscriptionPaymentFailed,
+  adminSubscriptionFailed
 };
