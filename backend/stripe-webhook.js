@@ -69,7 +69,7 @@ async function finnOrdreForAbonnement(supabase, stripe, subscriptionId) {
 }
 
 exports.handler = async (event) => {
-  const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+  const stripe = Stripe(process.env.STRIPE_SECRET_KEY_LIVE || process.env.STRIPE_SECRET_KEY);
   const supabase = createClient(
     process.env.SUPABASE_URL,
     process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -92,7 +92,7 @@ exports.handler = async (event) => {
     stripeEvent = stripe.webhooks.constructEvent(
       rawBody,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET
+      process.env.STRIPE_WEBHOOK_SECRET_LIVE || process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
     console.error('[stripe-webhook] Signaturverifisering feilet:', err.message);

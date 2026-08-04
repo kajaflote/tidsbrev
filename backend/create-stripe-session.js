@@ -64,7 +64,8 @@ exports.handler = async (event) => {
 
   // Sjekk at nødvendige miljøvariabler finnes
   const envCheck = {
-    STRIPE_SECRET_KEY:        !!process.env.STRIPE_SECRET_KEY,
+    // Foretrekk live-nøkkelen (STRIPE_SECRET_KEY_LIVE), fall tilbake til STRIPE_SECRET_KEY.
+    STRIPE_SECRET_KEY:        !!(process.env.STRIPE_SECRET_KEY_LIVE || process.env.STRIPE_SECRET_KEY),
     SUPABASE_URL:             !!process.env.SUPABASE_URL,
     SUPABASE_SERVICE_ROLE_KEY:!!process.env.SUPABASE_SERVICE_ROLE_KEY,
     SIDE_URL:                 !!process.env.SIDE_URL
@@ -232,7 +233,7 @@ exports.handler = async (event) => {
     }
 
     // ---- 3. Opprett Stripe Checkout Session ----
-    const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+    const stripe = Stripe(process.env.STRIPE_SECRET_KEY_LIVE || process.env.STRIPE_SECRET_KEY);
     const produktTekst = `${PRODUKT_NAVN[data.product_type]} — ${data.delivery_type === 'fysisk' ? 'fysisk levering' : 'digital levering'}${premiumEnvelope ? ', inkl. premiumkonvolutt' : ''}`;
     const sideUrl = process.env.SIDE_URL || 'https://tidsbrev.no';
 
